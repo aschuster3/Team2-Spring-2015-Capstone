@@ -25,7 +25,7 @@ public class User extends Model {
     public String email;
     
     @Required
-    public String passwordHash;
+    public String password;
     
     @Required
     public boolean isAdmin;
@@ -37,9 +37,9 @@ public class User extends Model {
     @OneToMany
     public ArrayList<Learner> learners;
     
-    public User(String email, String passwordHash, String fullname, boolean isAdmin) {
+    public User(String email, String password, String fullname, boolean isAdmin) {
         this.email = email;
-        this.passwordHash = passwordHash;
+        this.password = password;
         this.fullname = fullname;
         this.isAdmin = isAdmin;
         this.learners = new ArrayList<Learner>();
@@ -48,8 +48,8 @@ public class User extends Model {
     public static Finder<Long, User> find = new Finder<Long, User>(
             Long.class, User.class);
     
-    public static User authenticate(String email, String passwordHash) {
+    public static User authenticate(String email, String password) {
         return find.where().eq("email", email)
-               .eq("passwordHash", passwordHash).findUnique();
+               .eq("password", password).findUnique();
     }
 }

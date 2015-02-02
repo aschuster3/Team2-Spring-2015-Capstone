@@ -1,45 +1,66 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import models.User;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.*;
 
-import play.mvc.*;
-import play.test.*;
-import play.data.DynamicForm;
-import play.data.validation.ValidationError;
-import play.data.validation.Constraints.RequiredValidator;
-import play.i18n.Lang;
-import play.libs.F;
-import play.libs.F.*;
-import play.twirl.api.Content;
+import com.google.common.collect.ImmutableMap;
 
+import play.mvc.Result;
 import static play.test.Helpers.*;
 import static org.fest.assertions.Assertions.*;
 
 
 /**
 *
-* Simple (JUnit) tests that can call all parts of a play app.
-* If you are interested in mocking a whole application, see the wiki for more details.
+* Test functionality of the application
 *
 */
 public class ApplicationTest {
+    
+    @Before
+    public void setup() {
+        start(fakeApplication(inMemoryDatabase(), fakeGlobal()));
 
-    @Test
-    public void simpleCheck() {
-        int a = 1 + 1;
-        assertThat(a).isEqualTo(2);
+        new User("sharon@gmail.com", "kitty", "Sharon Norahs", true).save();
+        new User("bob@gmail.com", "secret", "Bob Lob", false).save();
     }
 
     @Test
-    public void renderTemplate() {
-        Content html = views.html.index.render("Your new application is ready.");
-        assertThat(contentType(html)).isEqualTo("text/html");
-        assertThat(contentAsString(html)).contains("Your new application is ready.");
+    public void tryAuthenticateUser() {
+        // Test a coordinator          
+        
+        assertThat(User.authenticate("bob@gmail.com", "secret")).isNotNull();
+        assertThat(User.authenticate("bob@gmail.com", "secret").isAdmin).isFalse();
+        assertThat(User.authenticate("bob@gmail.com", "plop")).isNull();
+        assertThat(User.authenticate("jeff@gmail.com", "secret")).isNull();
+        
+        // Test an administrator
+        
+        assertThat(User.authenticate("sharon@gmail.com", "kitty")).isNotNull();
+        assertThat(User.authenticate("sharon@gmail.com", "kitty").isAdmin).isTrue();;
+        assertThat(User.authenticate("sharon@gmail.com", "wrongpassword")).isNull();
     }
-
-
+    
+    @Test
+    public void authenticateSuccess() {
+        Result result = callAction(
+            controllers.routes.ref.Application.authenticate(),
+            fakeRequest().withFormUrlEncodedBody(ImmutableMap.of(
+                "email", "bob@gmail.com",
+                "password", "secret"))
+        );
+        assertThat(303).isEqualTo(status(result));
+        assertThat("bob@gmail.com").isEqualTo(session(result).get("email"));
+    }
+    
+    @Test
+    public void authenticateFailure() {
+        Result result = callAction(
+            controllers.routes.ref.Application.authenticate(),
+            fakeRequest().withFormUrlEncodedBody(ImmutableMap.of(
+                "email", "bob@gmail.com",
+                "password", "badpassword"))
+        );
+        assertThat(400).isEqualTo(status(result));
+        assertThat(session(result).get("email")).isNull();
+    }
 }
