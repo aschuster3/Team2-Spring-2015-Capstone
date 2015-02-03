@@ -13,16 +13,20 @@ public class Application extends Controller {
     
     static Form<Login> loginForm = Form.form(Login.class);
 
+    @Security.Authenticated(Secured.class)
     public static Result index() {
-        return ok("You did it!");
-    }
-
-    public static Result index(String name) {
-        return ok("Hello " + name);
+        String email = session().get("email");
+        User user = User.find.where().eq("email", email).findUnique();
+        
+        if(user.isAdmin) {
+            return ok(index.render("You are an admin"));
+        } else {
+            return ok(index.render("You are a coordinator"));
+        }
     }
     
     /**
-     * Redirects the user to the login page.
+     * Renders the login page.
      */
     public static Result login() {
         return ok(login.render(loginForm));
@@ -39,6 +43,14 @@ public class Application extends Controller {
                 routes.Application.index()
             );
         }
+    }
+    
+    public static Result logout() {
+        session().clear();
+        flash("success", "You've been logged out");
+        return redirect(
+            routes.Application.login()
+        );
     }
     
     /**

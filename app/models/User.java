@@ -33,7 +33,6 @@ public class User extends Model {
     @Required
     public String fullname;
 
-    @Required
     @OneToMany
     public ArrayList<Learner> learners;
     

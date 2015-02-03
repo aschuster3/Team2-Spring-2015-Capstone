@@ -63,4 +63,23 @@ public class ApplicationTest {
         assertThat(400).isEqualTo(status(result));
         assertThat(session(result).get("email")).isNull();
     }
+    
+    @Test
+    public void authenticated() {
+        Result result = callAction(
+            controllers.routes.ref.Application.index(),
+            fakeRequest().withSession("email", "bob@gmail.com")
+        );
+        assertThat(200).isEqualTo(status(result));
+    } 
+    
+    @Test
+    public void notAuthenticated() {
+        Result result = callAction(
+            controllers.routes.ref.Application.index(),
+            fakeRequest()
+        );
+        assertThat(303).isEqualTo(status(result));
+        assertThat("/login").isEqualTo(header("Location", result));
+    }
 }
