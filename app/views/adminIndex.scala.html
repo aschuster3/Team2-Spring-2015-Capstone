@@ -1,0 +1,80 @@
+@()
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Administrator Dashboard</title>
+
+	<meta charset="UTF-8">
+
+	<link rel="stylesheet" href="public/stylesheets/bootstrap3/css/bootstrap.min.css">
+	<link rel="stylesheet" href="public/stylesheets/bootstrap3/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="public/stylesheets/main.css">
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+</head>
+<body>
+<div class="container">
+	<div class="jumbotron">
+		<h1>Administrator Dashboard</h1>
+	</div>
+	<nav class="navbar navbar-default navbar-static-top">
+		<div class="container">
+			<ul class="nav navbar-nav">
+				<li class="active"><a href="adminIndex.html">Home</a></li>
+            	<li><a href="#coordinators">Coordinators</a></li>
+            	<li><a href="#students">Students</a><li>
+            	<li><a href="#schedule">Schedule</a></li>
+         	</ul>
+ 		</div>
+	</nav>
+	<div id = "content">
+		<div class="col-xs-6 col-md-4 panel panel-default">
+			<h2>Latest News</h2>
+			<!--Andrew this section is what I was saying to use Angular type stuff with to create x number of news evets-->
+			<div class="panel-body">
+				<div class = "newsevent">
+					<div class = "newsheadline">
+						<h4>News Event Headline 1</h4>
+					</div>
+					<div class ="newsbody">
+						<p>This will contain the text about the event</p>
+					</div>
+				</div>
+				<div class = "newsevent">
+					<div class = "newsheadline">
+						<h4>News Event Headline 2</h4>
+					</div>
+					<div class ="newsbody">
+						<p>This will contain the text about the event</p>
+					</div>
+				</div>
+  			</div>
+		</div>
+		<div class="col-xs-12 col-sm-6 col-md-8 panel panel-default">
+			<h2>Welcome</h2>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+			consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+			cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+			proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+			consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+			cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+			proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+			consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+			cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+			proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+		</div>
+	</div>
+</div>
+</body>
+</html>
