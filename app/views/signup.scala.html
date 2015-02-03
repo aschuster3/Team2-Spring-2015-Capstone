@@ -1,0 +1,26 @@
+@(signupForm: play.data.Form[User])
+
+@import helper._
+
+<html>
+    <head>
+        <title>Emory Dermatology</title>
+    </head>
+    <body>
+       
+        @form(routes.Application.createUser) {
+        <h1>Sign up</h1>
+
+        @inputText(signupForm("First Name"))
+        @inputText(signupForm("Last Name"))
+	    @inputText(signupForm("Email"))
+	    
+	    <input type="submit" value="Register">
+		   @if(signupForm.hasGlobalErrors) {
+		    <p class="error">
+		        @signupForm.globalError.message
+		    </p>
+	        }
+        }
+    </body>
+</html>

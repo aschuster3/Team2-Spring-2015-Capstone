@@ -12,6 +12,7 @@ import views.html.*;
 public class Application extends Controller {
     
     static Form<Login> loginForm = Form.form(Login.class);
+    static Form<User> signupForm = Form.form(User.class);
 
     @Security.Authenticated(Secured.class)
     public static Result index() {
@@ -32,6 +33,19 @@ public class Application extends Controller {
         return ok(login.render(loginForm));
     }
 
+    public static Result signup(){
+    	return ok(signup.render(signupForm));
+    }
+    
+    public static Result createUser(){
+    	Form<User> filledForm = signupForm.bindFromRequest();
+    	if (filledForm.hasErrors()) {
+            return badRequest(signup.render(filledForm));
+        } else {
+        	return redirect(routes.Application.index());
+        }
+    }
+    
     public static Result authenticate() {
         Form<Login> filledForm = loginForm.bindFromRequest();
         if (filledForm.hasErrors()) {
@@ -73,4 +87,6 @@ public class Application extends Controller {
             return null;
         }
     }
+   
+  
 }
