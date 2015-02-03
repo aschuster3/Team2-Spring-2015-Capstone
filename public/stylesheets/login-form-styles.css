@@ -100,11 +100,11 @@ h1
 
 .btn-primary
 {
-    background-color: #000077;
+    background-color: rgb(51,63,127);
     width: 40%;
     margin-left: 30%;
     margin-bottom: 20px;
-    border-color: #000077;
+    border-color: rgb(51,63,127);
 }
 
 .btn-primary:hover,
