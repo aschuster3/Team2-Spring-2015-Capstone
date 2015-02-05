@@ -30,7 +30,7 @@ public class Application extends Controller {
      * Renders the login page.
      */
     public static Result login() {
-        return ok(login.render(loginForm));
+        return ok(loginPage.render(loginForm));
     }
 
     public static Result signup(){
@@ -50,7 +50,7 @@ public class Application extends Controller {
     public static Result authenticate() {
         Form<Login> filledForm = loginForm.bindFromRequest();
         if (filledForm.hasErrors()) {
-            return badRequest(login.render(filledForm));
+            return badRequest(loginPage.render(filledForm));
         } else {
             session().clear();
             session("email", filledForm.get().email);
