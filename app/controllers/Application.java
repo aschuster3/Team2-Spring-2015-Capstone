@@ -20,9 +20,9 @@ public class Application extends Controller {
         User user = User.find.where().eq("email", email).findUnique();
         
         if(user.isAdmin) {
-            return ok(index.render("You are an admin"));
+            return ok(adminIndex.render());
         } else {
-            return ok(index.render("You are a coordinator"));
+            return ok(coordinatorIndex.render());
         }
     }
     

@@ -1,6 +1,6 @@
 package models;
 
-import java.util.ArrayList;
+import java.util.*;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -36,7 +36,7 @@ public class User extends Model {
     public String fullname;
 
     @OneToMany
-    public ArrayList<Learner> learners;
+    public List<Learner> learners;
     
     public User(String email, String password, String fullname, boolean isAdmin) {
         this.email = email;

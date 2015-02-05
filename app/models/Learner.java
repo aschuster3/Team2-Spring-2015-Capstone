@@ -1,6 +1,6 @@
 package models;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import play.db.ebean.*;
 import play.data.validation.Constraints.*;
@@ -18,7 +18,11 @@ public class Learner extends Model {
     public String fullname;
     
     @Required
-    public ArrayList<Session> sessions;
+    public List<Session> sessions;
+    
+    @Required
+    @ManyToOne
+    public User owner;
 
     public static Finder<Long, Learner> find = new Finder<Long, Learner>(
             Long.class, Learner.class);
