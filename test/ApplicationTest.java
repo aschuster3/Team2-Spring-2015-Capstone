@@ -65,6 +65,37 @@ public class ApplicationTest {
     }
     
     @Test
+    public void createUserSuccess() {
+        Result result = callAction(
+                controllers.routes.ref.Application.createUser(),
+                fakeRequest().withFormUrlEncodedBody(ImmutableMap.of(
+                        "fullname", "New User",
+                        "email", "new_email@gmail.com",
+                        "password", "12345"))
+        );
+        assertThat(303).isEqualTo(status(result));
+        assertThat(session(result).get("email")).isNull();
+        assertThat(User.find.byId("new_email@gmail.com")).isNotNull();
+    }
+    
+    @Test
+    public void createUserFailsOnUsedEmail() {
+        Result result = callAction(
+                controllers.routes.ref.Application.createUser(),
+                fakeRequest().withFormUrlEncodedBody(ImmutableMap.of(
+                        "fullname", "Not Bob Lob",
+                        "email", "bob@gmail.com",
+                        "password", "differentPassword"))
+        );
+        
+        User bob = User.find.byId("bob@gmail.com");
+        
+        assertThat(BAD_REQUEST).isEqualTo(status(result));
+        assertThat("Bob Lob").isEqualTo(bob.fullname);
+        assertThat("secret").isEqualTo(bob.password);
+    }
+    
+    @Test
     public void authenticated() {
         Result result = callAction(
             controllers.routes.ref.Application.index(),

@@ -42,7 +42,8 @@ public class Application extends Controller {
     	if (filledForm.hasErrors()) {
             return badRequest(signup.render(filledForm));
         } else {
-        	return redirect(routes.Application.index());
+            User.create(filledForm.get());
+        	return redirect(routes.Application.login());
         }
     }
     

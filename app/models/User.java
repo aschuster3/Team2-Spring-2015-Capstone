@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import play.data.validation.Constraints.Email;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
 
@@ -21,6 +22,7 @@ import play.db.ebean.Model;
 public class User extends Model {
 
     @Required
+    @Email
     @Id
     public String email;
     
@@ -44,11 +46,24 @@ public class User extends Model {
         this.learners = new ArrayList<Learner>();
     }
 
-    public static Finder<Long, User> find = new Finder<Long, User>(
-            Long.class, User.class);
+    public static Finder<String, User> find = new Finder<String, User>(
+            String.class, User.class);
     
     public static User authenticate(String email, String password) {
         return find.where().eq("email", email)
                .eq("password", password).findUnique();
+    }
+    
+    public static void create(User user) {
+        user.save();
+    }
+    
+    public String validate() {
+        User user = User.find.where().eq("email", this.email).findUnique();
+        if (user != null) {
+            return "Email " + user.email + " is already taken.";
+        }
+        
+        return null;
     }
 }

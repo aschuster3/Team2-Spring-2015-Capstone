@@ -11,9 +11,9 @@
         @form(routes.Application.createUser) {
         <h1>Sign up</h1>
 
-        @inputText(signupForm("First Name"))
-        @inputText(signupForm("Last Name"))
-	    @inputText(signupForm("Email"))
+        @inputText(signupForm("fullname"))
+        @inputText(signupForm("email"))
+        @inputPassword(signupForm("password"))
 	    
 	    <input type="submit" value="Register">
 		   @if(signupForm.hasGlobalErrors) {
