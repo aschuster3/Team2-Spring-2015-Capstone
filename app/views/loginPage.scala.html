@@ -24,8 +24,10 @@
                 <div class="account-wall">
                     <h1 class="text-center login-title"></h1>
                     <img class="profile-img pull-left" src="@routes.Assets.at("images/Emory_logo.png")" alt="">
-                    <h3 class="pull-right">Welcome to the</h3>
-                    <h3 class="pull-right">Dermatology Scheduler</h3>
+                    <div class="header-text">
+                        <h2 class="text-center">Welcome to Emory University's</h2>
+                        <h2 class="text-center">Dermatology Scheduler Application</h2>
+                    </div>
 
                     @form(routes.Application.authenticate) {
                         @inputText(loginF0rm("email"), 
