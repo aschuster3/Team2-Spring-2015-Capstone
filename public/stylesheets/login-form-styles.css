@@ -82,6 +82,11 @@ h2
     font-weight: 400;
     display: block;
 }
+
+.login-form
+{
+    margin-top: 10px;
+}
 .profile-img
 {
     width: 96px;

@@ -29,6 +29,7 @@
                         <h2 class="text-center">Dermatology Scheduler Application</h2>
                     </div>
 
+                    <div class="login-form">
                     @form(routes.Application.authenticate) {
                         @inputText(loginF0rm("email"), 
                             'type -> "text", 
@@ -42,6 +43,8 @@
                             '_label -> null)
                         <input role="button" class="btn btn-lg btn-primary btn-block" type="submit"></input>
                     }
+                    </div>
+
                     <a href="passwordForm.html" class="new-account">Forgot your password?</a>
                     <a href="@routes.Application.signup()" class="new-account">Don't have an account? Sign Up.</a>
 
