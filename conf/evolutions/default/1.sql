@@ -6,6 +6,7 @@
 create table learner (
   id                        bigint not null,
   fullname                  varchar(255),
+  owner_email               varchar(255),
   constraint pk_learner primary key (id))
 ;
 
@@ -31,6 +32,8 @@ create sequence session_seq;
 
 create sequence user_seq;
 
+alter table learner add constraint fk_learner_owner_1 foreign key (owner_email) references user (email) on delete restrict on update restrict;
+create index ix_learner_owner_1 on learner (owner_email);
 
 
 
