@@ -86,7 +86,7 @@ h2
 {
     width: 96px;
     height: 96px;
-    margin: 0 auto 30px 20px;
+    margin: 0 auto 10px 20px;
     display: block;
 }
 .need-help
@@ -132,4 +132,10 @@ p {
 .header-text
 {
     padding-top: 10px;
+}
+
+.sub-header
+{
+    padding-top: 25px;
+    color: #444444;
 }
