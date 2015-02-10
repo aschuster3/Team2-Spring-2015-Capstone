@@ -20,8 +20,8 @@ public class ApplicationTest {
     public void setup() {
         start(fakeApplication(inMemoryDatabase(), fakeGlobal()));
 
-        new User("sharon@gmail.com", "kitty", "Sharon Norahs", true).save();
-        new User("bob@gmail.com", "secret", "Bob Lob", false).save();
+        new User("Sharon", "Norahs", "sharon@gmail.com", "kitty", true).save();
+        new User("Bob", "Lob", "bob@gmail.com", "secret", false).save();
     }
 
     @Test
@@ -91,7 +91,8 @@ public class ApplicationTest {
         User bob = User.find.byId("bob@gmail.com");
         
         assertThat(BAD_REQUEST).isEqualTo(status(result));
-        assertThat("Bob Lob").isEqualTo(bob.fullname);
+        assertThat("Bob").isEqualTo(bob.firstName);
+        assertThat("Lob").isEqualTo(bob.lastName);
         assertThat("secret").isEqualTo(bob.password);
     }
     

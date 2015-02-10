@@ -1,6 +1,7 @@
 package controllers;
 
 import models.User;
+import models.UnapprovedUser;
 import play.data.*;
 import play.mvc.*;
 import views.html.*;
@@ -12,7 +13,7 @@ import views.html.*;
 public class Application extends Controller {
     
     static Form<Login> loginForm = Form.form(Login.class);
-    static Form<User> signupForm = Form.form(User.class);
+    static Form<UnapprovedUser> signupForm = Form.form(UnapprovedUser.class);
 
     @Security.Authenticated(Secured.class)
     public static Result index() {
@@ -42,11 +43,11 @@ public class Application extends Controller {
     }
     
     public static Result createUser(){
-    	Form<User> filledForm = signupForm.bindFromRequest();
+    	Form<UnapprovedUser> filledForm = signupForm.bindFromRequest();
     	if (filledForm.hasErrors()) {
             return badRequest(registrationForm.render(filledForm));
         } else {
-            User.create(filledForm.get());
+            UnapprovedUser.create(filledForm.get());
         	return redirect(routes.Application.login());
         }
     }

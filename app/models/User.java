@@ -33,15 +33,19 @@ public class User extends Model {
     public boolean isAdmin;
     
     @Required
-    public String fullname;
+    public String firstName;
+    
+    @Required
+    public String lastName;
 
     @OneToMany
     public List<Learner> learners;
     
-    public User(String email, String password, String fullname, boolean isAdmin) {
+    public User(String firstName, String lastName, String email, String password, boolean isAdmin) {
         this.email = email;
         this.password = password;
-        this.fullname = fullname;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.isAdmin = isAdmin;
         this.learners = new ArrayList<Learner>();
     }
