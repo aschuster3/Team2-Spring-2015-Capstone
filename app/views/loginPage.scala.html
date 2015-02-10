@@ -29,18 +29,20 @@
                         <h2 class="text-center">Dermatology Scheduler Application</h2>
                     </div>
 
-                    <div class="login-form">
+                    <div class="form-signin">
                     @form(routes.Application.authenticate) {
                         @inputText(loginF0rm("email"), 
                             'type -> "text", 
                             'class -> "form-control", 
                             'placeholder -> "Email",
-                            '_label -> null)
+                            '_label -> null,
+                            '_showConstraints -> false)
                         @inputText(loginF0rm("password"),
                             'type -> "password",
                             'class -> "form-control",
                             'placeholder -> "Password",
-                            '_label -> null)
+                            '_label -> null,
+                            '_showConstraints -> false)
                         <input role="button" class="btn btn-lg btn-primary btn-block" type="submit" value="Login"></input>
                     }
                     </div>
