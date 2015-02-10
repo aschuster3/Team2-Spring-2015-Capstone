@@ -1,42 +1,57 @@
-@()
+@(registrationForm: play.data.Form[User])
+
+@import helper._
 <html>
 <head>
-    <title>Dermatology Scuedule Registration</title>
+    <title>Dermatology Schedule Registration</title>
 
     <meta name="description" content="Registration form for Emory's Dermatology Scheduler">
     <meta charset="UTF-8">
 
-    <link rel="stylesheet" href="public/stylesheets/bootstrap3/css/bootstrap.css">
-    <link rel="stylesheet" href="public/stylesheets/login-form-styles.css">
+    <link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap3/css/bootstrap.css")">
+    <link rel="stylesheet" href="@routes.Assets.at("stylesheets/login-form-styles.css")">
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:200,300,400' rel='stylesheet' type='text/css'> 
 </head>
 
 <body>
-    <img src="img/blue-polygon.jpg" id="bg" alt="">
+    <img src="@routes.Assets.at("images/blue-polygon.jpg")" id="bg" alt="">
 
     <div class="container">
         <div class="row">
 
             <div class="col-md-6 col-md-offset-3 pull-left">
                 <div class="account-wall">
-                    <img class="profile-img pull-left" src="img/Emory_logo.png" alt="">
+                    <img class="profile-img pull-left" src="@routes.Assets.at("images/Emory_logo.png")" alt="">
                     <div class="header-text">
                         <h2 class="text-center">Welcome to Emory University's</h2>
                         <h2 class="text-center">Dermatology Scheduler Application</h2>
                     </div>
                     <p class="sub-header text-center">Please register for credentials</p>
 
-                    <form class="form-signin">
-
-                        <!-- THIS SECTION NEEDS INPUT -->
-                        <input type="text" class="form-control" placeholder="First Name" required autofocus>
-                        <input type="text" class="form-control" placeholder="Last Name" required>
-                        <input type="text" class="form-control" placeholder="Email" required>
-                        <input href="loginForm.html" role="button" class="btn btn-lg btn-primary btn-block" type="submit">
-                            Register</input>
-                        <a href="loginForm.html" class="new-account">Return to login screen</a>
-                        
-                    </form>
+                    <div class="form-signin">
+                    @form(routes.Application.createUser) {
+                        @inputText(registrationForm("fullname"), 
+                            'type -> "text",
+                            'class -> "form-control",
+                            'placeholder -> "Full Name",
+                            '_label -> null,
+                            '_showConstraints -> false)
+                        @inputText(registrationForm("email"), 
+                            'type -> "text",
+                            'class -> "form-control",
+                            'placeholder -> "E-mail",
+                            '_label -> null,
+                            '_showConstraints -> false)
+                        @inputText(registrationForm("password"), 
+                            'type -> "password",
+                            'class -> "form-control",
+                            'placeholder -> "Password",
+                            '_label -> null,
+                            '_showConstraints -> false)
+                        <input role="button" class="btn btn-lg btn-primary btn-block" value="Register" type="submit"></input>
+                        <a href="@routes.Application.login()" class="new-account">Return to login screen</a>
+                    }  
+                    </div>
                 </div>
                 
             </div>

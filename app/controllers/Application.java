@@ -34,13 +34,17 @@ public class Application extends Controller {
     }
 
     public static Result signup(){
-    	return ok(signup.render(signupForm));
+    	return ok(registrationForm.render(signupForm));
+    }
+    
+    public static Result forgotPassword() {
+        return TODO;
     }
     
     public static Result createUser(){
     	Form<User> filledForm = signupForm.bindFromRequest();
     	if (filledForm.hasErrors()) {
-            return badRequest(signup.render(filledForm));
+            return badRequest(registrationForm.render(filledForm));
         } else {
             User.create(filledForm.get());
         	return redirect(routes.Application.login());

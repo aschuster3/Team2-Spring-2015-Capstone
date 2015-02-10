@@ -12,6 +12,7 @@ GET     /assets/*file                   controllers.Assets.at(path="/public", fi
 GET     /login                          controllers.Application.login()
 POST    /login                          controllers.Application.authenticate()
 GET     /logout                         controllers.Application.logout()
+GET     /forgotPassword                 controllers.Application.forgotPassword()
 
 #Sign up
 GET     /signup                         controllers.Application.signup()
