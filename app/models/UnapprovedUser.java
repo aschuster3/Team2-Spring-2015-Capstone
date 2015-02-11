@@ -1,7 +1,5 @@
 package models;
 
-import java.util.*;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -17,7 +15,7 @@ import play.db.ebean.Model;
  * 
  * @author Julia Rapoport
  */
-public class UnapprovedUser extends Model{
+public class UnapprovedUser extends Model {
     @Required
     @Email
     @Id
@@ -32,7 +30,7 @@ public class UnapprovedUser extends Model{
     @Required
     public String lastName;
 
-    @Required
+    //@Required
     public String token;
     
     public UnapprovedUser(String firstName, String lastName, String email, String department, String token) {
@@ -51,11 +49,12 @@ public class UnapprovedUser extends Model{
     }
     
     public String validate() {
-        User user = User.find.where().eq("email", this.email).findUnique();
+    	UnapprovedUser user = UnapprovedUser.find.where().eq("email", this.email).findUnique();
         if (user != null) {
             return "Email " + user.email + " is already taken.";
         }
         
         return null;
     }
+
 }

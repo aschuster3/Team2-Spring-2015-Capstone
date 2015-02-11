@@ -1,4 +1,4 @@
-@(registrationForm: play.data.Form[User])
+@(registrationForm: play.data.Form[UnapprovedUser])
 
 @import helper._
 <html>
@@ -30,10 +30,16 @@
 
                     <div class="form-signin">
                     @form(routes.Application.createUser) {
-                        @inputText(registrationForm("fullname"), 
+                        @inputText(registrationForm("firstName"), 
                             'type -> "text",
                             'class -> "form-control",
-                            'placeholder -> "Full Name",
+                            'placeholder -> "First Name",
+                            '_label -> null,
+                            '_showConstraints -> false)
+                       @inputText(registrationForm("lastName"), 
+                            'type -> "text",
+                            'class -> "form-control",
+                            'placeholder -> "Last Name",
                             '_label -> null,
                             '_showConstraints -> false)
                         @inputText(registrationForm("email"), 
@@ -42,15 +48,17 @@
                             'placeholder -> "E-mail",
                             '_label -> null,
                             '_showConstraints -> false)
-                        @inputText(registrationForm("password"), 
-                            'type -> "password",
+                        @inputText(registrationForm("department"), 
+                            'type -> "text",
                             'class -> "form-control",
-                            'placeholder -> "Password",
+                            'placeholder -> "Department",
                             '_label -> null,
                             '_showConstraints -> false)
                         <input role="button" class="btn btn-lg btn-primary btn-block" value="Register" type="submit"></input>
                         <a href="@routes.Application.login()" class="new-account">Return to login screen</a>
-                    }                      </div>
+                    }  
+           
+                    </div>
 
                 </div>
                
