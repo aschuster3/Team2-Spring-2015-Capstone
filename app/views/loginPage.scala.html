@@ -44,6 +44,10 @@
                             '_label -> null,
                             '_showConstraints -> false)
                         <input role="button" class="btn btn-lg btn-primary btn-block" type="submit" value="Login"></input>
+                        
+                        @if(loginF0rm.hasGlobalErrors()) {
+                            <p class="text-center"><font color="red">@loginF0rm.globalError.message</font></p>
+                        }
                     }
                     </div>
 

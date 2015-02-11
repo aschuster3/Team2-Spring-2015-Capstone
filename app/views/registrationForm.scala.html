@@ -55,6 +55,9 @@
                             '_label -> null,
                             '_showConstraints -> false)
                         <input role="button" class="btn btn-lg btn-primary btn-block" value="Register" type="submit"></input>
+                        @if(registrationForm.hasGlobalErrors()) {
+                            <p class="text-center"><font color="red">@registrationForm.globalError.message</font></p>
+                        }
                         <a href="@routes.Application.login()" class="new-account">Return to login screen</a>
                     }  
            

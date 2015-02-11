@@ -49,9 +49,10 @@ public class UnapprovedUser extends Model {
     }
     
     public String validate() {
-    	UnapprovedUser user = UnapprovedUser.find.where().eq("email", this.email).findUnique();
-        if (user != null) {
-            return "Email " + user.email + " is already taken.";
+    	UnapprovedUser unapprovedUser = UnapprovedUser.find.byId(this.email);
+    	User user = User.find.byId(this.email);
+        if (unapprovedUser != null || user != null) {
+            return "Email " + this.email + " is already taken.";
         }
         
         return null;

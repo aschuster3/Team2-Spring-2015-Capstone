@@ -44,7 +44,7 @@ public class Application extends Controller {
     
     public static Result createUser(){
     	Form<UnapprovedUser> filledForm = signupForm.bindFromRequest();
-    	if (filledForm.hasErrors()) {
+    	if (filledForm.hasGlobalErrors()) {
             return badRequest(registrationForm.render(filledForm));
         } else {
             UnapprovedUser.create(filledForm.get());
@@ -88,7 +88,7 @@ public class Application extends Controller {
          */
         public String validate() {
             if (User.authenticate(email, password) == null) {
-              return "Invalid user or password";
+              return "Invalid email or password";
             }
             return null;
         }

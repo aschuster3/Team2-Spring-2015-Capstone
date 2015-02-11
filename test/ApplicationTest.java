@@ -1,3 +1,4 @@
+import models.UnapprovedUser;
 import models.User;
 
 import org.junit.*;
@@ -60,7 +61,7 @@ public class ApplicationTest {
                 "email", "bob@gmail.com",
                 "password", "badpassword"))
         );
-        assertThat(400).isEqualTo(status(result));
+        assertThat(BAD_REQUEST).isEqualTo(status(result));
         assertThat(session(result).get("email")).isNull();
     }
     
@@ -69,13 +70,14 @@ public class ApplicationTest {
         Result result = callAction(
                 controllers.routes.ref.Application.createUser(),
                 fakeRequest().withFormUrlEncodedBody(ImmutableMap.of(
-                        "fullname", "New User",
+                        "firstName", "Big",
+                        "lastName", "Octopus",
                         "email", "new_email@gmail.com",
-                        "password", "12345"))
+                        "department", "Aquatic Life"))
         );
+        
         assertThat(303).isEqualTo(status(result));
-        assertThat(session(result).get("email")).isNull();
-        assertThat(User.find.byId("new_email@gmail.com")).isNotNull();
+        assertThat(UnapprovedUser.find.byId("new_email@gmail.com")).isNotNull();
     }
     
     @Test
@@ -83,9 +85,10 @@ public class ApplicationTest {
         Result result = callAction(
                 controllers.routes.ref.Application.createUser(),
                 fakeRequest().withFormUrlEncodedBody(ImmutableMap.of(
-                        "fullname", "Not Bob Lob",
+                        "firstName", "Rob",
+                        "lastName", "Lob",
                         "email", "bob@gmail.com",
-                        "password", "differentPassword"))
+                        "department", "Imagineering"))
         );
         
         User bob = User.find.byId("bob@gmail.com");
@@ -102,7 +105,7 @@ public class ApplicationTest {
             controllers.routes.ref.Application.index(),
             fakeRequest().withSession("email", "bob@gmail.com")
         );
-        assertThat(200).isEqualTo(status(result));
+        assertThat(OK).isEqualTo(status(result));
     } 
     
     @Test
