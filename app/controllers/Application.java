@@ -1,8 +1,15 @@
 package controllers;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.UUID;
+
 import models.User;
 import models.UnapprovedUser;
+import play.Logger;
 import play.data.*;
+import play.libs.mailer.Email;
+import play.libs.mailer.MailerPlugin;
 import play.mvc.*;
 import views.html.*;
 
@@ -95,7 +102,13 @@ public class Application extends Controller {
         }
     }
     
-    
+    /**
+     * Removes an UnapprovedUser from the database when 
+     * and administrator presses the "delete" button
+     * 
+     * @param userEmail
+     * @return
+     */
     public static Result removeUnapprovedUser(String userEmail) {
         UnapprovedUser user = UnapprovedUser.find.byId(userEmail);
         if(user != null) {
@@ -104,26 +117,48 @@ public class Application extends Controller {
         return redirect(routes.Application.fetchUU());
     }
     
+    /**
+     * Approves an UnapprovedUser by generating a random token
+     * and assigning it to them.  Once assigned a token, the email
+     * address associated with the UnapprovedUser is sent a custom link
+     * to complete the creation of their account.
+     * 
+     * @param userEmail
+     * @return
+     */
     public static Result approveUnapprovedUser(String userEmail) {
-        // Send an email with the user info
-        return TODO;
-    }
-    
-    public static class Password {
+        UnapprovedUser user = UnapprovedUser.find.byId(userEmail);
         
-        public String password;
-        public String passwordConfirm;
-        
-        public String validate() {
-            if (password == null) {
-                return "Darn";
-            } else if (!password.equals(passwordConfirm)) {
-              return "Passwords do not match!";
-            }
-            return null;
+        user.token = UUID.randomUUID().toString();
+
+        try {
+            // Verifies that the URL is not malformed
+            URL url = new URL("http://localhost:9000" + (routes.Application.setPassword(user.token)).url());
+            user.save();
+            
+            Email email = new Email();
+            email.setSubject("Test Email");
+            email.setFrom("admin@emory.edu");
+            email.addTo(userEmail);
+            email.setBodyText("Go to " + url.toString() + 
+                    " to complete your signup process");
+            
+            MailerPlugin.send(email);
+            return redirect(routes.Application.fetchUU());
+        } catch (MalformedURLException e) {
+            return badRequest(testViewUnapprovedUsers.render(UnapprovedUser.getAll()));
         }
     }
     
+    /**
+     * Once an UnapprovedUser has been emailed their custom
+     * sign-up link, they will be made to set a password for their
+     * account.  This method populates the screen where they will
+     * be making their password.
+     * 
+     * @param token
+     * @return
+     */
     public static Result setPassword(String token) {
         UnapprovedUser user = UnapprovedUser.find.where().eq("token", token).findUnique();
         if (user == null) {
@@ -132,6 +167,13 @@ public class Application extends Controller {
         return ok(testViewUserSignup.render(passwordForm, user));
     }
     
+    /**
+     * Once an acceptable password is made, the user is saved and
+     * then directed to the coordinator dashboard
+     * 
+     * @param email
+     * @return
+     */
     public static Result addNewUser(String email) {
         Form<Password> filledForm = passwordForm.bindFromRequest();
         UnapprovedUser user = UnapprovedUser.find.byId(email);
@@ -149,13 +191,35 @@ public class Application extends Controller {
             );
         }
     }
+    
+    /**
+     * A form filler for the password form used in creating a
+     * a new user
+     */
+    public static class Password {
+        
+        public String password;
+        public String passwordConfirm;
+        
+        public String validate() {
+            if (password == null) {
+                return "Darn";
+            } else if (!password.equals(passwordConfirm)) {
+              return "Passwords do not match!";
+            }
+            return null;
+        }
+    }
    
     /**
-     * This is a temporary test action to view current unapproved users
+     * This is a temporary test action to view current UnapprovedUsers
+     * 
+     * This should be replaced by the admin capabilities
      * 
      * @return
      */
     public static Result fetchUU() {
+        // TODO: replace with an admin template
         return ok(testViewUnapprovedUsers.render(UnapprovedUser.getAll()));
     }
   

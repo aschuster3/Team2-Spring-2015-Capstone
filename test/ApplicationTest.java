@@ -5,6 +5,7 @@ import org.junit.*;
 
 import com.google.common.collect.ImmutableMap;
 
+import play.Logger;
 import play.mvc.Result;
 import static play.test.Helpers.*;
 import static org.fest.assertions.Assertions.*;
@@ -97,6 +98,43 @@ public class ApplicationTest {
         assertThat("Bob").isEqualTo(bob.firstName);
         assertThat("Lob").isEqualTo(bob.lastName);
         assertThat("secret").isEqualTo(bob.password);
+    }
+    
+    @Test
+    public void adminApproveUnapprovedUser() {
+        UnapprovedUser user = new UnapprovedUser("Adrian", "Brody", 
+                "abrody@hotmail.com", "Brody Questing");
+        user.save();
+        
+        assertThat(user.token).isNull();
+        
+        Result result = callAction(
+                controllers.routes.ref.Application.approveUnapprovedUser(user.email)
+        );
+        
+        // Gets the updated version of the user
+        user = UnapprovedUser.find.byId(user.email);
+        
+        assertThat(303).isEqualTo(status(result));
+        assertThat(user.token).isNotNull();
+    }
+    
+    @Test
+    public void adminDeleteUnapprovedUser() {
+        UnapprovedUser user = new UnapprovedUser("Nicolas", "Cage", 
+                "ncage@hotmail.com", "National Treasure");
+        user.save();
+        
+        assertThat(user.token).isNull();
+        
+        Result result = callAction(
+                controllers.routes.ref.Application.removeUnapprovedUser(user.email)
+        );
+        
+        // Gets the updated version of the user
+        user = UnapprovedUser.find.byId(user.email);
+        
+        assertThat(user).isNull();
     }
     
     @Test

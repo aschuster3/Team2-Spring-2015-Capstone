@@ -1,7 +1,6 @@
 package models;
 
 import java.util.List;
-import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -48,9 +47,6 @@ public class UnapprovedUser extends Model {
             String.class, UnapprovedUser.class);
     
     public static void create(UnapprovedUser user) {
-        // TODO: Move this to a place where it will be generated after approval!
-        user.token = UUID.randomUUID().toString();
-        
         user.save();
     }
     
