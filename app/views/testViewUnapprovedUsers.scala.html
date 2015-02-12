@@ -1,0 +1,26 @@
+@(allUnapproved: List[UnapprovedUser])
+
+@import helper._
+
+<html>
+    
+    <ul>
+    @for(user <- allUnapproved) {
+        <li>
+            @user.firstName
+            @user.lastName
+            @user.email
+            @user.token
+            
+            @form(routes.Application.removeUnapprovedUser(user.email)) {
+                <input type="submit" value="Delete"></input>
+            }
+            @form(routes.Application.approveUnapprovedUser(user.email)) {
+                <input type="submit" value="Approve"></input>
+            }
+        </li>
+        
+    }
+    </ul>
+
+</html>

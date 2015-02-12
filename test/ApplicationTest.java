@@ -66,9 +66,9 @@ public class ApplicationTest {
     }
     
     @Test
-    public void createUserSuccess() {
+    public void createUnapprovedUserSuccess() {
         Result result = callAction(
-                controllers.routes.ref.Application.createUser(),
+                controllers.routes.ref.Application.createUnapprovedUser(),
                 fakeRequest().withFormUrlEncodedBody(ImmutableMap.of(
                         "firstName", "Big",
                         "lastName", "Octopus",
@@ -81,9 +81,9 @@ public class ApplicationTest {
     }
     
     @Test
-    public void createUserFailsOnUsedEmail() {
+    public void createUnapprovedUserFailsOnUsedEmail() {
         Result result = callAction(
-                controllers.routes.ref.Application.createUser(),
+                controllers.routes.ref.Application.createUnapprovedUser(),
                 fakeRequest().withFormUrlEncodedBody(ImmutableMap.of(
                         "firstName", "Rob",
                         "lastName", "Lob",
@@ -97,6 +97,50 @@ public class ApplicationTest {
         assertThat("Bob").isEqualTo(bob.firstName);
         assertThat("Lob").isEqualTo(bob.lastName);
         assertThat("secret").isEqualTo(bob.password);
+    }
+    
+    @Test
+    public void completeAccountCreation() {
+        UnapprovedUser user = new UnapprovedUser("Fran", "the Man", "useless@address.com", "birds");
+        UnapprovedUser.create(user);
+        
+        String userEmail = user.email;
+        
+
+        assertThat(UnapprovedUser.find.byId(userEmail)).isNotNull();
+        
+        Result result = callAction(
+                controllers.routes.ref.Application.addNewUser(user.email),
+                fakeRequest().withFormUrlEncodedBody(ImmutableMap.of(
+                        "password", "Iluvcats2010",
+                        "passwordConfirm", "Iluvcats2010"))
+        );
+        
+        assertThat(303).isEqualTo(status(result));
+        assertThat(UnapprovedUser.find.byId(userEmail)).isNull();
+        assertThat(User.find.byId(userEmail)).isNotNull();
+    }
+    
+    @Test
+    public void accountCreationFailedBadPassword() {
+        UnapprovedUser user = new UnapprovedUser("Fran", "the Man", "useless@address.com", "birds");
+        UnapprovedUser.create(user);
+        
+        String userEmail = user.email;
+        
+
+        assertThat(UnapprovedUser.find.byId(userEmail)).isNotNull();
+        
+        Result result = callAction(
+                controllers.routes.ref.Application.addNewUser(user.email),
+                fakeRequest().withFormUrlEncodedBody(ImmutableMap.of(
+                        "password", "Iluvcats2010",
+                        "passwordConfirm", "woofbark"))
+        );
+        
+        assertThat(BAD_REQUEST).isEqualTo(status(result));
+        assertThat(UnapprovedUser.find.byId(userEmail)).isNotNull();
+        assertThat(User.find.byId(userEmail)).isNull();
     }
     
     @Test

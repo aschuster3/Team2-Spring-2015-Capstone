@@ -1,9 +1,13 @@
 package models;
 
+import java.util.List;
+import java.util.UUID;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import play.data.validation.Constraints.Email;
+import play.data.validation.Constraints.EmailValidator;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
 
@@ -16,6 +20,7 @@ import play.db.ebean.Model;
  * @author Julia Rapoport
  */
 public class UnapprovedUser extends Model {
+    
     @Required
     @Email
     @Id
@@ -30,22 +35,27 @@ public class UnapprovedUser extends Model {
     @Required
     public String lastName;
 
-    //@Required
     public String token;
     
-    public UnapprovedUser(String firstName, String lastName, String email, String department, String token) {
+    public UnapprovedUser(String firstName, String lastName, String email, String department) {
         this.email = email;
         this.department = department;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.token = token;
     }
 
     public static Finder<String, UnapprovedUser> find = new Finder<String, UnapprovedUser>(
             String.class, UnapprovedUser.class);
     
     public static void create(UnapprovedUser user) {
+        // TODO: Move this to a place where it will be generated after approval!
+        user.token = UUID.randomUUID().toString();
+        
         user.save();
+    }
+    
+    public static List<UnapprovedUser> getAll() {
+        return UnapprovedUser.find.all();
     }
     
     public String validate() {
@@ -53,6 +63,10 @@ public class UnapprovedUser extends Model {
     	User user = User.find.byId(this.email);
         if (unapprovedUser != null || user != null) {
             return "Email " + this.email + " is already taken.";
+        }
+        EmailValidator val = new EmailValidator();
+        if(!val.isValid(this.email)) {
+            return "The email address is not valid.";
         }
         
         return null;

@@ -14,7 +14,16 @@ POST    /login                          controllers.Application.authenticate()
 GET     /logout                         controllers.Application.logout()
 GET     /forgotPassword                 controllers.Application.forgotPassword()
 
-#Sign up
+# Sign up
 GET     /signup                         controllers.Application.signup()
-POST    /signup                         controllers.Application.createUser()
+POST    /signup                         controllers.Application.createUnapprovedUser()
+
+# Test UnapprovedUser population
+GET     /testUU                         controllers.Application.fetchUU()
+
+# UnapprovedUser Actions
+POST    /testUU/:id/delete              controllers.Application.removeUnapprovedUser(id: String)
+POST    /testUU/:id                     controllers.Application.approveUnapprovedUser(id: String)
+GET     /completeSignup/:token          controllers.Application.setPassword(token: String)
+POST    /completeSignup                 controllers.Application.addNewUser(email: String)
 

@@ -29,7 +29,7 @@
                     <p class="sub-header text-center">Please register for credentials</p>
 
                     <div class="form-signin">
-                    @form(routes.Application.createUser) {
+                    @form(routes.Application.createUnapprovedUser) {
                         @inputText(registrationForm("firstName"), 
                             'type -> "text",
                             'class -> "form-control",

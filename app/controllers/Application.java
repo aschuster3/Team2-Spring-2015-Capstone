@@ -14,6 +14,7 @@ public class Application extends Controller {
     
     static Form<Login> loginForm = Form.form(Login.class);
     static Form<UnapprovedUser> signupForm = Form.form(UnapprovedUser.class);
+    static Form<Password> passwordForm = Form.form(Password.class);
 
     @Security.Authenticated(Secured.class)
     public static Result index() {
@@ -42,9 +43,9 @@ public class Application extends Controller {
         return TODO;
     }
     
-    public static Result createUser(){
+    public static Result createUnapprovedUser(){
     	Form<UnapprovedUser> filledForm = signupForm.bindFromRequest();
-    	if (filledForm.hasGlobalErrors()) {
+    	if (filledForm.hasGlobalErrors() || filledForm.hasErrors()) {
             return badRequest(registrationForm.render(filledForm));
         } else {
             UnapprovedUser.create(filledForm.get());
@@ -93,6 +94,69 @@ public class Application extends Controller {
             return null;
         }
     }
+    
+    
+    public static Result removeUnapprovedUser(String userEmail) {
+        UnapprovedUser user = UnapprovedUser.find.byId(userEmail);
+        if(user != null) {
+            user.delete();
+        }
+        return redirect(routes.Application.fetchUU());
+    }
+    
+    public static Result approveUnapprovedUser(String userEmail) {
+        // Send an email with the user info
+        return TODO;
+    }
+    
+    public static class Password {
+        
+        public String password;
+        public String passwordConfirm;
+        
+        public String validate() {
+            if (password == null) {
+                return "Darn";
+            } else if (!password.equals(passwordConfirm)) {
+              return "Passwords do not match!";
+            }
+            return null;
+        }
+    }
+    
+    public static Result setPassword(String token) {
+        UnapprovedUser user = UnapprovedUser.find.where().eq("token", token).findUnique();
+        if (user == null) {
+            return redirect(routes.Application.login());
+        }
+        return ok(testViewUserSignup.render(passwordForm, user));
+    }
+    
+    public static Result addNewUser(String email) {
+        Form<Password> filledForm = passwordForm.bindFromRequest();
+        UnapprovedUser user = UnapprovedUser.find.byId(email);
+        if (filledForm.hasGlobalErrors() || filledForm.hasErrors()) {
+            return badRequest(testViewUserSignup.render(filledForm, user));
+        } else {
+            session().clear();
+            User.create(
+                new User(user.firstName, user.lastName, user.email, filledForm.get().password, false)
+            );
+            session("email", user.email);
+            user.delete();
+            return redirect(
+                routes.Application.index()
+            );
+        }
+    }
    
+    /**
+     * This is a temporary test action to view current unapproved users
+     * 
+     * @return
+     */
+    public static Result fetchUU() {
+        return ok(testViewUnapprovedUsers.render(UnapprovedUser.getAll()));
+    }
   
 }
