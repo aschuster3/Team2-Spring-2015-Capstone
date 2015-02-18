@@ -1,0 +1,40 @@
+@(addSessionForm: play.data.Form[Session])
+
+@import helper._
+
+@form(routes.SessionController.createSession()) {
+						@inputText(addSessionForm("id"), 
+                            'type -> "text",
+                            'class -> "form-control",
+                            '_label -> "IDe",
+                            '_showConstraints -> false)
+                        @inputText(addSessionForm("sessionName"), 
+                            'type -> "text",
+                            'class -> "form-control",
+                            'placeholder -> "Name",
+                            '_label -> "Session Name",
+                            '_showConstraints -> false)
+                       @inputText(addSessionForm("startTime"), 
+                            'type -> "date",
+                            'class -> "form-control",
+                            '_label -> "Start Date/Time",
+                            '_showConstraints -> false)
+                        @inputText(addSessionForm("endTime"), 
+                            'type -> "date",
+                            'class -> "form-control",
+                            '_label -> "End Date/Time",
+                            '_showConstraints -> false)
+                       	@inputText(addSessionForm("isFree"), 
+                            'type -> "boolean",
+                            'class -> "form-control",
+                            '_label -> "Is this session free?",
+                            '_showConstraints -> false)
+                        <input role="button" class="btn btn-lg btn-primary btn-block" value="Create" type="submit"></input>
+                        @if(addSessionForm.hasGlobalErrors()) {
+                            <p class="text-center"><font color="red">@addSessionForm.globalError.message</font></p>
+                        }
+                        @if(addSessionForm.hasErrors()) {
+                            <p class="text-center"><font color="red">@addSessionForm.globalError.message</font></p>
+                        }
+                        <a href="@routes.Application.index()" class="new-account">Return to sessions screen</a>
+             }

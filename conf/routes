@@ -27,3 +27,6 @@ POST    /testUU/:id                     controllers.Application.approveUnapprove
 GET     /completeSignup/:token          controllers.Application.setPassword(token: String)
 POST    /completeSignup                 controllers.Application.addNewUser(email: String)
 
+# Session Actions
+GET		/sessions						controllers.SessionController.sessions()
+POST 	/sessions						controllers.SessionController.createSession()
