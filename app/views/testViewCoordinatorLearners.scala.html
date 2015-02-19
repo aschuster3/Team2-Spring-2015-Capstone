@@ -1,0 +1,28 @@
+@(learnersOfCoordinator: List[Learner], learnerForm: play.data.Form[Application.LearnerName])
+
+@import helper._
+
+<div>These are my learners....</div>
+@for(l <- learnersOfCoordinator) {
+    <div>@l.firstName @l.lastName (owned by @l.owner.firstName)</div>
+}
+
+@form(routes.Application.createLearner) {
+    @inputText(learnerForm("firstName"), 
+        'type -> "text", 
+        'class -> "form-control", 
+        'placeholder -> "First Name",
+        '_label -> null,
+        '_showConstraints -> false)
+    @inputText(learnerForm("lastName"),
+        'type -> "text", 
+        'class -> "form-control", 
+        'placeholder -> "Last Name",
+        '_label -> null,
+        '_showConstraints -> false)
+    <input role="button" class="btn btn-lg btn-primary btn-block" type="submit" value="Create Student"></input>
+    
+    @if(learnerForm.hasGlobalErrors()) {
+        <p class="text-center"><font color="red">@learnerForm.globalError.message</font></p>
+    }
+}
