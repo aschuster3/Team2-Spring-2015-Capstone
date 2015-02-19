@@ -5,7 +5,8 @@
 
 create table learner (
   id                        bigint not null,
-  fullname                  varchar(255),
+  first_name                varchar(255),
+  last_name                 varchar(255),
   owner_email               varchar(255),
   constraint pk_learner primary key (id))
 ;
