@@ -1,0 +1,122 @@
+@()
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Administrator: Coordinators</title>
+
+	<meta charset="UTF-8">
+
+	<link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap3/css/bootstrap.min.css")">
+    <!--<link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap3/css/bootstrap-theme.min.css")">-->
+    <link rel="stylesheet" href="@routes.Assets.at("stylesheets/main.css")">
+    <link rel="stylesheet" href="@routes.Assets.at("stylesheets/flat-ui.css")">
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+	<!--<script type="text/javascript" src="components/bootstrap3/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="components/jquery/jquery.min.js"></script>-->
+
+</head>
+<body>
+<div class="container">
+	<div class="jumbotron">
+		<h1>Coordinators</h1>	
+	</div>
+	<nav class="navbar navbar-default navbar-static-top">
+		<div class="container">
+			<ul class="nav navbar-nav pull-left">
+				<li><a href="@routes.Application.index()">Home</a></li>
+            	<li class="active"><a href="coordinators.html">Coordinators</a></li>
+            	<li><a href="#schedule">Schedule</a></li>
+         	</ul>
+         	<div class="pull-right">
+		  		<button onclick="location.href='@routes.Application.logout()';" type="button" class="btn btn-block btn-sm btn-danger">Log Out</button>
+			</div>
+ 		</div>
+	</nav>
+</div>
+<div class="container">
+	<h4>Coordinators Pending Approval</h4>
+	<div class="panel panel-default">
+		<div class = "panel-body">
+			<div class = "pendingapproval">
+				<div class = "pull-left">
+					<h6>Coordinator 1 to approve</h6>
+						<p>E-mail</p>
+						<p>Department</p>
+				</div>
+				<div class="pull-right">
+				  		<button type="button" class="btn btn-block btn-sm btn-inverse">Approve</button><button type="button" class="btn btn-block btn-sm btn-danger">Deny</button>
+				</div>
+			</div>
+		</div>
+		<div class = "panel-body">
+			<div class = "pendingapproval">
+				<div class = "pull-left">
+					<h6>Coordinator 2 to approve</h6>
+						<p>E-mail</p>
+						<p>Department</p>
+				</div>
+				<div class="pull-right">
+				  		<button type="button" class="btn btn-block btn-sm btn-inverse">Approve</button><button type="button" class="btn btn-block btn-sm btn-danger">Deny</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="container">
+	<h4>Current Coordinators</h4>
+	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+		<div class="panel panel-default">
+			<div class="panel-heading" role="tab" id="headingOne">
+				<h4 class="panel-title">
+					<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+						Coordinator 1
+					</a>
+				</h4>
+			</div>
+			<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+				<div class="panel-body">
+					<h6>Name:</h6> Coordinator 1's Name
+					<h6>E-mail:</h6> Coordinator 1's e-mail
+					<h6>Department:</h6> Coordinator 1's department
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading" role="tab" id="headingTwo">
+				<h4 class="panel-title">
+					<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+						Coordinator 2
+					</a>
+				</h4>
+			</div>
+			<div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+				<div class="panel-body">
+		        	<h6>Name:</h6> Coordinator 2's Name
+					<h6>E-mail:</h6> Coordinator 2's e-mail
+					<h6>Department:</h6> Coordinator 2's department
+		      </div>
+		    </div>
+		  </div>
+		  <div class="panel panel-default">
+		  	<div class="panel-heading" role="tab" id="headingThree">
+		  		<h4 class="panel-title">
+		  			<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+		  				Coordinator 3
+		  			</a>
+		  		</h4>
+		    </div>
+		    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+		    	<div class="panel-body">
+		    		<h6>Name:</h6> Coordinator 3's Name
+					<h6>E-mail:</h6> Coordinator 3's e-mail
+					<h6>Department:</h6> Coordinator 3's department
+		    	</div>
+		    </div>
+		</div>
+	</div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+</body>
+</html>
