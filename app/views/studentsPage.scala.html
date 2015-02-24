@@ -1,0 +1,146 @@
+@()
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Coordinator: Students</title>
+
+	<meta charset="UTF-8">
+
+	<link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap3/css/bootstrap.min.css")">
+    <!--<link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap3/css/bootstrap-theme.min.css")">-->
+    <link rel="stylesheet" href="@routes.Assets.at("stylesheets/main.css")">
+    <link rel="stylesheet" href="@routes.Assets.at("stylesheets/flat-ui.css")">
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+	<!--<script type="text/javascript" src="components/bootstrap3/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="components/jquery/jquery.min.js"></script>-->
+
+</head>
+<body>
+<div class="container">
+	<div class="jumbotron">
+		<h1>Students</h1>	
+	</div>
+	<nav class="navbar navbar-default navbar-static-top">
+		<div class="container">
+			<ul class="nav navbar-nav pull-left">
+				<li><a href="@routes.Application.index()">Home</a></li>
+            	<li class="active"><a href="students.html">Students</a></li>
+            	<li><a href="#schedule">Schedule</a></li>
+         	</ul>
+         	<div class="pull-right">
+		  		<button onclick="location.href='@routes.Application.logout()';" type="button" class="btn btn-block btn-sm btn-danger">Log Out</button>
+			</div>
+ 		</div>
+	</nav>
+</div>
+<!--Somehow dynamically create these based on how many students are listed in the database under this coordinator-->
+<div class="container">
+	<h4>Your Students</h4>
+	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+		<div class="panel panel-default">
+			<div class="panel-heading" role="tab" id="headingOne">
+				<h4 class="panel-title">
+					<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+						Student Name 1
+					</a>
+				</h4>
+			</div>
+			<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+				<div class="panel-body">
+					<div class = "pull-left">
+						<h6>Name:</h6> Student 1's Name
+						<h6>E-mail:</h6> Student 1's e-mail
+						<h6>Type:</h6> Student 1's type
+					</div>
+					<div class="pull-right">
+				  		<button type="button" class="btn btn-block btn-sm btn-warning">Edit</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading" role="tab" id="headingTwo">
+				<h4 class="panel-title">
+					<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+						Student Name 2
+					</a>
+				</h4>
+			</div>
+			<div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+				<div class="panel-body">
+					<div class = "pull-left">
+						<h6>Name:</h6> Student 2's Name
+						<h6>E-mail:</h6> Student 2's e-mail
+						<h6>Type:</h6> Student 2's type
+					</div>
+					<div class="pull-right">
+				  		<button type="button" class="btn btn-block btn-sm btn-warning">Edit</button>
+					</div>
+		      	</div>
+		    </div>
+		  </div>
+		  <div class="panel panel-default">
+		  	<div class="panel-heading" role="tab" id="headingThree">
+		  		<h4 class="panel-title">
+		  			<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+		  				Student Name 3
+		  			</a>
+		  		</h4>
+		    </div>
+		    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+		    	<div class="panel-body">
+		    		<div class = "pull-left">
+						<h6>Name:</h6> Student 3's Name
+						<h6>E-mail:</h6> Student 3's e-mail
+						<h6>Type:</h6> Student 3's type
+					</div>
+					<div class="pull-right">
+				  		<button type="button" class="btn btn-block btn-sm btn-warning">Edit</button>
+					</div>
+		    	</div>
+		    </div>
+		</div>
+	</div>
+	<a class="btn btn-inverse" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+		Add Student
+	</a>
+<!--Andrew!!! Can you change this to Play's form format (and the format for the dropdown is probably wrong anyways)-->
+	<div class="collapse submitform" id="collapseExample">
+		<form>
+			<div class="form-group">
+				<label for="inputName">Student</label>
+				<input type="text" class="form-control" id="inputName" placeholder="Name">
+			</div>
+			<div class="form-group">
+				<label for="inputEmail">Email address</label>
+				<input type="email" class="form-control" id="inputEmail" placeholder="Email">
+			</div>
+			<div class ="form group">
+				<label for="inputType">Type</label>
+				<select class="form-control">
+				  <option>Ambulatory Medical Student</option>
+				  <option>Sub-I Medical Student</option>
+				  <option>Dermatology Resident</option>
+				  <option>Pediatrics resident</option>
+				  <option>Emory Internal Medicine</option>
+				  <option>Morehouse Internal Medicine</option>
+				  <option>Family Medicine</option>
+				  <option>Podiatry Resident</option>
+				  <option>Geriatrics Resident</option>
+				  <option>Rheumatology Resident</option>
+				  <option>Nurse Practitioner Student</option>
+				  <option>Physician Assistant Student</option>
+				  <option>Pediatrics Allergy Fellow</option>
+				  <option>International Student</option>
+				  <option>Pre-med Student</option>
+				</select>
+			</div>
+			<button type="submit" class="btn btn-default">Submit</button>
+		</form>
+	</div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+</body>
+</html>
