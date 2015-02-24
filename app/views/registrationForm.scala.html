@@ -3,7 +3,7 @@
 @import helper._
 <html>
 <head>
-    <title>Dermatology Schedule Registration</title>
+    <title>Dermatology Schedule Registration Form</title>
 
     <meta name="description" content="Registration form for Emory's Dermatology Scheduler">
     <meta charset="UTF-8">
@@ -23,8 +23,9 @@
                 <div class="account-wall">
                     <img class="profile-img pull-left" src="@routes.Assets.at("images/Emory_logo.png")" alt="">
                     <div class="header-text">
-                        <h2 class="text-center">Welcome to Emory University's</h2>
-                        <h2 class="text-center">Dermatology Scheduler Application</h2>
+                        <h2 class="text-center">Welcome to the Emory</h2>
+                        <h2 class="text-center">Department of Dermatology</h2>
+                        <h2 class="text-center">Rotation Request Form</h2>
                     </div>
                     <p class="sub-header text-center">Please register for credentials</p>
 
@@ -48,10 +49,17 @@
                             'placeholder -> "E-mail",
                             '_label -> null,
                             '_showConstraints -> false)
-                        @inputText(registrationForm("department"), 
+                        @select(registrationForm("department"),
+                            options(Seq("Emory Internal Medicine","Morehouse Internal Medicine","Emory Family Medicine","Emory Pediatrics",
+                            "Emory Rheumatology", "Emory Allergy ", "Emory Plastic Surgery", "Emory Nurse Practitioner Student", "Emory Physicians Assistant Student", "Other - Please specify below")),
+                            '_label -> "Department", '_default -> "Select Department",
+                            'class -> "form-control",
+                            '_label -> null,
+                            '_showConstraints -> false)
+                        @inputText(registrationForm("other_department"), 
                             'type -> "text",
                             'class -> "form-control",
-                            'placeholder -> "Department",
+                            'placeholder -> "Other Department",
                             '_label -> null,
                             '_showConstraints -> false)
                         <input role="button" class="btn btn-lg btn-primary btn-block" value="Register" type="submit"></input>

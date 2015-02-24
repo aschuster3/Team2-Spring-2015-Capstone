@@ -5,16 +5,18 @@
 
 create table learner (
   id                        bigint not null,
-  fullname                  varchar(255),
+  first_name                varchar(255),
+  last_name                 varchar(255),
   owner_email               varchar(255),
   constraint pk_learner primary key (id))
 ;
 
 create table session (
-  id                        bigint not null,
+  id                        varchar(255) not null,
   session_name              varchar(255),
   start_time                timestamp,
   end_time                  timestamp,
+  is_free                   boolean,
   constraint pk_session primary key (id))
 ;
 

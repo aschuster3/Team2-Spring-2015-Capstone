@@ -4,14 +4,24 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.UUID;
 
-import models.User;
+import models.Learner;
 import models.UnapprovedUser;
+import models.User;
 import play.Logger;
-import play.data.*;
+import play.data.Form;
+import play.data.validation.Constraints.Required;
 import play.libs.mailer.Email;
 import play.libs.mailer.MailerPlugin;
-import play.mvc.*;
-import views.html.*;
+import play.mvc.Controller;
+import play.mvc.Result;
+import play.mvc.Security;
+import views.html.adminIndex;
+import views.html.coordinatorIndex;
+import views.html.loginPage;
+import views.html.registrationForm;
+import views.html.testViewCoordinatorLearners;
+import views.html.testViewUnapprovedUsers;
+import views.html.testViewUserSignup;
 
 /**
  * The application controller for general purpose tasks such as logging in and out.
@@ -22,6 +32,7 @@ public class Application extends Controller {
     static Form<Login> loginForm = Form.form(Login.class);
     static Form<UnapprovedUser> signupForm = Form.form(UnapprovedUser.class);
     static Form<Password> passwordForm = Form.form(Password.class);
+    static Form<LearnerName> learnerForm = Form.form(LearnerName.class);
 
     @Security.Authenticated(Secured.class)
     public static Result index() {
@@ -221,6 +232,35 @@ public class Application extends Controller {
     public static Result fetchUU() {
         // TODO: replace with an admin template
         return ok(testViewUnapprovedUsers.render(UnapprovedUser.getAll()));
+    }
+    
+    public static Result viewLearners() {
+        String email = session().get("email");
+        return ok(testViewCoordinatorLearners.render(Learner.getAllOwnedBy(email), learnerForm));
+    }
+    
+    public static Result createLearner() {
+        Form<LearnerName> filledForm = learnerForm.bindFromRequest();
+        String email = session().get("email");
+        
+        if (filledForm.hasGlobalErrors() || filledForm.hasErrors()) {
+            return badRequest(testViewCoordinatorLearners.render(Learner.getAllOwnedBy(email), filledForm));
+        } else {
+            LearnerName learnerName = filledForm.get();
+            Learner.create(learnerName.firstName, learnerName.lastName, session().get("email"));
+            return redirect(routes.Application.viewLearners());
+        }
+    }
+    
+    /**
+     * Class to use for the learner creation form.
+     */
+    public static class LearnerName {
+        @Required
+        public String firstName;
+        
+        @Required
+        public String lastName;
     }
   
 }

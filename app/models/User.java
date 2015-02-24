@@ -38,8 +38,10 @@ public class User extends Model {
     @Required
     public String lastName;
 
+    /*
     @OneToMany
     public List<Learner> learners;
+    */
     
     public User(String firstName, String lastName, String email, String password, boolean isAdmin) {
         this.email = email;
@@ -47,7 +49,7 @@ public class User extends Model {
         this.firstName = firstName;
         this.lastName = lastName;
         this.isAdmin = isAdmin;
-        this.learners = new ArrayList<Learner>();
+        //this.learners = new ArrayList<Learner>();
     }
 
     public static Finder<String, User> find = new Finder<String, User>(
