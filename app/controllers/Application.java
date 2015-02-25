@@ -9,6 +9,7 @@ import models.UnapprovedUser;
 import models.User;
 import play.Logger;
 import play.data.Form;
+import play.data.validation.Constraints.EmailValidator;
 import play.data.validation.Constraints.Required;
 import play.libs.mailer.Email;
 import play.libs.mailer.MailerPlugin;
@@ -17,8 +18,11 @@ import play.mvc.Result;
 import play.mvc.Security;
 import views.html.adminIndex;
 import views.html.coordinatorIndex;
+import views.html.forgotPasswordForm;
 import views.html.loginPage;
+import views.html.passwordPage;
 import views.html.registrationForm;
+import views.html.studentsPage;
 import views.html.testViewCoordinatorLearners;
 import views.html.testViewUnapprovedUsers;
 import views.html.testViewUserSignup;
@@ -31,6 +35,7 @@ public class Application extends Controller {
     
     static Form<Login> loginForm = Form.form(Login.class);
     static Form<UnapprovedUser> signupForm = Form.form(UnapprovedUser.class);
+    static Form<ForgotPassword> forgotPasswordTemplate = Form.form(ForgotPassword.class);
     static Form<Password> passwordForm = Form.form(Password.class);
     static Form<LearnerName> learnerForm = Form.form(LearnerName.class);
 
@@ -46,6 +51,14 @@ public class Application extends Controller {
         }
     }
     
+    @Security.Authenticated(Secured.class)
+    public static Result students() {
+        
+        // TODO: This should get the learners that are specifically for a user
+        
+        return ok(studentsPage.render(Learner.getAll()));
+    }
+    
     /**
      * Renders the login page.
      */
@@ -58,7 +71,7 @@ public class Application extends Controller {
     }
     
     public static Result forgotPassword() {
-        return TODO;
+        return ok(forgotPasswordForm.render(forgotPasswordTemplate));
     }
     
     public static Result createUnapprovedUser(){
@@ -175,7 +188,7 @@ public class Application extends Controller {
         if (user == null) {
             return redirect(routes.Application.login());
         }
-        return ok(testViewUserSignup.render(passwordForm, user));
+        return ok(passwordPage.render(passwordForm, user));
     }
     
     /**
@@ -189,7 +202,7 @@ public class Application extends Controller {
         Form<Password> filledForm = passwordForm.bindFromRequest();
         UnapprovedUser user = UnapprovedUser.find.byId(email);
         if (filledForm.hasGlobalErrors() || filledForm.hasErrors()) {
-            return badRequest(testViewUserSignup.render(filledForm, user));
+            return badRequest(passwordPage.render(filledForm, user));
         } else {
             session().clear();
             User.create(
@@ -249,6 +262,35 @@ public class Application extends Controller {
             LearnerName learnerName = filledForm.get();
             Learner.create(learnerName.firstName, learnerName.lastName, session().get("email"));
             return redirect(routes.Application.viewLearners());
+        }
+    }
+    
+    public static class ForgotPassword {
+        @Required
+        public String email;
+        
+        public String validate() {
+            EmailValidator val = new EmailValidator();
+            if(!val.isValid(this.email)) {
+                return "The email address is not valid.";
+            }
+            return null;
+        }
+    }
+    
+    public static Result sendNewPassword() {
+        Form<ForgotPassword> filledForm = forgotPasswordTemplate.bindFromRequest();
+        if(filledForm.hasGlobalErrors() || filledForm.hasErrors()) {
+            return badRequest(forgotPasswordForm.render(forgotPasswordTemplate));
+        } else {
+            Email email = new Email();
+            email.setSubject("Reset Password");
+            email.setFrom("admin@emory.edu");
+            email.addTo(filledForm.get().email);
+            email.setBodyText("Your new password is available here");
+            
+            MailerPlugin.send(email);
+            return redirect(routes.Application.login());
         }
     }
     

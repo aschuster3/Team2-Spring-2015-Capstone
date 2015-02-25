@@ -1,5 +1,6 @@
 import com.avaje.ebean.Ebean;
 
+import models.Learner;
 import models.User;
 import play.Application;
 import play.GlobalSettings;
@@ -12,9 +13,15 @@ public class Global extends GlobalSettings {
         // Check if the database is empty
         if (User.find.findRowCount() == 0) {
             Logger.info("Data added");
+            User bahb = new User("Bob", "Lob", "bob@gmail.com", "secret", false);
+            
             Ebean.save(new User("Bob", "Lob", "bob@gmail.com", "secret", false));
             Ebean.save(new User("Sharon", "Norahs", "sharon@gmail.com", "kitty", true));
             Ebean.save(new User("Frank", "Knarf", "frank@gmail.com", "allyourbase", false));
+            
+            Ebean.save(new Learner("Harry", "Cat", bahb));
+            Ebean.save(new Learner("Monkey", "Octopus", bahb));
+            Ebean.save(new Learner("Iamnot", "arapper", bahb));
         }
     }
 }

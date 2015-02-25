@@ -12,7 +12,10 @@ GET     /assets/*file                   controllers.Assets.at(path="/public", fi
 GET     /login                          controllers.Application.login()
 POST    /login                          controllers.Application.authenticate()
 GET     /logout                         controllers.Application.logout()
+
+# Forgot Password
 GET     /forgotPassword                 controllers.Application.forgotPassword()
+POST    /forgotPassword                 controllers.Application.sendNewPassword()
 
 # Sign up
 GET     /signup                         controllers.Application.signup()
@@ -36,3 +39,4 @@ POST    /learners                       controllers.Application.createLearner()
 
 # Coordinator Learner Page
 GET     /testLearners                   controllers.Application.viewLearners()
+GET     /students                       controllers.Application.students()

@@ -1,4 +1,4 @@
-@()
+@(learners: List[models.Learner])
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,7 +25,7 @@
 		<div class="container">
 			<ul class="nav navbar-nav pull-left">
 				<li><a href="@routes.Application.index()">Home</a></li>
-            	<li class="active"><a href="students.html">Students</a></li>
+            	<li class="active"><a href="@routes.Application.students()">Students</a></li>
             	<li><a href="#schedule">Schedule</a></li>
          	</ul>
          	<div class="pull-right">
@@ -38,62 +38,22 @@
 <div class="container">
 	<h4>Your Students</h4>
 	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-		<div class="panel panel-default">
-			<div class="panel-heading" role="tab" id="headingOne">
-				<h4 class="panel-title">
-					<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-						Student Name 1
-					</a>
-				</h4>
-			</div>
-			<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-				<div class="panel-body">
-					<div class = "pull-left">
-						<h6>Name:</h6> Student 1's Name
-						<h6>E-mail:</h6> Student 1's e-mail
-						<h6>Type:</h6> Student 1's type
-					</div>
-					<div class="pull-right">
-				  		<button type="button" class="btn btn-block btn-sm btn-warning">Edit</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="panel panel-default">
-			<div class="panel-heading" role="tab" id="headingTwo">
-				<h4 class="panel-title">
-					<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-						Student Name 2
-					</a>
-				</h4>
-			</div>
-			<div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-				<div class="panel-body">
-					<div class = "pull-left">
-						<h6>Name:</h6> Student 2's Name
-						<h6>E-mail:</h6> Student 2's e-mail
-						<h6>Type:</h6> Student 2's type
-					</div>
-					<div class="pull-right">
-				  		<button type="button" class="btn btn-block btn-sm btn-warning">Edit</button>
-					</div>
-		      	</div>
-		    </div>
-		  </div>
+		
+		@for(learner <- learners) {
 		  <div class="panel panel-default">
 		  	<div class="panel-heading" role="tab" id="headingThree">
 		  		<h4 class="panel-title">
 		  			<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-		  				Student Name 3
+		  				@learner.firstName @learner.lastName
 		  			</a>
 		  		</h4>
 		    </div>
 		    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
 		    	<div class="panel-body">
 		    		<div class = "pull-left">
-						<h6>Name:</h6> Student 3's Name
-						<h6>E-mail:</h6> Student 3's e-mail
-						<h6>Type:</h6> Student 3's type
+						<h6>Name:</h6>@learner.firstName @learner.lastName
+						<h6>E-mail:</h6>Email not implemented :(
+						<h6>Type:</h6>Type also not implement
 					</div>
 					<div class="pull-right">
 				  		<button type="button" class="btn btn-block btn-sm btn-warning">Edit</button>
@@ -101,6 +61,7 @@
 		    	</div>
 		    </div>
 		</div>
+		}
 	</div>
 	<a class="btn btn-inverse" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
 		Add Student
