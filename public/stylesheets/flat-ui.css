@@ -434,8 +434,7 @@ h6 small,
   color: #e7e9ec;
   }
 h1,
-h2,
-h3 {
+h2{
   margin-top: 30px;
   }
 h4,
@@ -1325,7 +1324,6 @@ fieldset[disabled] .form-control,
 .select2-search input[type="text"][disabled],
 .select2-search input[type="text"][readonly],
 fieldset[disabled] .select2-search input[type="text"] {
-  color: #d5dbdb;
   cursor: default;
   background-color: #f4f6f6;
   filter: alpha(opacity=70);

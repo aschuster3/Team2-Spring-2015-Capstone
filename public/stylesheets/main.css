@@ -55,3 +55,17 @@ p{
 .panel-group{
 	padding-bottom: 10px;
 }
+.btn-link{
+  padding-top: 0px;
+  padding-bottom: 0px;
+  color: rgb(51, 63, 127);
+}
+.btn-link:hover,
+.btn-link:active{
+  padding-top: 0px;
+  padding-bottom: 0px;
+  color: rgb(91, 103, 167);
+}
+.btn-logout{
+  margin-top: 8px;
+}
