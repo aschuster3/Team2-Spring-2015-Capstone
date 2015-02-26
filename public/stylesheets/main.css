@@ -12,6 +12,9 @@ p{
 #content{
 	padding-top: 10px;
 }
+.studentsSection{
+	padding-bottom: 10px;
+}
 .navbar-static-top{
 	background: #333F7F; /*#9FA8DA;*/ 
 	border-top-left-radius: 4px;
