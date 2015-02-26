@@ -324,16 +324,16 @@
   background-color: #ad2121;
 }
 .event-info {
-  background-color: #1e90ff;
+  background-color: rgb(230, 192, 31);
 }
 .event-warning {
   background-color: #e3bc08;
 }
 .event-inverse {
-  background-color: #1b1b1b;
+  background-color: rgb(51, 63, 127);
 }
 .event-success {
-  background-color: #006400;
+  background-color: ;
 }
 .event-special {
   background-color: #800080;
@@ -352,11 +352,11 @@
 }
 .day-highlight.dh-event-info:hover,
 .day-highlight.dh-event-info {
-  background-color: #d1e8ff;
+  background-color: #F2E5AC;
 }
 .day-highlight.dh-event-inverse:hover,
 .day-highlight.dh-event-inverse {
-  background-color: #c1c1c1;
+  background-color: #C8CCE3;
 }
 .day-highlight.dh-event-success:hover,
 .day-highlight.dh-event-success {
