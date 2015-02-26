@@ -1,18 +1,38 @@
 @()
 <html class="no-js">
   <head>
-    <title>Admin Calendar</title>
+    <title>Admin Schedule</title>
     <meta name="description" content="Admin calendar">
     <meta name="viewport" content="width=device-width">
 
     <link rel="stylesheet" href="@routes.Assets.at("stylesheets/angular-bootstrap-calendar.min.css")">
     <link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
     <link rel="stylesheet" href="@routes.Assets.at("stylesheets/calendar.css")">
+    <link rel="stylesheet" href="@routes.Assets.at("stylesheets/flat-ui.css")">
     <link rel="stylesheet" href="@routes.Assets.at("stylesheets/main.css")">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
     
   </head>
   <body ng-app="mwl.calendar" ng-cloak>
 
+    <div class="container">
+      <div class="jumbotron">
+        <h1>Administrator Schedule</h1>
+      </div>
+      <nav class="navbar navbar-default navbar-static-top">
+        <div class="container">
+          <ul class="nav navbar-nav pull-left">
+            <li><a href="@routes.Application.index()">Home</a></li>
+                  <li class="active"><a href="coordinators.html">Coordinators</a></li>
+                  <li><a href="#schedule">Schedule</a></li>
+              </ul>
+              <div class="pull-right">
+              <button onclick="location.href='@routes.Application.logout()';" type="button" class="btn btn-block btn-sm btn-danger btn-logout">Log Out</button>
+          </div>
+        </div>
+      </nav>
+    </div>
 
     <div class="container-fluid">
 
@@ -24,9 +44,9 @@
             <div class="pull-right">
 
               <div class="btn-group">
-                <button class="btn btn-primary" ng-click="calendarControl.prev()">Previous</button>
+                <button class="btn btn-inverse" ng-click="calendarControl.prev()">Previous</button>
                 <button class="btn btn-default" ng-click="setCalendarToToday()">Today</button>
-                <button class="btn btn-primary" ng-click="calendarControl.next()">Next</button>
+                <button class="btn btn-inverse" ng-click="calendarControl.next()">Next</button>
               </div>
 
               <div class="btn-group">
@@ -65,13 +85,13 @@
               <p>Event: <pre>{{ event | json }}</pre></p>
             </div>
             <div class="modal-footer">
-              <button class="btn btn-primary" ng-click="$modalInstance.close()">OK</button>
+              <button class="btn btn-inverse" ng-click="$modalInstance.close()">OK</button>
             </div>
           </script>
 
           <h3 id="event-editor">
             Edit events
-            <button class="btn btn-primary pull-right" ng-click="events.push({title: 'New event', type: 'important'})">Add new</button>
+            <button class="btn btn-inverse pull-right" ng-click="events.push({title: 'New event', type: 'important'})">Add new</button>
             <div class="clearfix"></div>
           </h3>
 
