@@ -148,7 +148,12 @@ public class Application extends Controller {
         } else {
             session().clear();
             User.create(
-                new User(user.firstName, user.lastName, user.email, filledForm.get().password, false)
+                new User(user.firstName,
+                        user.lastName,
+                        user.email,
+                        filledForm.get().password,
+                        false,
+                        user.department)
             );
             session("email", user.email);
             user.delete();
