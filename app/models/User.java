@@ -37,6 +37,8 @@ public class User extends Model {
     
     @Required
     public String lastName;
+    
+    public String department;
 
     /*
     @OneToMany
@@ -62,6 +64,14 @@ public class User extends Model {
     
     public static void create(User user) {
         user.save();
+    }
+    
+    public static List<User> getAll() {
+        return find.all();
+    }
+    
+    public static List<User> getAllCoordinators() {
+        return find.where().eq("isAdmin", false).findList();
     }
     
     public String validate() {

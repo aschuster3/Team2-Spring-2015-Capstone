@@ -12,10 +12,10 @@
             @user.email
             @user.token
             
-            @form(routes.Application.removeUnapprovedUser(user.email)) {
+            @form(routes.AdminController.removeUnapprovedUser(user.email)) {
                 <input type="submit" value="Delete"></input>
             }
-            @form(routes.Application.approveUnapprovedUser(user.email)) {
+            @form(routes.AdminController.approveUnapprovedUser(user.email)) {
                 <input type="submit" value="Approve"></input>
             }
         </li>

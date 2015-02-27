@@ -35,6 +35,7 @@ create table user (
   is_admin                  boolean,
   first_name                varchar(255),
   last_name                 varchar(255),
+  department                varchar(255),
   constraint pk_user primary key (email))
 ;
 

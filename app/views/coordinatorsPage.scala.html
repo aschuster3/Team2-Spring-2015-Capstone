@@ -1,4 +1,7 @@
-@()
+@(unapprovedCoordinators: List[UnapprovedUser], approvedCoordinators: List[User])
+
+@import helper._
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,7 +28,7 @@
 		<div class="container">
 			<ul class="nav navbar-nav pull-left">
 				<li><a href="@routes.Application.index()">Home</a></li>
-            	<li class="active"><a href="coordinators.html">Coordinators</a></li>
+            	<li class="active"><a href="@routes.AdminController.viewAllCoordinators()">Coordinators</a></li>
             	<li><a href="#schedule">Schedule</a></li>
          	</ul>
          	<div class="pull-right">
@@ -34,86 +37,61 @@
  		</div>
 	</nav>
 </div>
+
 <div class="container">
 	<h4>Coordinators Pending Approval</h4>
-	<div class="panel panel-default">
-		<div class = "panel-body">
-			<div class = "pendingapproval">
-				<div class = "pull-left">
-					<h6>Coordinator 1 to approve</h6>
-						<p>E-mail</p>
-						<p>Department</p>
-				</div>
-				<div class="pull-right">
-				  		<button type="button" class="btn btn-block btn-sm btn-inverse">Approve</button><button type="button" class="btn btn-block btn-sm btn-danger">Deny</button>
-				</div>
-			</div>
-		</div>
-		<div class = "panel-body">
-			<div class = "pendingapproval">
-				<div class = "pull-left">
-					<h6>Coordinator 2 to approve</h6>
-						<p>E-mail</p>
-						<p>Department</p>
-				</div>
-				<div class="pull-right">
-				  		<button type="button" class="btn btn-block btn-sm btn-inverse">Approve</button><button type="button" class="btn btn-block btn-sm btn-danger">Deny</button>
-				</div>
-			</div>
-		</div>
+	
+    <div class="panel panel-default">
+	@for((unapproved, index) <- unapprovedCoordinators.zipWithIndex) {
+	   <div class = "panel-body">
+            <div class = "pendingapproval">
+                <div class = "pull-left">
+                    <h6>@unapproved.firstName @unapproved.lastName</h6>
+                        <p>E-mail: @unapproved.email</p>
+                        <p>Department: @unapproved.department</p>
+                        
+                        @if(unapproved.token != null && unapproved.token != "") {
+                            <p>Status: Emailed password (@unapproved.token)</p>
+                        }
+                </div>
+                <div class="pull-right">
+                @form(routes.AdminController.approveUnapprovedUser(unapproved.email)) {
+                    <button class="btn btn-lg btn-primary btn-block btn-sm btn-inverse" type="submit">Approve</button>
+                }
+                
+                @form(routes.AdminController.removeUnapprovedUser(unapproved.email)) {
+                    <button class="btn btn-lg btn-primary btn-block btn-sm btn-danger" type="submit">Deny</button>
+                }
+                </div>
+            </div>
+        </div>
+	}
 	</div>
 </div>
+
 <div class="container">
 	<h4>Current Coordinators</h4>
 	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+	
+	@for((coord, index) <- approvedCoordinators.zipWithIndex) {
 		<div class="panel panel-default">
-			<div class="panel-heading" role="tab" id="headingOne">
+			<div class="panel-heading" role="tab" id="@("heading" + index)">
 				<h4 class="panel-title">
-					<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-						Coordinator 1
+					<a class="@(if (index > 0) "collapsed" else "")" data-toggle="collapse" data-parent="#accordion" href="#@("collapse" + index)" aria-expanded="@(if (index == 0) "true" else "false")" aria-controls="@("collapse" + index)">
+						@coord.firstName @coord.lastName
 					</a>
 				</h4>
 			</div>
-			<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+			<div id="@("collapse" + index)" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="@("heading" + index)">
 				<div class="panel-body">
-					<h6>Name:</h6> Coordinator 1's Name
-					<h6>E-mail:</h6> Coordinator 1's e-mail
-					<h6>Department:</h6> Coordinator 1's department
+					<h6>Name:</h6>  @coord.firstName @coord.lastName
+					<h6>E-mail:</h6>   @coord.email
+					<h6>Department:</h6>  @(index)
 				</div>
 			</div>
 		</div>
-		<div class="panel panel-default">
-			<div class="panel-heading" role="tab" id="headingTwo">
-				<h4 class="panel-title">
-					<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-						Coordinator 2
-					</a>
-				</h4>
-			</div>
-			<div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-				<div class="panel-body">
-		        	<h6>Name:</h6> Coordinator 2's Name
-					<h6>E-mail:</h6> Coordinator 2's e-mail
-					<h6>Department:</h6> Coordinator 2's department
-		      </div>
-		    </div>
-		  </div>
-		  <div class="panel panel-default">
-		  	<div class="panel-heading" role="tab" id="headingThree">
-		  		<h4 class="panel-title">
-		  			<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-		  				Coordinator 3
-		  			</a>
-		  		</h4>
-		    </div>
-		    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-		    	<div class="panel-body">
-		    		<h6>Name:</h6> Coordinator 3's Name
-					<h6>E-mail:</h6> Coordinator 3's e-mail
-					<h6>Department:</h6> Coordinator 3's department
-		    	</div>
-		    </div>
-		</div>
+	}
+	
 	</div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
