@@ -1,4 +1,4 @@
-@(addSessionForm: play.data.Form[Session])
+@(addSessionForm: play.data.Form[models.Session])
 
 @import helper._
 
@@ -6,7 +6,7 @@
 						@inputText(addSessionForm("id"), 
                             'type -> "text",
                             'class -> "form-control",
-                            '_label -> "IDe",
+                            '_label -> "ID",
                             '_showConstraints -> false)
                         @inputText(addSessionForm("sessionName"), 
                             'type -> "text",
@@ -34,7 +34,8 @@
                             <p class="text-center"><font color="red">@addSessionForm.globalError.message</font></p>
                         }
                         @if(addSessionForm.hasErrors()) {
-                            <p class="text-center"><font color="red">@addSessionForm.globalError.message</font></p>
+                            <p class="text-center"><font color="red">There has been an error</font></p>
                         }
-                        <a href="@routes.Application.index()" class="new-account">Return to sessions screen</a>
+                        
              }
+             <a href="@routes.Application.index()" class="new-account">Return to sessions screen</a>
