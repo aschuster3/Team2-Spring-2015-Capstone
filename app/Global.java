@@ -13,11 +13,11 @@ public class Global extends GlobalSettings {
         // Check if the database is empty
         if (User.find.findRowCount() == 0) {
             Logger.info("Data added");
-            User bahb = new User("Bob", "Lob", "bob@gmail.com", "secret", false);
+            User bahb = new User("Bob", "Lob", "bob@gmail.com", "secret", false, "Emory Internal Medicine");
             
-            Ebean.save(new User("Bob", "Lob", "bob@gmail.com", "secret", false));
+            Ebean.save(bahb);
             Ebean.save(new User("Sharon", "Norahs", "sharon@gmail.com", "kitty", true));
-            Ebean.save(new User("Frank", "Knarf", "frank@gmail.com", "allyourbase", false));
+            Ebean.save(new User("Frank", "Knarf", "frank@gmail.com", "allyourbase", false, "Emory Allergy"));
             
             Ebean.save(new Learner("Harry", "Cat", bahb));
             Ebean.save(new Learner("Monkey", "Octopus", bahb));

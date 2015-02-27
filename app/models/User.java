@@ -54,6 +54,15 @@ public class User extends Model {
         //this.learners = new ArrayList<Learner>();
     }
 
+    public User(String firstName, String lastName, String email, String password, boolean isAdmin, String department) {
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.isAdmin = isAdmin;
+        this.department = department;
+    }
+
     public static Finder<String, User> find = new Finder<String, User>(
             String.class, User.class);
     
