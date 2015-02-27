@@ -15,7 +15,7 @@ import play.db.ebean.Model;
 public class Learner extends Model {
 
     @Id
-    public Long id;
+    public String email;
 
     @Required
     public String firstName;
@@ -28,21 +28,21 @@ public class Learner extends Model {
     
     @Required
     @ManyToOne
-    public User owner;
+    public String ownerEmail;
 
-    public static Finder<Long, Learner> find = new Finder<Long, Learner>(
-            Long.class, Learner.class);
+    public static Finder<String, Learner> find = new Finder<String, Learner>(
+            String.class, Learner.class);
     
-    public Learner(String first, String last, User owner) {
+    public Learner(String email, String first, String last, String ownerEmail) {
+        this.email = email;
         this.firstName = first;
         this.lastName = last;
-        this.owner = owner;
+        this.ownerEmail = ownerEmail;
         this.sessions = new ArrayList<>();
     }
     
-    public static void create(String firstName, String lastName, String ownerEmail) {
-        User owner = User.find.ref(ownerEmail);
-        Learner newLearner = new Learner(firstName, lastName, owner);
+    public static void create(String email, String firstName, String lastName, String ownerEmail) {
+        Learner newLearner = new Learner(email, firstName, lastName, ownerEmail);
         newLearner.save();
     }
     
@@ -51,6 +51,6 @@ public class Learner extends Model {
     }
     
     public static List<Learner> getAllOwnedBy(String ownerEmail) {
-        return Learner.find.where().eq("owner.email", ownerEmail).findList();
+        return Learner.find.where().eq("ownerEmail", ownerEmail).findList();
     }
 }

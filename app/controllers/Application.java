@@ -23,7 +23,6 @@ import views.html.loginPage;
 import views.html.passwordPage;
 import views.html.registrationForm;
 import views.html.studentsPage;
-import views.html.testViewCoordinatorLearners;
 import views.html.testViewUnapprovedUsers;
 import views.html.testViewUserSignup;
 
@@ -37,7 +36,6 @@ public class Application extends Controller {
     static Form<UnapprovedUser> signupForm = Form.form(UnapprovedUser.class);
     static Form<ForgotPassword> forgotPasswordTemplate = Form.form(ForgotPassword.class);
     static Form<Password> passwordForm = Form.form(Password.class);
-    static Form<LearnerName> learnerForm = Form.form(LearnerName.class);
 
     @Security.Authenticated(Secured.class)
     public static Result index() {
@@ -49,14 +47,6 @@ public class Application extends Controller {
         } else {
             return ok(coordinatorIndex.render());
         }
-    }
-    
-    @Security.Authenticated(Secured.class)
-    public static Result students() {
-        
-        // TODO: This should get the learners that are specifically for a user
-        
-        return ok(studentsPage.render(Learner.getAll()));
     }
     
     /**
@@ -187,24 +177,6 @@ public class Application extends Controller {
         }
     }
     
-    public static Result viewLearners() {
-        String email = session().get("email");
-        return ok(testViewCoordinatorLearners.render(Learner.getAllOwnedBy(email), learnerForm));
-    }
-    
-    public static Result createLearner() {
-        Form<LearnerName> filledForm = learnerForm.bindFromRequest();
-        String email = session().get("email");
-        
-        if (filledForm.hasGlobalErrors() || filledForm.hasErrors()) {
-            return badRequest(testViewCoordinatorLearners.render(Learner.getAllOwnedBy(email), filledForm));
-        } else {
-            LearnerName learnerName = filledForm.get();
-            Learner.create(learnerName.firstName, learnerName.lastName, session().get("email"));
-            return redirect(routes.Application.viewLearners());
-        }
-    }
-    
     public static class ForgotPassword {
         @Required
         public String email;
@@ -232,17 +204,6 @@ public class Application extends Controller {
             MailerPlugin.send(email);
             return redirect(routes.Application.login());
         }
-    }
-    
-    /**
-     * Class to use for the learner creation form.
-     */
-    public static class LearnerName {
-        @Required
-        public String firstName;
-        
-        @Required
-        public String lastName;
     }
   
 }

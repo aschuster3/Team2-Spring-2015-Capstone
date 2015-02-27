@@ -1,4 +1,8 @@
-@(learners: List[models.Learner])
+@(learners: List[models.Learner], learnerForm: play.data.Form[CoordinatorController.PreLearner])
+
+@import helper._
+@import java.math.BigInteger; var panelNum = 1
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,7 +29,7 @@
 		<div class="container">
 			<ul class="nav navbar-nav pull-left">
 				<li><a href="@routes.Application.index()">Home</a></li>
-            	<li class="active"><a href="@routes.Application.students()">Students</a></li>
+            	<li class="active"><a href="@routes.CoordinatorController.students()">Students</a></li>
             	<li><a href="#schedule">Schedule</a></li>
          	</ul>
          	<div class="pull-right">
@@ -41,19 +45,18 @@
 		
 		@for(learner <- learners) {
 		  <div class="panel panel-default">
-		  	<div class="panel-heading" role="tab" id="headingThree">
+		  	<div class="panel-heading" role="tab" id="heading@panelNum">
 		  		<h4 class="panel-title">
-		  			<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+		  			<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse@panelNum" aria-expanded="false" aria-controls="collapse@panelNum">
 		  				@learner.firstName @learner.lastName
 		  			</a>
 		  		</h4>
 		    </div>
-		    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+		    <div id="collapse@panelNum" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading@panelNum">
 		    	<div class="panel-body">
 		    		<div class = "pull-left">
 						<h6>Name:</h6>@learner.firstName @learner.lastName
-						<h6>E-mail:</h6>Email not implemented :(
-						<h6>Type:</h6>Type also not implement
+						<h6>E-mail:</h6>@learner.email
 					</div>
 					<div class="pull-right">
 				  		<button type="button" class="btn btn-block btn-sm btn-warning">Edit</button>
@@ -61,6 +64,7 @@
 		    	</div>
 		    </div>
 		</div>
+		@(panelNum += 1)
 		}
 	</div>
 	<a class="btn btn-inverse" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
@@ -68,37 +72,30 @@
 	</a>
 <!--Andrew!!! Can you change this to Play's form format (and the format for the dropdown is probably wrong anyways)-->
 	<div class="collapse submitform" id="collapseExample">
-		<form>
-			<div class="form-group">
-				<label for="inputName">Student</label>
-				<input type="text" class="form-control" id="inputName" placeholder="Name">
-			</div>
-			<div class="form-group">
-				<label for="inputEmail">Email address</label>
-				<input type="email" class="form-control" id="inputEmail" placeholder="Email">
-			</div>
-			<div class ="form group">
-				<label for="inputType">Type</label>
-				<select class="form-control">
-				  <option>Ambulatory Medical Student</option>
-				  <option>Sub-I Medical Student</option>
-				  <option>Dermatology Resident</option>
-				  <option>Pediatrics resident</option>
-				  <option>Emory Internal Medicine</option>
-				  <option>Morehouse Internal Medicine</option>
-				  <option>Family Medicine</option>
-				  <option>Podiatry Resident</option>
-				  <option>Geriatrics Resident</option>
-				  <option>Rheumatology Resident</option>
-				  <option>Nurse Practitioner Student</option>
-				  <option>Physician Assistant Student</option>
-				  <option>Pediatrics Allergy Fellow</option>
-				  <option>International Student</option>
-				  <option>Pre-med Student</option>
-				</select>
-			</div>
-			<button type="submit" class="btn btn-inverse">Submit</button>
-		</form>
+		@form(routes.CoordinatorController.createLearner) {
+		  @inputText(learnerForm("firstName"),
+		      'type -> "text",
+		      'class -> "form-control", 
+		      'id -> "inputFirstName",
+		      'placeholder -> "First Name",
+		      '_label -> null,
+		      '_showConstraints -> false)
+          @inputText(learnerForm("lastName"),
+              'type -> "text",
+              'class -> "form-control", 
+              'id -> "inputLastName",
+              'placeholder -> "Last Name",
+              '_label -> null,
+              '_showConstraints -> false)
+          @inputText(learnerForm("email"),
+              'type -> "text",
+              'class -> "form-control", 
+              'id -> "inputEmail",
+              'placeholder -> "Email",
+              '_label -> null,
+              '_showConstraints -> false)
+          <input role="button" class="btn btn-inverse" type="submit" value="Submit"></input>
+		}
 	</div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>

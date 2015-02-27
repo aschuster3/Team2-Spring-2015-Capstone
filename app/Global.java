@@ -14,14 +14,15 @@ public class Global extends GlobalSettings {
         if (User.find.findRowCount() == 0) {
             Logger.info("Data added");
             User bahb = new User("Bob", "Lob", "bob@gmail.com", "secret", false);
+            User frank = new User("Frank", "Knarf", "frank@gmail.com", "allyourbase", false);
             
-            Ebean.save(new User("Bob", "Lob", "bob@gmail.com", "secret", false));
+            Ebean.save(bahb);
             Ebean.save(new User("Sharon", "Norahs", "sharon@gmail.com", "kitty", true));
-            Ebean.save(new User("Frank", "Knarf", "frank@gmail.com", "allyourbase", false));
+            Ebean.save(frank);
             
-            Ebean.save(new Learner("Harry", "Cat", bahb));
-            Ebean.save(new Learner("Monkey", "Octopus", bahb));
-            Ebean.save(new Learner("Iamnot", "arapper", bahb));
+            Ebean.save(new Learner("harry@cat.meow", "Harry", "Cat", bahb.email));
+            Ebean.save(new Learner("ooooo@octopus.noise", "Monkey", "Octopus", bahb.email));
+            Ebean.save(new Learner("fire@Ispit.it", "Peyton", "Manning", frank.email));
         }
     }
 }

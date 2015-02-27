@@ -32,14 +32,11 @@ POST    /completeSignup                 controllers.Application.addNewUser(email
 
 # Session Actions
 GET		/sessions						controllers.SessionController.sessions()
-POST 	/sessions						controllers.SessionController.createSession()
-
-# Learner Actions        
-POST    /learners                       controllers.Application.createLearner()
+POST 	/sessions						controllers.SessionController.createSession()  
 
 # Coordinator Learner Page
-GET     /testLearners                   controllers.Application.viewLearners()
-GET     /students                       controllers.Application.students()
+GET     /students                       controllers.CoordinatorController.students()
+POST    /students                       controllers.CoordinatorController.createLearner()
 
 # Admin View: Coordinators List
 GET     /coordinators                   controllers.AdminController.viewAllCoordinators()

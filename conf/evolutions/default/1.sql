@@ -4,11 +4,11 @@
 # --- !Ups
 
 create table learner (
-  id                        bigint not null,
+  email                     varchar(255) not null,
   first_name                varchar(255),
   last_name                 varchar(255),
   owner_email               varchar(255),
-  constraint pk_learner primary key (id))
+  constraint pk_learner primary key (email))
 ;
 
 create table session (
@@ -47,8 +47,6 @@ create sequence unapproved_user_seq;
 
 create sequence user_seq;
 
-alter table learner add constraint fk_learner_owner_1 foreign key (owner_email) references user (email) on delete restrict on update restrict;
-create index ix_learner_owner_1 on learner (owner_email);
 
 
 
