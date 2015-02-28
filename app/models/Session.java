@@ -29,51 +29,56 @@ public class Session extends Model {
     public String id;
 
     @Required
-    public String sessionName;
+    public String title;
     
     @Required
-    public Date startTime;
+    public Date starts_at;
     
     @Required
-    public Date endTime;
+    public Date ends_at;
     
     @Required
-    public Boolean isFree; 
+    public Boolean isFree;
+
+	public String type;
     
-    public Session(String id, String sessionName, Date startTime, Date endTime, Boolean isFree){
+    public Session(String id, String title, Date starts_at, Date ends_at, Boolean isFree){
     	this.id = id;
-    	this.sessionName = sessionName;
-    	this.startTime = startTime;
-    	this.endTime = endTime;
+    	this.title = title;
+    	this.starts_at = starts_at;
+    	this.ends_at = ends_at;
     	this.isFree = isFree;
     }
     
-    public Session(String id, String sessionName, String startTime, String endTime, String isFree){
+    public Session(String id, String title, String starts_at, String ends_at, String isFree){
     	this.id = id;
-    	this.sessionName = sessionName;
+    	this.title = title;
     	DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");    	
     	try{
-    		this.startTime = formatter.parse(startTime);
-    		this.endTime = formatter.parse(endTime);
+    		this.starts_at = formatter.parse(starts_at);
+    		this.ends_at = formatter.parse(ends_at);
     	}
     	catch(Exception e){
     		
     	}
     	if(isFree.equalsIgnoreCase("true")||isFree.equalsIgnoreCase("yes")) this.isFree = true;
     	else this.isFree = false;
-    }
+    }	
     
-    public Session(String sessionName, Date startTime, Date endTime){
+    public Session(String title, Date starts_at, Date ends_at){
     	this.id = UUID.randomUUID().toString();
-    	this.sessionName = sessionName;
-    	this.startTime = startTime;
-    	this.endTime = endTime;
+    	this.title = title;
+    	this.starts_at = starts_at;
+    	this.ends_at = ends_at;
     	this.isFree = true;
     }
+
     public static Finder<String, Session> find = new Finder<String, Session>(
             String.class, Session.class);
     
     public static void create(Session session){
+		//TODO add type functionality (or base it on free status?)
+		session.type = session.isFree ? "info" : "important";
     	session.save();
     }
 

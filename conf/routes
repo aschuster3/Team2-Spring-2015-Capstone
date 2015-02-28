@@ -3,40 +3,47 @@
 # ~~~~
 
 # Home page
-GET     /                               controllers.Application.index()
+GET         /                             controllers.Application.index()
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file                   controllers.Assets.at(path="/public", file)
+GET         /assets/*file                 controllers.Assets.at(path="/public", file)
 
 # Login
-GET     /login                          controllers.Application.login()
-POST    /login                          controllers.Application.authenticate()
-GET     /logout                         controllers.Application.logout()
+GET         /login                        controllers.Application.login()
+POST        /login                        controllers.Application.authenticate()
+GET         /logout                       controllers.Application.logout()
 
 # Forgot Password
-GET     /forgotPassword                 controllers.Application.forgotPassword()
-POST    /forgotPassword                 controllers.Application.sendNewPassword()
+GET         /forgotPassword               controllers.Application.forgotPassword()
+POST        /forgotPassword               controllers.Application.sendNewPassword()
 
 # Sign up
-GET     /signup                         controllers.Application.signup()
-POST    /signup                         controllers.Application.createUnapprovedUser()
+GET         /signup                       controllers.Application.signup()
+POST        /signup                       controllers.Application.createUnapprovedUser()
 
 # Test UnapprovedUser population
-GET     /testUU                         controllers.AdminController.fetchUU()
+GET         /testUU                       controllers.AdminController.fetchUU()
 
 # UnapprovedUser Actions
-POST    /testUU/:id/delete              controllers.AdminController.removeUnapprovedUser(id: String)
-POST    /testUU/:id                     controllers.AdminController.approveUnapprovedUser(id: String)
-GET     /completeSignup/:token          controllers.Application.setPassword(token: String)
-POST    /completeSignup                 controllers.Application.addNewUser(email: String)
+POST        /testUU/:id/delete            controllers.AdminController.removeUnapprovedUser(id: String)
+POST        /testUU/:id                   controllers.AdminController.approveUnapprovedUser(id: String)
+GET         /completeSignup/:token        controllers.Application.setPassword(token: String)
+POST        /completeSignup               controllers.Application.addNewUser(email: String)
 
 # Session Actions
-GET		/sessions						controllers.SessionController.sessions()
-POST 	/sessions						controllers.SessionController.createSession()  
+GET         /sessions                     controllers.SessionController.sessions()
+POST        /sessions                     controllers.SessionController.createSession()
+GET         /sessions-json                controllers.SessionController.jsonAllSessions()
 
 # Coordinator Learner Page
-GET     /students                       controllers.CoordinatorController.students()
-POST    /students                       controllers.CoordinatorController.createLearner()
+GET         /students                     controllers.CoordinatorController.students()
+POST        /students                     controllers.CoordinatorController.createLearner()
+
+# Coordinator Calendar Page
+GET         /calendar                     controllers.CoordinatorController.viewCoordinatorCalendar()
 
 # Admin View: Coordinators List
-GET     /coordinators                   controllers.AdminController.viewAllCoordinators()
+GET         /coordinators                 controllers.AdminController.viewAllCoordinators()
+
+# Admin View: Calendar Page
+GET         /admincalendar                controllers.AdminController.viewCalendar()

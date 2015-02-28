@@ -9,7 +9,7 @@
 angular.module('mwl.calendar')
   .directive('mwlCalendarDay', function($filter, moment, calendarHelper) {
     return {
-      templateUrl: 'templates/day.html',
+      templateUrl: 'assets/templates/day.html',
       restrict: 'EA',
       require: '^mwlCalendar',
       scope: {

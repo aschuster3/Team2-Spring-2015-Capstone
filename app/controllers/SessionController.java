@@ -5,6 +5,7 @@ import models.UnapprovedUser;
 import play.Logger;
 import play.data.*;
 import play.data.validation.ValidationError;
+import play.libs.Json;
 import play.mvc.*;
 import views.html.*;
 
@@ -36,6 +37,10 @@ public class SessionController extends Controller {
 	
 	public static Result addSession(){
 	    	return ok(addSessionForm.render(sessionForm));
-	    }
+	}
+
+	public static Result jsonAllSessions() {
+		return ok(Json.toJson(Session.getAll()));
+	}
 
 }

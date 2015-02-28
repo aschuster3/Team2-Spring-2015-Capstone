@@ -32,14 +32,14 @@ public class SessionControllerTest {
                 controllers.routes.ref.SessionController.createSession(),
                 fakeRequest().withFormUrlEncodedBody(ImmutableMap.of(
                         "id", "1001",
-                        "sessionName", "firstSession",
-                        "startTime", "2015-3-1",
-                        "endTime", "2015-3-2",
+                        "title", "firstSession",
+                        "starts_at", "2015-3-1",
+                        "ends_at", "2015-3-2",
                         "isFree", "yes"))
         );
         
         assertThat(303).isEqualTo(status(result));
-		assertThat("Event1").isEqualTo(event1.sessionName);
+		assertThat("Event1").isEqualTo(event1.title);
 		assertThat(Session.getAll().contains(event1)).isEqualTo(true);
 		assertThat(Session.getAll().size()).isEqualTo(2);
 		assertThat(Session.getAll().contains(event2)).isEqualTo(false);
@@ -54,9 +54,9 @@ public class SessionControllerTest {
                 controllers.routes.ref.SessionController.createSession(),
                 fakeRequest().withFormUrlEncodedBody(ImmutableMap.of(
                         "id", "102",
-                        "sessionName", "firstSession",
-                        "startTime", "2015-3-1",
-                        "endTime", "2015-3-2",
+                        "title", "firstSession",
+                        "starts_at", "2015-3-1",
+                        "ends_at", "2015-3-2",
                         "isFree", "yes"))
         );
 		

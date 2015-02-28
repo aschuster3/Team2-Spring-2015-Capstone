@@ -53,7 +53,7 @@ public class AdminControllerTest {
     }
 
     @Test
-    public void viewCoordinators_unregisteredSession_fails() {
+    public void viewCoordinators_invalidSession_fails() {
         Result result = callAction(
                 controllers.routes.ref.AdminController.viewAllCoordinators(),
                 fakeRequest().withSession("email", UNREGISTERED_EMAIL)

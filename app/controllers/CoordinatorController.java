@@ -8,6 +8,7 @@ import play.data.validation.Constraints.Required;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
+import views.html.calendarCoordinator;
 import views.html.studentsPage;
 
 @Security.Authenticated(Secured.class)
@@ -64,6 +65,10 @@ public class CoordinatorController extends Controller {
             Learner.create(learner.email, learner.firstName, learner.lastName, ownerEmail);
             return redirect(routes.CoordinatorController.students());
         }
+    }
+
+    public static Result viewCoordinatorCalendar() {
+        return ok(calendarCoordinator.render());
     }
 
 }

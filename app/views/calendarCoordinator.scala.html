@@ -24,11 +24,11 @@
         <div class="container">
           <ul class="nav navbar-nav pull-left">
             <li><a href="@routes.Application.index()">Home</a></li>
-                  <li class="active"><a href="coordinators.html">Coordinators</a></li>
-                  <li><a href="#schedule">Schedule</a></li>
-              </ul>
-              <div class="pull-right">
-              <button onclick="location.href='@routes.Application.logout()';" type="button" class="btn btn-block btn-sm btn-danger btn-logout">Log Out</button>
+            <li><a href="@routes.CoordinatorController.students()">Students</a></li>
+            <li class="active"><a href="@routes.CoordinatorController.viewCoordinatorCalendar()">Schedule</a></li>
+          </ul>
+          <div class="pull-right">
+            <button onclick="location.href='@routes.Application.logout()';" type="button" class="btn btn-block btn-sm btn-danger btn-logout">Log Out</button>
           </div>
         </div>
       </nav>
@@ -70,8 +70,8 @@
             calendar-edit-event-click="eventEdited($event)"
             calendar-delete-event-click="eventDeleted($event)"
             calendar-auto-open="true"
-            calendar-day-view-start="06:00"
-            calendar-day-view-end="22:00"
+            calendar-day-view-starts_at="06:00"
+            calendar-day-view-ends_at="22:00"
             ></mwl-calendar>
 
           <br><br><br>
@@ -96,20 +96,20 @@
     </div>
 
     <script src="www.ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script>
-    <script src="@routes.Assets.at("stylesheets/angular.js")"></script>
-    <script src="@routes.Assets.at("stylesheets/moment.min.js")"></script>
-    <script src="@routes.Assets.at("stylesheets/angular-bootstrap-calendar-tpls.min.js")"></script>
-    <script src="@routes.Assets.at("stylesheets/js/ui-bootstrap-tpls.min.js")"></script>
-    <script src="@routes.Assets.at("stylesheets/ui-bootstrap-tpls.min.js")"></script>
-    <script src="@routes.Assets.at("stylesheets/app.js")"></script>
-    <script src="@routes.Assets.at("stylesheets/main.js")"></script>
-    <script src="@routes.Assets.at("stylesheets/mwlcalendar.js")"></script>
-    <script src="@routes.Assets.at("stylesheets/truncateEventTitle.js")"></script>
-    <script src="@routes.Assets.at("stylesheets/calendarhelper.js")"></script>
-    <script src="@routes.Assets.at("stylesheets/moment.js")"></script>
-    <script src="@routes.Assets.at("stylesheets/mwlcalendaryear.js")"></script>
-    <script src="@routes.Assets.at("stylesheets/mwlcalendarmonth.js")"></script>
-    <script src="@routes.Assets.at("stylesheets/mwlcalendarweek.js")"></script>
-    <script src="@routes.Assets.at("stylesheets/mwlcalendarday.js")"></script>
+    <script src="@routes.Assets.at("javascripts/angular.js")"></script>
+    <script src="@routes.Assets.at("javascripts/moment.min.js")"></script>
+    <script src="@routes.Assets.at("javascripts/angular-bootstrap-calendar-tpls.min.js")"></script>
+    <script src="@routes.Assets.at("javascripts/js/ui-bootstrap-tpls.min.js")"></script>
+    <script src="@routes.Assets.at("javascripts/ui-bootstrap-tpls.min.js")"></script>
+    <script src="@routes.Assets.at("javascripts/app.js")"></script>
+    <script src="@routes.Assets.at("javascripts/main.js")"></script>
+    <script src="@routes.Assets.at("javascripts/mwlcalendar.js")"></script>
+    <script src="@routes.Assets.at("javascripts/truncateEventTitle.js")"></script>
+    <script src="@routes.Assets.at("javascripts/calendarhelper.js")"></script>
+    <script src="@routes.Assets.at("javascripts/moment.js")"></script>
+    <script src="@routes.Assets.at("javascripts/mwlcalendaryear.js")"></script>
+    <script src="@routes.Assets.at("javascripts/mwlcalendarmonth.js")"></script>
+    <script src="@routes.Assets.at("javascripts/mwlcalendarweek.js")"></script>
+    <script src="@routes.Assets.at("javascripts/mwlcalendarday.js")"></script>
 </body>
 </html>

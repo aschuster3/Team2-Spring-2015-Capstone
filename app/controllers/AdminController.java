@@ -73,6 +73,10 @@ public class AdminController extends Controller {
                     User.getAllCoordinators()));
         }
     }
+
+    public static Result viewCalendar() {
+        return ok(views.html.calendarAdmin.render());
+    }
     
     /**
      * This is a temporary test action to view current UnapprovedUsers

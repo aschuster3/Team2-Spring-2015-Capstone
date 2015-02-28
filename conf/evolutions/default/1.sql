@@ -13,10 +13,11 @@ create table learner (
 
 create table session (
   id                        varchar(255) not null,
-  session_name              varchar(255),
-  start_time                timestamp,
-  end_time                  timestamp,
+  title                     varchar(255),
+  starts_at                 timestamp,
+  ends_at                   timestamp,
   is_free                   boolean,
+  type                      varchar(255),
   constraint pk_session primary key (id))
 ;
 

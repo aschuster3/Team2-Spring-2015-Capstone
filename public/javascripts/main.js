@@ -8,11 +8,16 @@
  * Controller of the angularBootstrapCalendarApp
  */
 angular.module('mwl.calendar')
-  .controller('MainCtrl', function ($scope, $modal, moment) {
+  .controller('MainCtrl', function ($scope, $modal, moment, $http) {
 
     var currentYear = moment().year();
     var currentMonth = moment().month();
 
+    $http.get('/sessions-json')
+        .success(function(data) {
+          $scope.events = data;
+        });
+    /*
     $scope.events = [
       {
         title: 'Event 1',
@@ -33,6 +38,7 @@ angular.module('mwl.calendar')
         ends_at: new Date(currentYear,currentMonth,25,6,60)
       },
     ];
+    */
 
     $scope.calendarView = 'month';
     $scope.calendarDay = new Date();
