@@ -1,10 +1,13 @@
 import com.avaje.ebean.Ebean;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import models.Learner;
 import models.User;
 import play.Application;
 import play.GlobalSettings;
 import play.Logger;
+import play.libs.Json;
 
 
 public class Global extends GlobalSettings {
@@ -25,5 +28,9 @@ public class Global extends GlobalSettings {
             Ebean.save(new Learner("ooooo@octopus.noise", "Monkey", "Octopus", bahb.email));
             Ebean.save(new Learner("fire@Ispit.it", "Peyton", "Manning", frank.email));
         }
+
+        ObjectMapper mapper = new ObjectMapper()
+                .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        Json.setObjectMapper(mapper);
     }
 }

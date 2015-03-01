@@ -33,7 +33,9 @@ POST        /completeSignup               controllers.Application.addNewUser(ema
 # Session Actions
 GET         /sessions                     controllers.SessionController.sessions()
 POST        /sessions                     controllers.SessionController.createSession()
-GET         /sessions-json                controllers.SessionController.jsonAllSessions()
+GET         /sessions-api                 controllers.SessionController.jsonAllSessions()
+PUT         /sessions-api/:id             controllers.SessionController.updateSession(id: String)
+DELETE      /sessions-api/:id             controllers.SessionController.deleteSession(id: String)
 
 # Coordinator Learner Page
 GET         /students                     controllers.CoordinatorController.students()

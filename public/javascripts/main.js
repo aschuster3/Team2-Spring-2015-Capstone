@@ -8,37 +8,23 @@
  * Controller of the angularBootstrapCalendarApp
  */
 angular.module('mwl.calendar')
-  .controller('MainCtrl', function ($scope, $modal, moment, $http) {
+  .controller('MainCtrl', function ($scope, $modal, moment, sessionService) {
 
     var currentYear = moment().year();
     var currentMonth = moment().month();
 
-    $http.get('/sessions-json')
-        .success(function(data) {
+    sessionService.getSessions()
+        .success(function (data) {
           $scope.events = data;
         });
-    /*
-    $scope.events = [
-      {
-        title: 'Event 1',
-        type: 'warning',
-        starts_at: new Date(currentYear,currentMonth,25,8,30),
-        ends_at: new Date(currentYear,currentMonth,25,9,30)
-      },
-      {
-        title: 'Event 2',
-        type: 'info',
-        starts_at: new Date(currentYear,currentMonth,19,7,30),
-        ends_at: new Date(currentYear,currentMonth,25,9,30)
-      },
-      {
-        title: 'This is a really long event title',
-        type: 'important',
-        starts_at: new Date(currentYear,currentMonth,25,6,30),
-        ends_at: new Date(currentYear,currentMonth,25,6,60)
-      },
-    ];
-    */
+
+    $scope.deleteSession = function (sessionIndex) {
+      var session = $scope.events[sessionIndex];
+      sessionService.deleteSession(session.id)
+          .success(function () {
+            $scope.events.splice(sessionIndex, 1);
+          })
+    };
 
     $scope.calendarView = 'month';
     $scope.calendarDay = new Date();

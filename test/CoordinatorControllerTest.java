@@ -7,6 +7,9 @@ import static play.test.Helpers.fakeRequest;
 import static play.test.Helpers.inMemoryDatabase;
 import static play.test.Helpers.start;
 import static play.test.Helpers.status;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import models.Learner;
 import models.UnapprovedUser;
 import models.User;
@@ -16,6 +19,7 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableMap;
 
+import play.libs.Json;
 import play.mvc.Result;
 
 
@@ -25,6 +29,9 @@ public class CoordinatorControllerTest {
     public void setup() {
         start(fakeApplication(inMemoryDatabase(), fakeGlobal()));
         
+        ObjectMapper mapper = new ObjectMapper()
+                .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        Json.setObjectMapper(mapper);
         new User("John", "Stamos", "fullhouse@gmail.com", "olsens", false).save();
     }
     
