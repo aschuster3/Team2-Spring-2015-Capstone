@@ -13,13 +13,14 @@
         ng-click="dayClicked($parent.$index, $index)"
         ng-class="{pointer: day.events.length > 0}">
         <div class="cal-month-day" ng-class="{'cal-day-outmonth': !day.inMonth, 'cal-day-inmonth': day.inMonth, 'cal-day-weekend': $index == 5 || $index == 6, 'cal-day-today': day.isToday}">
-          <small class="cal-events-num badge badge-important pull-left" ng-show="day.events.length > 0">{{ day.events.length }}</small>
+          <small class="cal-events-num badge badge-inverse pull-left" ng-show="day.events.length > 0">{{ day.events.length }}</small>
           <span class="pull-right" data-cal-date ng-click="drillDown(day.label)">{{ day.label }}</span>
           <div class="cal-day-tick" ng-show="day.isOpened">
             <i class="glyphicon glyphicon-chevron-up"></i>
             <i class="fa fa-chevron-up"></i>
           </div>
           <div class="events-list" ng-show="day.events.length > 0">
+            <!--  commenting out the little dots showing the events on the calendar
             <a
               href="javascript:;"
               ng-click="eventClick({$event: event})"
@@ -30,6 +31,7 @@
               tooltip-append-to-body="true"
               tooltip="{{ event.title }}"
               ></a>
+            -->
           </div>
 
         </div>
