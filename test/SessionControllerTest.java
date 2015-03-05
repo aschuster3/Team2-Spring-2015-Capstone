@@ -137,4 +137,21 @@ public class SessionControllerTest {
         assertThat(status(result)).isEqualTo(201);
         assertThat(newSession).isNotNull();
     }
+
+    @Test
+    public void jsonCreateSession_Succeeds() {
+        JsonNode jsonForNewSession = Json.toJson(
+                new Session("1", "new-title", new Date(0), new Date(1), true));
+
+        Result result = callAction(
+                routes.ref.SessionController.jsonCreateSession(),
+                fakeRequest()
+                        .withSession("email", ADMIN_EMAIL)
+                        .withJsonBody(jsonForNewSession)
+        );
+        Session newSession = Session.find.byId("1");
+
+        assertThat(status(result)).isEqualTo(201);
+        assertThat(newSession).isNotNull();
+    }
 }

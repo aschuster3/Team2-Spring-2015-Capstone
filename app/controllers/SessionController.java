@@ -47,7 +47,6 @@ public class SessionController extends Controller {
 		return ok(Json.toJson(Session.getAll()));
 	}
 
-	@With(SecuredAdminAction.class)
 	@BodyParser.Of(BodyParser.Json.class)
 	public static Result updateSession(String id) {
 		JsonNode json = request().body().asJson();
@@ -58,12 +57,22 @@ public class SessionController extends Controller {
 		}
 
 		if (Session.find.byId(id) == null) {
-			session.save();
+			Session.create(session);
 			return status(CREATED, Json.toJson(session));
 		} else {
 			session.update();
 			return status(204);
 		}
+	}
+
+	@With(SecuredAdminAction.class)
+	@BodyParser.Of(BodyParser.Json.class)
+	public static Result jsonCreateSession() {
+		JsonNode json = request().body().asJson();
+		Session session = Json.fromJson(json, Session.class);
+
+		Session.create(session);
+		return status(CREATED);
 	}
 
 	@With(SecuredAdminAction.class)
