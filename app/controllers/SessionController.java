@@ -72,7 +72,7 @@ public class SessionController extends Controller {
 		Session session = Json.fromJson(json, Session.class);
 
 		Session.create(session);
-		return status(CREATED);
+		return status(CREATED, Json.toJson(session));
 	}
 
 	@With(SecuredAdminAction.class)

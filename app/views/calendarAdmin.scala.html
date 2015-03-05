@@ -134,6 +134,8 @@
                   <timepicker ng-model="event.ends_at" hour-step="1" minute-step="15" show-meridian="true"></timepicker>
                 </td>
                 <td><button class="btn btn-danger" ng-click="deleteSession($index)">Delete</button></td>
+                <td><button class="btn" ng-click="createSession($index)" ng-show="!event.id">Submit (Create)</button>
+                    <button class="btn" ng-click="updateSession(event)" ng-show="event.id">Submit (Update)</button></td>
               </tr>
             </tbody>
 

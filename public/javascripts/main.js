@@ -26,6 +26,24 @@ angular.module('mwl.calendar')
           })
     };
 
+    $scope.createSession = function (sessionIndex) {
+      console.log($scope.events);
+      var session = $scope.events[sessionIndex];
+      console.log(sessionIndex);
+      console.log(session)
+      sessionService.createSession(session)
+          .success(function (data) {
+            /* POST will return the created object
+               The difference between the returned session
+               and the session passed to the server is
+               that the ID will now be assigned
+             */
+            $scope.events[sessionIndex] = data;
+          });
+    }
+
+    $scope.updateSession = sessionService.updateSession;
+
     $scope.calendarView = 'month';
     $scope.calendarDay = new Date();
 
