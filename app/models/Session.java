@@ -9,8 +9,7 @@ import play.data.validation.Constraints.*;
 
 import java.util.UUID;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import play.db.ebean.Model;
 
@@ -25,6 +24,10 @@ import play.db.ebean.Model;
  */
 public class Session extends Model {
 
+	/* for the front-end calendar */
+	public static final String TYPE_TAKEN = "invalid";
+	public static final String TYPE_FREE = "info";
+
     @Id
     public String id;
 
@@ -36,21 +39,21 @@ public class Session extends Model {
     
     @Required
     public Date ends_at;
-    
-    @Required
-    public Boolean isFree;
 
-	public String type;
+	@ManyToOne
+    public Learner assignedLearner;
+
+	@Transient  // only for front-end Javascript objects
+	private String type;
     
-    public Session(String id, String title, Date starts_at, Date ends_at, Boolean isFree){
+    public Session(String id, String title, Date starts_at, Date ends_at){
     	this.id = id;
     	this.title = title;
     	this.starts_at = starts_at;
     	this.ends_at = ends_at;
-    	this.isFree = isFree;
     }
     
-    public Session(String id, String title, String starts_at, String ends_at, String isFree){
+    public Session(String id, String title, String starts_at, String ends_at){
     	this.id = id;
     	this.title = title;
     	DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");    	
@@ -61,8 +64,6 @@ public class Session extends Model {
     	catch(Exception e){
     		
     	}
-    	if(isFree.equalsIgnoreCase("true")||isFree.equalsIgnoreCase("yes")) this.isFree = true;
-    	else this.isFree = false;
     }	
     
     public Session(String title, Date starts_at, Date ends_at){
@@ -70,15 +71,12 @@ public class Session extends Model {
     	this.title = title;
     	this.starts_at = starts_at;
     	this.ends_at = ends_at;
-    	this.isFree = true;
     }
 
     public static Finder<String, Session> find = new Finder<String, Session>(
             String.class, Session.class);
     
-    public static void create(Session session){
-		//TODO add type functionality (or base it on free status?)
-		session.type = session.isFree ? "info" : "important";
+    public static void create(Session session) {
     	session.save();
     }
 
@@ -93,5 +91,12 @@ public class Session extends Model {
     	}
     	return null;
     }
-    
+
+	private boolean isFree() {
+		return this.assignedLearner == null;
+	}
+
+	private String getType() {
+		return this.isFree() ? TYPE_FREE : TYPE_TAKEN;
+	}
 }

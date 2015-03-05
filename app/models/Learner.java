@@ -24,9 +24,6 @@ public class Learner extends Model {
     public String lastName;
     
     @Required
-    public List<Session> sessions;
-    
-    @Required
     @ManyToOne
     public String ownerEmail;
 
@@ -38,7 +35,6 @@ public class Learner extends Model {
         this.firstName = first;
         this.lastName = last;
         this.ownerEmail = ownerEmail;
-        this.sessions = new ArrayList<>();
     }
     
     public static void create(String email, String firstName, String lastName, String ownerEmail) {

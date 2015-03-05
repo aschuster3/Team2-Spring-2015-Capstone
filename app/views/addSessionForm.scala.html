@@ -23,12 +23,7 @@
                             'type -> "date",
                             'class -> "form-control",
                             '_label -> "End Date/Time",
-                            '_showConstraints -> false)
-                       	@inputText(addSessionForm("isFree"), 
-                            'type -> "boolean",
-                            'class -> "form-control",
-                            '_label -> "Is this session free?",
-                            '_showConstraints -> false)
+                            '_showConstraints -> false)clean
                         <input role="button" class="btn btn-lg btn-primary btn-block" value="Create" type="submit"></input>
                         @if(addSessionForm.hasGlobalErrors()) {
                             <p class="text-center"><font color="red">@addSessionForm.globalError.message</font></p>

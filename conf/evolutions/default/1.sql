@@ -16,8 +16,7 @@ create table session (
   title                     varchar(255),
   starts_at                 timestamp,
   ends_at                   timestamp,
-  is_free                   boolean,
-  type                      varchar(255),
+  assigned_learner_email    varchar(255),
   constraint pk_session primary key (id))
 ;
 
@@ -48,6 +47,8 @@ create sequence unapproved_user_seq;
 
 create sequence user_seq;
 
+alter table session add constraint fk_session_assignedLearner_1 foreign key (assigned_learner_email) references learner (email) on delete restrict on update restrict;
+create index ix_session_assignedLearner_1 on session (assigned_learner_email);
 
 
 
