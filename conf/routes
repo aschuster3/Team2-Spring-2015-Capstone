@@ -38,6 +38,9 @@ PUT           /sessions-api/:id             controllers.SessionController.update
 DELETE        /sessions-api/:id             controllers.SessionController.deleteSession(id: String)
 POST          /sessions-api                 controllers.SessionController.jsonCreateSession()
 
+# Learner Actions
+GET           /learners-api                 controllers.LearnerController.getLearners()
+
 # Coordinator Learner Page
 GET           /students                     controllers.CoordinatorController.students()
 POST          /students                     controllers.CoordinatorController.createLearner()

@@ -8,7 +8,7 @@
  * Controller of the angularBootstrapCalendarApp
  */
 angular.module('mwl.calendar')
-  .controller('MainCtrl', function ($scope, $modal, moment, sessionService) {
+  .controller('MainCtrl', function ($scope, $modal, moment, sessionService, learnerService) {
 
     var currentYear = moment().year();
     var currentMonth = moment().month();
