@@ -96,7 +96,7 @@ public class Session extends Model {
 		return this.assignedLearner == null;
 	}
 
-	private String getType() {
+	public String getType() {
 		return this.isFree() ? TYPE_FREE : TYPE_TAKEN;
 	}
 }

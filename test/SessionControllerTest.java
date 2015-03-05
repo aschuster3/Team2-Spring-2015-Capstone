@@ -4,6 +4,7 @@ import java.util.Iterator;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.routes;
+import models.Learner;
 import models.Session;
 
 import models.User;
@@ -154,10 +155,21 @@ public class SessionControllerTest {
     }
 
     @Test
-    public void ensureTypeIsSerializedToJSON() {
+    public void ensureFreeTypeIsSerializedToJSON() {
         JsonNode json = Json.toJson(
                 new Session("1", "new-title", new Date(0), new Date(1)));
 
-        assertThat(json.path("type")).isNotNull();
+        assertThat(json.path("type").asText()).isEqualTo(Session.TYPE_FREE);
+    }
+
+    @Test
+    public void ensureTakenTypeIsSerializedToJSON() {
+        Session session = new Session("1", "title", new Date(0), new Date(1));
+        Learner learner = new Learner("email", "first", "last", ADMIN_EMAIL);
+        session.assignedLearner = learner;
+
+        JsonNode json = Json.toJson(session);
+
+        assertThat(json.path("type").asText()).isEqualTo(Session.TYPE_TAKEN);
     }
 }
