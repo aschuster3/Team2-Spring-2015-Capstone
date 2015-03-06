@@ -8,6 +8,7 @@ Once Activator is installed:
 2. Type "activator"
 3. Type "test" to see that the tests pass
 4. Type "run" and go to localhost:9000 to run the application
+
 	4a. To sign in as a coordinator, use the following credentials:
 		email = bob@gmail.com
 		password = secret
