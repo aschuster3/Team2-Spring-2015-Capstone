@@ -14,6 +14,7 @@ import models.User;
 import org.junit.Before;
 import org.junit.Test;
 
+import play.Logger;
 import play.mvc.Result;
 
 

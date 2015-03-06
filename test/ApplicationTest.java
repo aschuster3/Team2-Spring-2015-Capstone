@@ -1,5 +1,6 @@
 import models.UnapprovedUser;
 import models.User;
+import models.UserReset;
 
 import org.junit.*;
 
@@ -161,5 +162,54 @@ public class ApplicationTest {
         );
         assertThat(303).isEqualTo(status(result));
         assertThat("/login").isEqualTo(header("Location", result));
+    }
+    
+    @Test
+    public void requestPasswordResetSuccess() {
+        new User("Larry", "Lobster", "bluelagoon@gmail.com", "posewithme", false).save();
+        
+        Result result = callAction(
+                controllers.routes.ref.Application.sendNewPassword(),
+                fakeRequest().withFormUrlEncodedBody(ImmutableMap.of(
+                        "email", "bluelagoon@gmail.com"))
+            );
+        
+        assertThat(303).isEqualTo(status(result));
+        assertThat(UserReset.find.byId("bluelagoon@gmail.com")).isNotNull();
+    }
+    
+    @Test
+    public void requestPasswordResetFail() {
+        
+        Result result = callAction(
+                controllers.routes.ref.Application.sendNewPassword(),
+                fakeRequest().withFormUrlEncodedBody(ImmutableMap.of(
+                        "email", "somerandomemail@gmail.com"))
+            );
+        
+        assertThat(BAD_REQUEST).isEqualTo(status(result));
+        assertThat(UserReset.find.byId("somerandomemail@gmail.com")).isNull();
+    }
+    
+    @Test
+    public void resetPasswordSucceed() {
+        new User("Jeff", "Jefferson", "jeff@gmail.com", "password", false).save();
+        
+        User user = User.find.byId("jeff@gmail.com");
+        UserReset.create(user.email, "abcdefghijklmnopqrstuvwxyz");
+        
+        assertThat(user.password).isEqualTo("password");
+        
+        Result result = callAction(
+                controllers.routes.ref.Application.changeUserPassword(user.email),
+                fakeRequest().withFormUrlEncodedBody(ImmutableMap.of(
+                        "password", "newPassword",
+                        "passwordConfirm", "newPassword"))
+            );
+        
+        user = User.find.byId("jeff@gmail.com");
+        
+        assertThat(303).isEqualTo(status(result));
+        assertThat(user.password).isEqualTo("newPassword");
     }
 }

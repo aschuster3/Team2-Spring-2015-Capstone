@@ -7,6 +7,7 @@ import java.util.UUID;
 import models.Learner;
 import models.UnapprovedUser;
 import models.User;
+import models.UserReset;
 import play.Logger;
 import play.data.Form;
 import play.data.validation.Constraints.EmailValidator;
@@ -22,6 +23,7 @@ import views.html.forgotPasswordForm;
 import views.html.loginPage;
 import views.html.passwordPage;
 import views.html.registrationForm;
+import views.html.resetPasswordPage;
 import views.html.studentsPage;
 import views.html.testViewUnapprovedUsers;
 import views.html.testViewUserSignup;
@@ -148,13 +150,13 @@ public class Application extends Controller {
         } else {
             session().clear();
             User.create(
-                new User(user.firstName,
-                        user.lastName,
-                        user.email,
-                        filledForm.get().password,
-                        false,
-                        user.department)
-            );
+                    new User(user.firstName,
+                            user.lastName,
+                            user.email,
+                            filledForm.get().password,
+                            false,
+                            user.department)
+                );
             session("email", user.email);
             user.delete();
             return redirect(
@@ -162,7 +164,7 @@ public class Application extends Controller {
             );
         }
     }
-    
+
     /**
      * A form filler for the password form used in creating a
      * a new user
@@ -182,6 +184,68 @@ public class Application extends Controller {
         }
     }
     
+    public static Result sendNewPassword() {
+        Form<ForgotPassword> filledForm = forgotPasswordTemplate.bindFromRequest();
+        if(filledForm.hasGlobalErrors() || filledForm.hasErrors()) {
+            return badRequest(forgotPasswordForm.render(forgotPasswordTemplate));
+        } else if(User.find.byId(filledForm.get().email) == null) {
+            return badRequest(forgotPasswordForm.render(forgotPasswordTemplate));
+        } else {
+            String userEmail = filledForm.get().email;
+            
+            String token = UUID.randomUUID().toString();
+
+            try {
+                // Verifies that the URL is not malformed
+                URL url = new URL("http://localhost:9000" + (routes.Application.resetPassword(token)).url());
+                
+                Email email = new Email();
+                email.setSubject("Reset Password");
+                email.setFrom("admin@emory.edu");
+                email.addTo(userEmail);
+                email.setBodyText("Your new password is available here: " + url.toString());
+                
+                MailerPlugin.send(email);
+                
+                UserReset.create(userEmail, token);
+                
+                return redirect(routes.Application.login());
+            } catch (MalformedURLException e) {
+                return TODO;
+            }
+        }
+    }
+    
+    public static Result resetPassword(String token) {
+        UserReset userReset = UserReset.find.where().eq("resetToken", token).findUnique();
+        User user = User.find.where().eq("email", userReset.userEmail).findUnique();
+        if (userReset == null && user == null) {
+            return redirect(routes.Application.login());
+        }
+        
+        return ok(resetPasswordPage.render(passwordForm, user));
+    }
+    
+    public static Result changeUserPassword(String email) {
+        Form<Password> filledForm = passwordForm.bindFromRequest();
+        User user = User.find.byId(email);
+        if (filledForm.hasGlobalErrors() || filledForm.hasErrors()) {
+            return badRequest(resetPasswordPage.render(filledForm, user));
+        } else {
+            session().clear();
+            user.changePassword(filledForm.get().password);
+            
+            // Delete password reset token
+            UserReset.find.byId(user.email).delete();
+            
+            session("email", user.email);
+            return redirect(
+                routes.Application.index()
+            );
+        }
+    }
+  
+
     public static class ForgotPassword {
         @Required
         public String email;
@@ -194,21 +258,4 @@ public class Application extends Controller {
             return null;
         }
     }
-    
-    public static Result sendNewPassword() {
-        Form<ForgotPassword> filledForm = forgotPasswordTemplate.bindFromRequest();
-        if(filledForm.hasGlobalErrors() || filledForm.hasErrors()) {
-            return badRequest(forgotPasswordForm.render(forgotPasswordTemplate));
-        } else {
-            Email email = new Email();
-            email.setSubject("Reset Password");
-            email.setFrom("admin@emory.edu");
-            email.addTo(filledForm.get().email);
-            email.setBodyText("Your new password is available here");
-            
-            MailerPlugin.send(email);
-            return redirect(routes.Application.login());
-        }
-    }
-  
 }

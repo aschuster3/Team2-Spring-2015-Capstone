@@ -71,6 +71,16 @@ public class User extends Model {
                .eq("password", password).findUnique();
     }
     
+    /**
+     * For convenience to add encryption later
+     * 
+     * @param newPassword New password for account
+     */
+    public void changePassword(String newPassword) {
+        this.password = newPassword;
+        this.save();
+    }
+    
     public static void create(User user) {
         user.save();
     }
