@@ -39,6 +39,12 @@ create table user (
   constraint pk_user primary key (email))
 ;
 
+create table user_reset (
+  user_email                varchar(255) not null,
+  reset_token               varchar(255),
+  constraint pk_user_reset primary key (user_email))
+;
+
 create sequence learner_seq;
 
 create sequence session_seq;
@@ -46,6 +52,8 @@ create sequence session_seq;
 create sequence unapproved_user_seq;
 
 create sequence user_seq;
+
+create sequence user_reset_seq;
 
 alter table session add constraint fk_session_assignedLearner_1 foreign key (assigned_learner_email) references learner (email) on delete restrict on update restrict;
 create index ix_session_assignedLearner_1 on session (assigned_learner_email);
@@ -64,6 +72,8 @@ drop table if exists unapproved_user;
 
 drop table if exists user;
 
+drop table if exists user_reset;
+
 SET REFERENTIAL_INTEGRITY TRUE;
 
 drop sequence if exists learner_seq;
@@ -73,4 +83,6 @@ drop sequence if exists session_seq;
 drop sequence if exists unapproved_user_seq;
 
 drop sequence if exists user_seq;
+
+drop sequence if exists user_reset_seq;
 

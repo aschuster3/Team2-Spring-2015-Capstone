@@ -433,14 +433,13 @@ h6 small,
 .h6 small {
   color: #e7e9ec;
   }
-h1,
-h2{
+h1{
   margin-top: 30px;
   }
 h4,
 h5,
 h6 {
-  margin-top: 15px;
+  margin-top: 0px;
   margin-bottom: 15px;
   }
 h6 {
@@ -688,7 +687,6 @@ a.thumbnail.active {
   color: #34495e;
   }
 .btn {
-  padding: 10px 15px;
   font-size: 15px;
   font-weight: normal;
   line-height: 1.4;
@@ -1021,8 +1019,8 @@ fieldset[disabled] .btn-warning.active {
 .btn-inverse:active,
 .btn-inverse.active,
 .open > .dropdown-toggle.btn-inverse {
-  background: #2c3e50;
-  border-color: #2c3e50;
+  background: rgb(71, 83, 147);
+  border-color: rgb(71, 83, 147);
   }
 .btn-inverse.disabled,
 .btn-inverse[disabled],
@@ -1042,8 +1040,8 @@ fieldset[disabled] .btn-inverse:active,
 .btn-inverse.disabled.active,
 .btn-inverse[disabled].active,
 fieldset[disabled] .btn-inverse.active {
-  background-color: #bdc3c7;
-  border-color: #34495e;
+  background-color: rgb(71, 83, 147);
+  border-color: rgb(71, 83, 147);
   }
 .btn-inverse .badge {
   color: #34495e;
@@ -6193,4 +6191,4 @@ footer p {
     background: #bdc3c7 !important;
     }
   }
-/*# sourceMappingURL=flat-ui.css.map */
+
