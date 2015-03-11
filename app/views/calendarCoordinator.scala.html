@@ -40,7 +40,13 @@
         <div class="col-md-8 col-md-offset-2">
           
           <div class="row">
-            <h2 class="pull-left">{{ calendarControl.getTitle() }}</h2>
+            <h4 class="pull-left">{{ calendarControl.getTitle() }}</h4>
+            <select class="form-control form-inline pull-right" id="student-form">
+                <option value="" selected="selected">Select Student</option>
+                <option value="3">Marcia</option>
+                <option value="2">Jan</option>
+                <option value="1">Cindy</option>
+              </select>
             <div class="pull-right">
 
               <div class="btn-group">
@@ -50,9 +56,8 @@
               </div>
 
               <div class="btn-group">
-                <label class="btn btn-info" ng-model="calendarView" btn-radio="'month'">Month</label>
-                <label class="btn btn-info" ng-model="calendarView" btn-radio="'week'">Week</label>
-                <label class="btn btn-info" ng-model="calendarView" btn-radio="'day'">Day</label>
+                <label class="btn btn-inverse" ng-model="calendarView" btn-radio="'month'">Month</label>
+                <label class="btn btn-inverse" ng-model="calendarView" btn-radio="'week'">Week</label>
               </div>
             </div>
 
@@ -64,30 +69,10 @@
             calendar-view="calendarView"
             calendar-current-day="calendarDay"
             calendar-control="calendarControl"
-            calendar-event-click="eventClicked($event)"
-            calendar-edit-event-html="'<i class=\'glyphicon glyphicon-pencil\'></i>'"
-            calendar-delete-event-html="'<i class=\'glyphicon glyphicon-remove\'></i>'"
-            calendar-edit-event-click="eventEdited($event)"
-            calendar-delete-event-click="eventDeleted($event)"
             calendar-auto-open="true"
             calendar-day-view-starts_at="06:00"
             calendar-day-view-ends_at="22:00"
             ></mwl-calendar>
-
-          <br><br><br>
-
-          <script type="text/ng-template" id="modalContent.html">
-            <div class="modal-header">
-              <h3 class="modal-title">Event action occurred!</h3>
-            </div>
-            <div class="modal-body">
-              <p>Action: <pre>{{ action }}</pre></p>
-              <p>Event: <pre>{{ event | json }}</pre></p>
-            </div>
-            <div class="modal-footer">
-              <button class="btn btn-inverse" ng-click="$modalInstance.close()">OK</button>
-            </div>
-          </script>
 
           
         </div>

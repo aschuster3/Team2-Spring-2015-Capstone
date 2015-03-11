@@ -56,11 +56,13 @@
               <div class="btn-group">
                 <label class="btn btn-inverse" ng-model="calendarView" btn-radio="'month'">Month</label>
                 <label class="btn btn-inverse" ng-model="calendarView" btn-radio="'week'">Week</label>
-                <label class="btn btn-inverse" ng-model="calendarView" btn-radio="'day'">Day</label>
               </div>
 
-              <div class="btn btn-info" id="event-editor" ng-click="events.push({title: 'New event', type: 'info'})">New Event</div>
+              <!-- The line below now creates the pop-up when you click the New Event button -->
+              <div class="btn btn-info" id="event-editor" ng-click="eventClicked($event)">New Event</div> 
               <div class="clearfix"></div>
+              <!-- The line below was removed from the above ng-click="" line above. Not sure what to do with it just yet. -->
+              <!-- events.push({title: 'New event', type: 'info'}) -->
 
             </div>
 
@@ -94,62 +96,97 @@
 
           <script type="text/ng-template" id="modalContent.html">
             <div class="modal-header">
-              <h3 class="modal-title">Edit Event</h3>
+              <h4 class="modal-title">Edit Event</h4>
             </div>
             <div class="modal-body">
-              <p>Action: <pre>{{ action }}</pre></p>
-              <p>Event: <pre>{{ event | json }}</pre></p>
+              <table class="table table-bordered">
+
+                <thead>
+                  <tr>
+                    <th>Location</th>
+                    <th>Physician on Duty</th>
+                    <th>Date</th>
+                    <th>Repeat</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr>
+
+                    <td>
+                      <form class="form-horizontal">
+                        <fieldset>
+                            <select class="form-control col-sm-3">
+                                <option value="1">Emory Hospital</option>
+                                <option value="2">Grady Hospital</option>
+                                <option value="3">Something else</option>
+                                <option value="4">Something else</option>
+                            </select>
+                        </fieldset>
+                    </form>
+                    </td>
+
+                    <td>
+                        <input type="text" class="form-control" ng-model="event.title">
+                    </td>
+
+                    <td>
+                      <p class="input-group" style="max-width: 250px">
+                        <input type="text" class="form-control" readonly datepicker-popup="small" ng-model="event.starts_at" is-open="event.startOpen" close-text="Close" />
+                        <span class="input-group-btn">
+                          <button type="button" class="btn btn-default" ng-click="toggle($event, 'startOpen', event)"><i class="glyphicon glyphicon-search"></i></button>
+                        </span>
+                      </p>
+                      <div class="radio">
+                        <label>
+                          <input type="radio" name="AM-PM" id="AM-PM1">
+                          AM
+                        </label>
+                      </div>
+                      <div class="radio">
+                        <label>
+                          <input type="radio" name="AM-PM" id="AM-PM2">
+                          PM
+                        </label>
+                      </div>
+
+                    </td>
+
+                    <td>
+                      <div class="radio">
+                        <label>
+                          <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1">
+                          Daily
+                        </label>
+                      </div>
+                      <div class="radio">
+                        <label>
+                          <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                          Weekly
+                        </label>
+                      </div>
+                      <div class="radio">
+                        <label>
+                          <input type="radio" name="optionsRadios" id="optionsRadios3" value="option3">
+                          Monthly
+                        </label>
+                      </div>
+                    </td>
+
+                  </tr>
+                </tbody>
+
+              </table>
+      
             </div>
             <div class="modal-footer">
-              <button class="btn btn-inverse" ng-click="$modalInstance.close()">OK</button>
+              <button class="btn btn-danger pull-left" ng-click="$modalInstance.close()">Delete Event</button>
+              <button class="btn btn-inverse pull-right" ng-click="$modalInstance.close()">Cancel</button>
+              <button class="btn btn-inverse pull-right" ng-click="$modalInstance.close()">Submit</button>
             </div>
 
           </script>
-
-          <h4 id="event-editor">
-            Edit events
-          </h4>
-
-          <table class="table table-bordered">
-
-            <thead>
-              <tr>
-                <th>Clinic</th>
-                <th>Start time</th>
-                <th>End time</th>
-                <th>Submit</th>
-                <th>Remove</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr ng-repeat="event in events">
-                <td><input type="text" class="form-control" ng-model="event.title"></td>
-                <td>
-                  <p class="input-group" style="max-width: 250px">
-                    <input type="text" class="form-control" readonly datepicker-popup="medium" ng-model="event.starts_at" is-open="event.startOpen" close-text="Close" />
-                    <span class="input-group-btn">
-                      <button type="button" class="btn btn-default" ng-click="toggle($event, 'startOpen', event)"><i class="glyphicon glyphicon-search"></i></button>
-                    </span>
-                  </p>
-                  <timepicker ng-model="event.starts_at" hour-step="1" minute-step="15" show-meridian="true"></timepicker>
-                </td>
-                <td>
-                  <p class="input-group" style="max-width: 250px">
-                    <input type="text" class="form-control" readonly datepicker-popup="small" ng-model="event.ends_at" is-open="event.endOpen" close-text="Close" />
-                    <span class="input-group-btn">
-                      <button type="button" class="btn btn-default" ng-click="toggle($event, 'endOpen', event)"><i class="glyphicon glyphicon-search"></i></button>
-                    </span>
-                  </p>
-                  <timepicker ng-model="event.ends_at" hour-step="1" minute-step="15" show-meridian="true"></timepicker>
-                </td>
-                <td><button class="btn btn-inverse" ng-click="createSession($index)" ng-show="!event.id">Create</button>
-                    <button class="btn btn-inverse" ng-click="updateSession(event)" ng-show="event.id">Update</button></td>
-                <td><button class="btn btn-danger" ng-click="deleteSession($index)">Delete</button></td>
-              </tr>
-            </tbody>
-
-          </table>
+          
         </div>
       </div>
 

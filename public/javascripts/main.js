@@ -49,7 +49,7 @@ angular.module('mwl.calendar')
 
     function showModal(action, event) {
       $modal.open({
-        templateUrl: 'modalContent.html',
+        templateUrl: 'modal.html',
         controller: function($scope, $modalInstance) {
           $scope.$modalInstance = $modalInstance;
           $scope.action = action;

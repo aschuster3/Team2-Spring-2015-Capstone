@@ -688,6 +688,7 @@ a.thumbnail.active {
   }
 .btn {
   font-size: 15px;
+  margin-left: 10px;
   font-weight: normal;
   line-height: 1.4;
   border: none;
@@ -1964,8 +1965,6 @@ fieldset[disabled] .input-group-btn .btn-default.active {
 .checkbox,
 .radio {
   position: relative;
-  padding-left: 32px;
-  margin-bottom: 12px;
   font-size: 14px;
   line-height: 1.5;
   -webkit-transition: color .25s linear;
@@ -2241,7 +2240,7 @@ fieldset[disabled] .input-group-btn .btn-default.active {
   }
 .radio + .radio,
 .checkbox + .checkbox {
-  margin-top: 10px;
+  margin-top: 0px;
   }
 .form-inline .checkbox,
 .form-inline .radio {
