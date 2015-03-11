@@ -67,7 +67,7 @@ h2
 }
 .account-wall
 {
-    margin-top: 50px;
+    margin-top: 100px;
     margin-bottom: 50px;
     padding: 20px 30px 20px 20px;
     background-color: #f7f7f7;
@@ -115,7 +115,6 @@ h2
 .btn-primary
 {
     background-color: rgb(51,63,127);
-    width: 40%;
     margin-bottom: 20px;
     border-color: rgb(51,63,127);
 }
@@ -143,4 +142,22 @@ p {
 {
     padding-top: 10px;
     color: #444444;
+}
+
+dt{
+    line-height: 6px;
+}
+
+input.btn-block[type="submit"],
+input.btn-block[type="reset"], 
+input.btn-block[type="button"]
+{
+    width: 40%;
+    margin-left: 30%;
+}
+
+.account-wall-register
+{
+    margin-top: 50px;
+    margin-bottom: 20px;
 }
