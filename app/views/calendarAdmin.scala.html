@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="description" content="Admin calendar">
     <meta name="viewport" content="width=device-width">
-
+    
     <link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
     <link rel="stylesheet" href="@routes.Assets.at("stylesheets/angular-bootstrap-calendar.min.css")">
     <!--<link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap3/css/bootstrap-theme.min.css")">-->
@@ -58,11 +58,8 @@
                 <label class="btn btn-inverse" ng-model="calendarView" btn-radio="'week'">Week</label>
               </div>
 
-              <!-- The line below now creates the pop-up when you click the New Event button -->
-              <div class="btn btn-info" id="event-editor" ng-click="eventClicked($event)">New Event</div> 
+              <div class="btn btn-info" id="event-editor" ng-click="showModalForCreate()">New Event</div>
               <div class="clearfix"></div>
-              <!-- The line below was removed from the above ng-click="" line above. Not sure what to do with it just yet. -->
-              <!-- events.push({title: 'New event', type: 'info'}) -->
 
             </div>
 
@@ -77,113 +74,118 @@
             calendar-event-click="eventClicked($event)"
             calendar-edit-event-html="'<i class=\'glyphicon glyphicon-pencil\'></i>'"
             calendar-delete-event-html="'<i class=\'glyphicon glyphicon-remove\'></i>'"
-            calendar-edit-event-click="eventEdited($event)"
+            calendar-edit-event-click="showModalForUpdate($event)"
             calendar-delete-event-click="eventDeleted($event)"
             calendar-auto-open="true"
             calendar-day-view-starts_at="07:00"
             calendar-day-view-ends_at="20:00"
-            calendpublic Session(String title, Date starts_at, Date ends_at){
-    	this.id = UUID.randomUUID().toString();
-    	this.title = title;
-    	this.starts_at = starts_at;
-    	this.ends_at = ends_at;
-    	this.isFree = true;
-    }
-
             ></mwl-calendar>
 
           <br>
 
           <script type="text/ng-template" id="modalContent.html">
             <div class="modal-header">
-              <h4 class="modal-title">Edit Event</h4>
+              <h4 class="modal-title">{{ modalTitle }}</h4>
             </div>
-            <div class="modal-body">
-              <table class="table table-bordered">
+            <form name="eventForm" novalidate>
+              <div class="modal-body">
+                <table class="table table-bordered">
 
-                <thead>
-                  <tr>
-                    <th>Location</th>
-                    <th>Physician on Duty</th>
-                    <th>Date</th>
-                    <th>Repeat</th>
-                  </tr>
-                </thead>
+                  <thead>
+                    <tr>
+                      <th>Location</th>
+                      <th>Physician on Duty</th>
+                      <th>Date</th>
+                      <th ng-if="isCreateModal">Repeat</th>
+                    </tr>
+                  </thead>
 
-                <tbody>
-                  <tr>
+                  <tbody>
+                    <tr>
 
-                    <td>
-                      <form class="form-horizontal">
-                        <fieldset>
-                            <select class="form-control col-sm-3">
-                                <option value="1">Emory Hospital</option>
-                                <option value="2">Grady Hospital</option>
-                                <option value="3">Something else</option>
-                                <option value="4">Something else</option>
-                            </select>
-                        </fieldset>
-                    </form>
-                    </td>
-
-                    <td>
-                        <input type="text" class="form-control" ng-model="event.title">
-                    </td>
-
-                    <td>
-                      <p class="input-group" style="max-width: 250px">
-                        <input type="text" class="form-control" readonly datepicker-popup="small" ng-model="event.starts_at" is-open="event.startOpen" close-text="Close" />
-                        <span class="input-group-btn">
-                          <button type="button" class="btn btn-default" ng-click="toggle($event, 'startOpen', event)"><i class="glyphicon glyphicon-search"></i></button>
-                        </span>
-                      </p>
-                      <div class="radio">
-                        <label>
-                          <input type="radio" name="AM-PM" id="AM-PM1">
-                          AM
-                        </label>
+                      <td>
+                        <div class="form-horizontal">
+                          <fieldset>
+                              <select
+                                class="form-control col-sm-3"
+                                ng-model="event.title"
+                                ng-options="clinic as clinic for clinic in clinicOptions"
+                                required>
+                              </select>
+                          </fieldset>
                       </div>
-                      <div class="radio">
-                        <label>
-                          <input type="radio" name="AM-PM" id="AM-PM2">
-                          PM
-                        </label>
-                      </div>
+                      </td>
 
-                    </td>
+                      <td>
+                          <input type="text" class="form-control" ng-model="event.physician">
+                      </td>
 
-                    <td>
-                      <div class="radio">
-                        <label>
-                          <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1">
-                          Daily
-                        </label>
-                      </div>
-                      <div class="radio">
-                        <label>
-                          <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
-                          Weekly
-                        </label>
-                      </div>
-                      <div class="radio">
-                        <label>
-                          <input type="radio" name="optionsRadios" id="optionsRadios3" value="option3">
-                          Monthly
-                        </label>
-                      </div>
-                    </td>
+                      <td>
+                        <p class="input-group" style="max-width: 250px">
+                          <input type="text" class="form-control" readonly datepicker-popup="EEE MMMM d, yyyy"
+                                 ng-model="event.date" is-open="showDatePicker" close-text="Close"
+                                 ng-change="updateStartsAtEndsAt(event);" required />
+                          <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="toggleDatePicker($event)"><i class="glyphicon glyphicon-search"></i></button>
+                          </span>
+                        </p>
+                        <div class="radio">
+                          <label>
+                            <input type="radio" ng-model="event.isAM" ng-value="{{true}}"
+                                   ng-change="updateStartsAtEndsAt(event);" ng-required="!angular.isDefined(event.isAM)">
+                            AM
+                          </label>
+                        </div>
+                        <div class="radio">
+                          <label>
+                            <input type="radio" ng-model="event.isAM" ng-value="{{false}}"
+                                   ng-change="updateStartsAtEndsAt(event);" ng-required="!angular.isDefined(event.isAM)">
+                            PM
+                          </label>
+                        </div>
 
-                  </tr>
-                </tbody>
+                      </td>
 
-              </table>
-      
-            </div>
-            <div class="modal-footer">
-              <button class="btn btn-danger pull-left" ng-click="$modalInstance.close()">Delete Event</button>
-              <button class="btn btn-inverse pull-right" ng-click="$modalInstance.close()">Cancel</button>
-              <button class="btn btn-inverse pull-right" ng-click="$modalInstance.close()">Submit</button>
-            </div>
+                      <td ng-if="isCreateModal">
+                        <div class="radio">
+                          <label>
+                            <input type="radio" name="optionsRadios" id="optionsRadios0" value="option0">
+                            None
+                            </label>
+                          </div>
+                        <div class="radio">
+                          <label>
+                            <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1">
+                            Daily
+                          </label>
+                        </div>
+                        <div class="radio">
+                          <label>
+                            <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                            Weekly
+                          </label>
+                        </div>
+                        <div class="radio">
+                          <label>
+                            <input type="radio" name="optionsRadios" id="optionsRadios3" value="option3">
+                            Monthly
+                          </label>
+                        </div>
+                      </td>
+
+                    </tr>
+                  </tbody>
+
+                </table>
+
+
+              <div class="modal-footer">
+                <button ng-show="!isCreateModal" class="btn btn-danger pull-left" ng-click="clickDelete()">Delete Event</button>
+                <button class="btn btn-inverse pull-right" ng-click="clickCancel()">Cancel</button>
+                <button ng-show="isCreateModal" ng-disabled="eventForm.$invalid" class="btn btn-inverse pull-right" ng-click="clickCreate()">Submit</button>
+                <button ng-show="!isCreateModal" ng-disabled="eventForm.$invalid" class="btn btn-inverse pull-right" ng-click="clickUpdate()">Save</button>
+              </div>
+            </form>
 
           </script>
           
@@ -193,7 +195,6 @@
     </div>
 
     <script src="@routes.Assets.at("javascripts/angular.min.js")"></script>
-    <script src="@routes.Assets.at("javascripts/angular.js")"></script>
     <script src="@routes.Assets.at("javascripts/moment.min.js")"></script>
     <script src="@routes.Assets.at("javascripts/angular-bootstrap-calendar-tpls.min.js")"></script>
     <script src="@routes.Assets.at("javascripts/ui-bootstrap-tpls.min.js")"></script>
@@ -209,5 +210,6 @@
     <script src="@routes.Assets.at("javascripts/mwlcalendarday.js")"></script>
     <script src="@routes.Assets.at("javascripts/sessionService.js")"></script>
     <script src="@routes.Assets.at("javascripts/learnerService.js")"></script>
-</body>
+    <script src="@routes.Assets.at("javascripts/sessionModel.js")"></script>
+  </body>
 </html>

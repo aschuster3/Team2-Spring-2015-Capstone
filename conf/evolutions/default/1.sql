@@ -14,8 +14,9 @@ create table learner (
 create table session (
   id                        varchar(255) not null,
   title                     varchar(255),
-  starts_at                 timestamp,
-  ends_at                   timestamp,
+  is_am                     boolean,
+  date                      timestamp,
+  physician                 varchar(255),
   assigned_learner_email    varchar(255),
   constraint pk_session primary key (id))
 ;

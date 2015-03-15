@@ -17,7 +17,7 @@ angular.module('mwl.calendar')
 
         service.createSession = function (session) {
             return $http.post(urlBase, session);
-        }
+        };
 
         return service;
     }]);

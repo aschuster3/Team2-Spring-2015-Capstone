@@ -30,10 +30,10 @@ public class SessionControllerTest {
 	
 	@Test
     public void completeSessionCreation() {
-		Session event1 = new Session("Event1", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()));
+		Session event1 = new Session("Event1", new Date(System.currentTimeMillis()), true);
         Session.create(event1);
         
-        Session event2 = new Session("Event2", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()));
+        Session event2 = new Session("Event2", new Date(System.currentTimeMillis()), true);
         String event1ID = event1.id;
 
         assertThat(Session.find.byId(event1ID)).isNotNull();
@@ -43,8 +43,8 @@ public class SessionControllerTest {
                 fakeRequest().withSession("email", ADMIN_EMAIL).withFormUrlEncodedBody(ImmutableMap.of(
                         "id", "1001",
                         "title", "firstSession",
-                        "starts_at", "2015-3-1",
-                        "ends_at", "2015-3-2"))
+                        "date", "2015-3-1",
+                        "isAM", "true"))
         );
         
         assertThat(303).isEqualTo(status(result));
@@ -56,7 +56,7 @@ public class SessionControllerTest {
 	
 	@Test
 	public void sessionCreationFailedOnUsedID() {
-		Session event1 = new Session("102", "Event1", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()));
+		Session event1 = new Session("102", "Event1", new Date(System.currentTimeMillis()));
 		Session.create(event1);
 		
 		Result result = callAction(
@@ -64,8 +64,8 @@ public class SessionControllerTest {
                 fakeRequest().withSession("email", ADMIN_EMAIL).withFormUrlEncodedBody(ImmutableMap.of(
                         "id", "102",
                         "title", "firstSession",
-                        "starts_at", "2015-3-1",
-                        "ends_at", "2015-3-2"))
+                        "date", "2015-3-1",
+                        "isAM", "true"))
         );
 		
 		assertThat(400).isEqualTo(status(result));
@@ -75,7 +75,7 @@ public class SessionControllerTest {
 
     @Test
     public void deleteSessionSucceeds() {
-        Session session = new Session("1", "session-to-delete", new Date(0), new Date(1));
+        Session session = new Session("1", "session-to-delete", new Date(0));
         Session.create(session);
 
         Result result = callAction(
@@ -89,7 +89,7 @@ public class SessionControllerTest {
 
     @Test
     public void deleteSession_failsOnBadSessionID() {
-        Session session = new Session("1", "session-to-delete", new Date(0), new Date(1));
+        Session session = new Session("1", "session-to-delete", new Date(0));
         Session.create(session);
 
         Result result = callAction(
@@ -103,10 +103,10 @@ public class SessionControllerTest {
 
     @Test
     public void updateSession_existingSession_Succeeds() {
-        Session session = new Session("1", "old-title", new Date(0), new Date(1));
+        Session session = new Session("1", "old-title", new Date(0));
         Session.create(session);
         JsonNode jsonForUpdatedSession = Json.toJson(
-                new Session("1", "new-title", new Date(0), new Date(1)));
+                new Session("1", "new-title", new Date(0)));
 
         Result result = callAction(
                 routes.ref.SessionController.updateSession("1"),
@@ -123,7 +123,7 @@ public class SessionControllerTest {
     @Test
     public void updateSession_forNewSession_Succeeds() {
         JsonNode jsonForNewSession = Json.toJson(
-                new Session("1", "new-title", new Date(0), new Date(1)));
+                new Session("1", "new-title", new Date(0)));
 
         Result result = callAction(
                 routes.ref.SessionController.updateSession("1"),
@@ -140,7 +140,7 @@ public class SessionControllerTest {
     @Test
     public void jsonCreateSession_Succeeds() {
         JsonNode jsonForNewSession = Json.toJson(
-                new Session("1", "new-title", new Date(0), new Date(1)));
+                new Session("1", "new-title", new Date(0)));
 
         Result result = callAction(
                 routes.ref.SessionController.jsonCreateSession(),
@@ -157,14 +157,14 @@ public class SessionControllerTest {
     @Test
     public void ensureFreeTypeIsSerializedToJSON() {
         JsonNode json = Json.toJson(
-                new Session("1", "new-title", new Date(0), new Date(1)));
+                new Session("1", "new-title", new Date(0)));
 
         assertThat(json.path("type").asText()).isEqualTo(Session.TYPE_FREE);
     }
 
     @Test
     public void ensureTakenTypeIsSerializedToJSON() {
-        Session session = new Session("1", "title", new Date(0), new Date(1));
+        Session session = new Session("1", "title", new Date(0));
         Learner learner = new Learner("email", "first", "last", ADMIN_EMAIL);
         session.assignedLearner = learner;
 

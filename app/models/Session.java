@@ -1,5 +1,6 @@
 package models;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -28,49 +29,69 @@ public class Session extends Model {
 	public static final String TYPE_TAKEN = "invalid";
 	public static final String TYPE_FREE = "info";
 
+	public static final int AM_STARTS_AT = 8;
+	public static final int AM_ENDS_AT = 12;
+	public static final int PM_STARTS_AT = 13;
+	public static final int PM_ENDS_AT = 17;
+
     @Id
     public String id;
 
     @Required
     public String title;
-    
-    @Required
-    public Date starts_at;
-    
-    @Required
-    public Date ends_at;
+
+	@Required
+	public boolean isAM;
+
+	@Required
+	public Date date;  // only used for day-month-year
+
+	public String physician;
 
 	@ManyToOne
     public Learner assignedLearner;
 
-	@Transient  // only for front-end Javascript objects
+	/*
+	 * Following "transients" are only for front-end Javascript objects
+	 *
+	 * Do not directly assign to these.
+	 * These are read-only via getters, only (because they are dependent on other properties).
+	 */
+	@Transient
 	private String type;
+
+	@Transient
+	private Date starts_at;
+
+	@Transient
+	private Date ends_at;
+
+	/** Creates  an AM session */
+	public Session(String id, String title, Date date) {
+		this(id, title, date, true);
+	}
     
-    public Session(String id, String title, Date starts_at, Date ends_at){
-    	this.id = id;
-    	this.title = title;
-    	this.starts_at = starts_at;
-    	this.ends_at = ends_at;
+    public Session(String id, String title, Date date, boolean isAM) {
+		this(title, date, isAM);
+		this.id = id;
     }
+
+	public Session(String title, Date date, boolean isAM){
+		this.title = title;
+		this.date = date;
+		this.isAM = isAM;
+	}
     
-    public Session(String id, String title, String starts_at, String ends_at){
+    public Session(String id, String title, String date, boolean isAM){
     	this.id = id;
     	this.title = title;
     	DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");    	
     	try{
-    		this.starts_at = formatter.parse(starts_at);
-    		this.ends_at = formatter.parse(ends_at);
+    		this.date = formatter.parse(date);
     	}
     	catch(Exception e){
     		
     	}
-    }	
-    
-    public Session(String title, Date starts_at, Date ends_at){
-    	this.id = UUID.randomUUID().toString();
-    	this.title = title;
-    	this.starts_at = starts_at;
-    	this.ends_at = ends_at;
     }
 
     public static Finder<String, Session> find = new Finder<String, Session>(
@@ -98,5 +119,22 @@ public class Session extends Model {
 
 	public String getType() {
 		return this.isFree() ? TYPE_FREE : TYPE_TAKEN;
+	}
+
+	public Date getStarts_at() {
+		int startHour = this.isAM ? AM_STARTS_AT : PM_STARTS_AT;
+		return getCopyOfDateWithHour(startHour);
+	}
+
+	public Date getEnds_at() {
+		int endHour = this.isAM ? AM_ENDS_AT : PM_ENDS_AT;
+		return getCopyOfDateWithHour(endHour);
+	}
+
+	private Date getCopyOfDateWithHour(int hour) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(this.date);
+		cal.set(Calendar.HOUR_OF_DAY, hour);
+		return cal.getTime();
 	}
 }
