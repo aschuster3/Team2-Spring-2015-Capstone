@@ -10,23 +10,12 @@
 angular.module('mwl.calendar')
   .controller('MainCtrl', function ($scope, $modal, moment, Sessions, learnerService) {
 
-    $scope.showIt = false;
-
-    $scope.open = function($event) {
-      $event.preventDefault();
-      $event.stopPropagation();
-
-      $scope.opened = true;
-    };
-
-    $scope.dateOptions = {
-      formatYear: 'yy',
-      startingDay: 1
-    };
-
     /***********************************************************************
      * CALENDAR CODE
      ***********************************************************************/
+
+    $scope.events = Sessions.sessions;
+
     var currentYear = moment().year();
     var currentMonth = moment().month();
 
@@ -35,6 +24,24 @@ angular.module('mwl.calendar')
 
     $scope.setCalendarToToday = function() {
       $scope.calendarDay = new Date();
+    };
+
+    $scope.showModalForCreate = function () {
+      var defaultSession = {};
+      showModal(defaultSession);
+    };
+
+    $scope.showModalForUpdate = function (event) {
+      var copy = angular.copy(event);  // so we don't update real object until hitting "save"
+      showModal(copy);
+    };
+
+    $scope.eventClicked = function(event) {
+      console.log('eventClicked:  Clicking through icon not supported right now');
+    };
+
+    $scope.eventDeleted = function(event) {
+      Sessions.delete(event);
     };
 
 
@@ -51,8 +58,8 @@ angular.module('mwl.calendar')
      ***********************************************************************/
     var AM_START_HOURS = 8;
     var AM_END_HOURS = 12;
-    var PM_START_HOURS = 1;
-    var PM_END_HOURS = 5;
+    var PM_START_HOURS = 13;
+    var PM_END_HOURS = 17;
 
     /*
      * starts_at and ends_at are required properties for the calendar
@@ -153,29 +160,6 @@ angular.module('mwl.calendar')
         }
       });
     }
-
-    $scope.showModalForCreate = function () {
-      var defaultSession = {};
-      showModal(defaultSession);
-    };
-
-    $scope.showModalForUpdate = function (event) {
-      var copy = angular.copy(event);  // so we don't update real object until hitting "save"
-      showModal(copy);
-    };
-
-    $scope.eventClicked = function(event) {
-      console.log('eventClicked:  Clicking through icon not supported right now');
-    };
-
-    $scope.eventDeleted = function(event) {
-      Sessions.delete(event);
-    };
-
-    /*********************************************************************
-     * Initialize data on $scope
-     *********************************************************************/
-    $scope.events = Sessions.sessions;
 
   })
   .directive('datepickerPopup', ['datepickerPopupConfig', 'dateParser', 'dateFilter', function (datepickerPopupConfig, dateParser, dateFilter) {

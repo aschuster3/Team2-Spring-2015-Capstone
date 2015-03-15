@@ -6,7 +6,7 @@ angular.module('mwl.calendar')
       update: update,
       delete: remove
     }
-    getAll();  // init
+    getAll();
     return Sessions;
 
 

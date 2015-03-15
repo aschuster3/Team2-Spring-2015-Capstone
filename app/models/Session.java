@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import play.data.validation.Constraints.*;
 
 import java.util.UUID;
@@ -61,10 +62,12 @@ public class Session extends Model {
 	private String type;
 
 	@Transient
-	private Date starts_at;
+	@JsonProperty("starts_at")
+	private Date startsAt;
 
 	@Transient
-	private Date ends_at;
+	@JsonProperty("ends_at")
+	private Date endsAt;
 
 	/** Creates  an AM session */
 	public Session(String id, String title, Date date) {
@@ -121,12 +124,12 @@ public class Session extends Model {
 		return this.isFree() ? TYPE_FREE : TYPE_TAKEN;
 	}
 
-	public Date getStarts_at() {
+	public Date getStartsAt() {
 		int startHour = this.isAM ? AM_STARTS_AT : PM_STARTS_AT;
 		return getCopyOfDateWithHour(startHour);
 	}
 
-	public Date getEnds_at() {
+	public Date getEndsAt() {
 		int endHour = this.isAM ? AM_ENDS_AT : PM_ENDS_AT;
 		return getCopyOfDateWithHour(endHour);
 	}
