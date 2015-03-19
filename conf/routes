@@ -14,10 +14,10 @@ POST          /login                        controllers.Application.authenticate
 GET           /logout                       controllers.Application.logout()
 
 # Forgot Password
-GET         /forgotPassword               controllers.Application.forgotPassword()
-POST        /forgotPassword               controllers.Application.sendNewPassword()
-GET         /resetPassword/:token         controllers.Application.resetPassword(token: String)
-POST        /resetPassword                controllers.Application.changeUserPassword(email: String)
+GET           /forgotPassword               controllers.Application.forgotPassword()
+POST          /forgotPassword               controllers.Application.sendNewPassword()
+GET           /resetPassword/:token         controllers.Application.resetPassword(token: String)
+POST          /resetPassword                controllers.Application.changeUserPassword(email: String)
 
 # Sign up
 GET           /signup                       controllers.Application.signup()
@@ -39,6 +39,8 @@ GET           /sessions-api                 controllers.SessionController.jsonAl
 PUT           /sessions-api/:id             controllers.SessionController.updateSession(id: String)
 DELETE        /sessions-api/:id             controllers.SessionController.deleteSession(id: String)
 POST          /sessions-api                 controllers.SessionController.jsonCreateSession()
+POST          /sessions-api/rec             controllers.SessionController.createSessionRecurrenceGroup()
+DELETE        /sessions-api/rec/:sessionId  controllers.SessionController.deleteSessionRecurrenceGroup(sessionId: String)
 
 # Learner Actions
 GET           /learners-api                 controllers.LearnerController.getLearners()

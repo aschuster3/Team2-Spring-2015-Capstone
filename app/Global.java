@@ -2,12 +2,17 @@ import com.avaje.ebean.Ebean;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jobs.SessionRecurrenceJob;
 import models.Learner;
+import models.SessionRecurrenceGroup;
 import models.User;
 import play.Application;
 import play.GlobalSettings;
 import play.Logger;
 import play.libs.Json;
+import scala.concurrent.duration.Duration;
+
+import java.util.concurrent.TimeUnit;
 
 
 public class Global extends GlobalSettings {
@@ -32,5 +37,9 @@ public class Global extends GlobalSettings {
         ObjectMapper mapper = new ObjectMapper()
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         Json.setObjectMapper(mapper);
+
+        // TODO
+        new SessionRecurrenceJob(Duration.create(7, TimeUnit.DAYS), 1)
+                .schedule(Duration.create(0, TimeUnit.MILLISECONDS));
     }
 }

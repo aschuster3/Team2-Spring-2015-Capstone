@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import models.Session;
+import models.SessionRecurrenceGroup;
 import models.UnapprovedUser;
 import play.Logger;
 import play.data.*;
@@ -84,5 +85,69 @@ public class SessionController extends Controller {
 			session.delete();
 			return status(204);
 		}
+	}
+
+	/**
+	 * Expects JSON with two fields:
+	 *   1) sessionRecurrenceGroup [object],
+	 *   2) session [object]
+	 * @return list of created sessions
+	 */
+	@BodyParser.Of(BodyParser.Json.class)
+	public static Result createSessionRecurrenceGroup() {
+		JsonNode json = request().body().asJson();
+		JsonNode recGroupJson = json.get("sessionRecurrenceGroup");
+		JsonNode sessionJson = json.get("session");
+
+		if (recGroupJson == null || sessionJson == null) {
+			return status(BAD_REQUEST,
+					"JSON must contain a 'session' object " +
+							"and a 'sessionRecurrenceGroup' object");
+		}
+
+		SessionRecurrenceGroup recGroup =
+				Json.fromJson(recGroupJson, SessionRecurrenceGroup.class);
+		Session baseSession =
+				Json.fromJson(sessionJson, Session.class);
+
+		SessionRecurrenceGroup.create(recGroup);
+
+		baseSession.recurrenceGroupId = recGroup.id;
+		Session.create(baseSession);
+
+		List<Session> createdSessions = recGroup.generateNewOccurrences(52);
+		createdSessions.add(baseSession);
+		return status(CREATED, Json.toJson(createdSessions));
+	}
+
+	/**
+	 * Deletes the RecurrenceGroup object, along with all
+	 * sessions that are in the Recurrence group that come after
+	 * the session with the given sessionId
+	 *
+	 * i.e. delete all on or after Session.find.byId(sessionId)
+	 */
+	public static Result deleteSessionRecurrenceGroup(String sessionId) {
+		Session startSession = Session.find.byId(sessionId);
+		SessionRecurrenceGroup recGroup =
+				SessionRecurrenceGroup.find.byId(startSession.recurrenceGroupId);
+
+		if (startSession == null || recGroup == null) {
+			return badRequest("invalid sessionId, or sessionId not part of recurrence group");
+		}
+
+		List<Session> sessionsInRecGroup = recGroup.allSessions();
+
+		for (Session session: sessionsInRecGroup) {
+			if (session.date.after(startSession.date) || session.date.equals(startSession.date)) {
+				session.delete();
+			} else {
+				session.recurrenceGroupId = null;
+				session.save();
+			}
+		}
+		recGroup.delete();
+
+		return status(204);
 	}
 }

@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import play.data.validation.Constraints.*;
 
@@ -51,6 +52,8 @@ public class Session extends Model {
 
 	@ManyToOne
     public Learner assignedLearner;
+
+	public Long recurrenceGroupId;
 
 	/*
 	 * Following "transients" are only for front-end Javascript objects
@@ -139,5 +142,19 @@ public class Session extends Model {
 		cal.setTime(this.date);
 		cal.set(Calendar.HOUR_OF_DAY, hour);
 		return cal.getTime();
+	}
+
+	/**
+	 * @return A clone which has identical fields, except for ID.
+	 * transient fields are also ignored.
+	 */
+	public Session clone() {
+		Session clone = new Session(this.title, this.date, this.isAM);
+		clone.assignedLearner = this.assignedLearner;
+		clone.physician = this.physician;
+		clone.recurrenceGroupId = this.recurrenceGroupId;
+		clone.id = null;
+
+		return clone;
 	}
 }

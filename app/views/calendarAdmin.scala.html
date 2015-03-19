@@ -149,26 +149,14 @@
                       <td ng-if="isCreateModal">
                         <div class="radio">
                           <label>
-                            <input type="radio" name="optionsRadios" id="optionsRadios0" value="option0">
+                            <input type="radio" ng-model="event.recurrenceType" ng-value="REC_TYPE_NONE">
                             None
                             </label>
                           </div>
                         <div class="radio">
                           <label>
-                            <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1">
-                            Daily
-                          </label>
-                        </div>
-                        <div class="radio">
-                          <label>
-                            <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                            <input type="radio" ng-model="event.recurrenceType" ng-value="REC_TYPE_WEEKLY">
                             Weekly
-                          </label>
-                        </div>
-                        <div class="radio">
-                          <label>
-                            <input type="radio" name="optionsRadios" id="optionsRadios3" value="option3">
-                            Monthly
                           </label>
                         </div>
                       </td>

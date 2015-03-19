@@ -19,6 +19,10 @@ angular.module('mwl.calendar')
     var currentYear = moment().year();
     var currentMonth = moment().month();
 
+    /* from SessionRecurrenceGroup.java */
+    var REC_TYPE_NONE = 0;
+    var REC_TYPE_WEEKLY = 1;
+
     $scope.calendarView = 'month';
     $scope.calendarDay = new Date();
 
@@ -40,17 +44,24 @@ angular.module('mwl.calendar')
       console.log('eventClicked:  Clicking through icon not supported right now');
     };
 
-    $scope.eventDeleted = function(event) {
-      Sessions.delete(event);
-    };
+    $scope.eventDeleted = deleteEvent;
 
 
     /***********************************************************************
-     * General Functions relevant to Grouping Sessions
+     * General Functions relevant to Grouping or Deleting Sessions
      ***********************************************************************/
     function isCompleted(session) {
       var currentDate = new Date();
       return currentDate.getTime() - session.date.getTime() < 0;
+    }
+
+    function deleteEvent(event) {
+      // TODO provide option to user
+      if (event.recurrenceGroupId === null) {
+        Sessions.delete(event);
+      } else {
+        Sessions.deleteRecurrence(event);
+      }
     }
 
     /***********************************************************************
@@ -126,6 +137,11 @@ angular.module('mwl.calendar')
 
           $scope.showDatePicker = false;
 
+
+          $scope.REC_TYPE_NONE = REC_TYPE_NONE;
+          $scope.REC_TYPE_WEEKLY = REC_TYPE_WEEKLY;
+          $scope.event.recurrenceType = REC_TYPE_NONE;
+
           $scope.toggleDatePicker = function($event) {
             $event.preventDefault();
             $event.stopPropagation();
@@ -135,7 +151,8 @@ angular.module('mwl.calendar')
 
 
           $scope.clickDelete = function () {
-            Sessions.delete($scope.event);
+            // TODO provide option to delete recurrence group
+            deleteEvent($scope.event);
             $modalInstance.dismiss('cancel');
           };
 
@@ -145,7 +162,11 @@ angular.module('mwl.calendar')
           };
 
           $scope.clickCreate = function () {
-            Sessions.create($scope.event);
+            if ($scope.event.recurrenceType !== REC_TYPE_NONE) {
+              Sessions.createRecurrence($scope.event, $scope.event.recurrenceType);
+            } else {
+              Sessions.create($scope.event);
+            }
             $modalInstance.dismiss('cancel');
           };
 
