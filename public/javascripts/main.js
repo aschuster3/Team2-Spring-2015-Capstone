@@ -19,7 +19,7 @@ angular.module('mwl.calendar')
     var currentYear = moment().year();
     var currentMonth = moment().month();
 
-    /* from SessionRecurrenceGroup.java */
+    /* from RecurringSessionGroup.java */
     var REC_TYPE_NONE = 0;
     var REC_TYPE_WEEKLY = 1;
 
@@ -57,10 +57,10 @@ angular.module('mwl.calendar')
 
     function deleteEvent(event) {
       // TODO provide option to user
-      if (event.recurrenceGroupId === null) {
+      if (event.recurringGroupId === null) {
         Sessions.delete(event);
       } else {
-        Sessions.deleteRecurrence(event);
+        Sessions.deleteRecurringGroup(event);
       }
     }
 
@@ -140,7 +140,7 @@ angular.module('mwl.calendar')
 
           $scope.REC_TYPE_NONE = REC_TYPE_NONE;
           $scope.REC_TYPE_WEEKLY = REC_TYPE_WEEKLY;
-          $scope.event.recurrenceType = REC_TYPE_NONE;
+          $scope.event.recurringType = REC_TYPE_NONE;
 
           $scope.toggleDatePicker = function($event) {
             $event.preventDefault();
@@ -151,7 +151,7 @@ angular.module('mwl.calendar')
 
 
           $scope.clickDelete = function () {
-            // TODO provide option to delete recurrence group
+            // TODO provide option to delete recurring session group
             deleteEvent($scope.event);
             $modalInstance.dismiss('cancel');
           };
@@ -162,8 +162,8 @@ angular.module('mwl.calendar')
           };
 
           $scope.clickCreate = function () {
-            if ($scope.event.recurrenceType !== REC_TYPE_NONE) {
-              Sessions.createRecurrence($scope.event, $scope.event.recurrenceType);
+            if ($scope.event.recurringType !== REC_TYPE_NONE) {
+              Sessions.createRecurringGroup($scope.event, $scope.event.recurringType);
             } else {
               Sessions.create($scope.event);
             }

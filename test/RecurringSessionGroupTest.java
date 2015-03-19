@@ -1,6 +1,6 @@
 import models.Learner;
 import models.Session;
-import models.SessionRecurrenceGroup;
+import models.RecurringSessionGroup;
 import models.User;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +12,7 @@ import java.util.List;
 import static org.fest.assertions.Assertions.assertThat;
 import static play.test.Helpers.*;
 
-public class SessionRecurrenceGroupTest {
+public class RecurringSessionGroupTest {
 
     private static final String COORDINATOR_EMAIL = "admin@gmail.com";
 
@@ -28,15 +28,15 @@ public class SessionRecurrenceGroupTest {
         Learner learner = new Learner("learner@gmail.com", "first", "last", COORDINATOR_EMAIL);
         learner.save();
 
-        SessionRecurrenceGroup recGroup =
-                new SessionRecurrenceGroup(SessionRecurrenceGroup.REC_TYPE_WEEKLY);
+        RecurringSessionGroup recGroup =
+                new RecurringSessionGroup(RecurringSessionGroup.REC_TYPE_WEEKLY);
         recGroup.save();
 
         Calendar baseCal = Calendar.getInstance();
         baseCal.set(2015, 5, 1);
         Session base = new Session("title", baseCal.getTime(), true);
         base.assignedLearner = learner;
-        base.recurrenceGroupId = recGroup.id;
+        base.recurringGroupId = recGroup.id;
         base.save();
 
 
@@ -68,16 +68,16 @@ public class SessionRecurrenceGroupTest {
 
     @Test
     public void testFindLastSession() {
-        SessionRecurrenceGroup recGroup =
-                new SessionRecurrenceGroup(SessionRecurrenceGroup.REC_TYPE_WEEKLY);
-        SessionRecurrenceGroup.create(recGroup);
+        RecurringSessionGroup recGroup =
+                new RecurringSessionGroup(RecurringSessionGroup.REC_TYPE_WEEKLY);
+        RecurringSessionGroup.create(recGroup);
 
         Session lastSession = new Session("lastSession", new Date(10), true);
         Session firstSession = new Session("firstSession", new Date(9), true);
         Session unrelatedSession = new Session("unrelated", new Date(11), true);
 
-        lastSession.recurrenceGroupId = recGroup.id;
-        firstSession.recurrenceGroupId = recGroup.id;
+        lastSession.recurringGroupId = recGroup.id;
+        firstSession.recurringGroupId = recGroup.id;
 
         Session.create(lastSession);
         Session.create(firstSession);

@@ -19,16 +19,16 @@ angular.module('mwl.calendar')
             return $http.post(urlBase, session);
         };
 
-        service.createSessionRecurrence = function (session, recurrenceType) {
+        service.createRecurringSessions = function (session, recurringType) {
             return $http.post(urlBase + '/rec', {
                 session: session,
-                sessionRecurrenceGroup: {
-                    recurrenceType: recurrenceType
+                recurringSessionGroup: {
+                    recurringType: recurringType
                 }
             })
         };
 
-        service.removeSessionRecurrence = function (session) {
+        service.removeRecurringSessions = function (session) {
             return $http.delete(urlBase + '/rec/' + session.id);
         };
 

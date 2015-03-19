@@ -1,52 +1,50 @@
 package models;
 
-import org.springframework.beans.factory.annotation.Required;
 import play.db.ebean.Model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 @Entity
-public class SessionRecurrenceGroup extends Model {
+public class RecurringSessionGroup extends Model {
 
     public static final int REC_TYPE_WEEKLY = 1;
 
     @Id
     public Long id;
 
-    public int recurrenceType;
+    public int recurringType;
 
     /**
-     * @param recurrenceType choose from REC_TYPE_XXX constants
+     * @param recurringType choose from REC_TYPE_XXX constants
      */
-    public SessionRecurrenceGroup(int recurrenceType) {
-        this.recurrenceType = recurrenceType;
+    public RecurringSessionGroup(int recurringType) {
+        this.recurringType = recurringType;
     }
 
-    public static Model.Finder<Long, SessionRecurrenceGroup> find =
-            new Model.Finder<>(Long.class, SessionRecurrenceGroup.class);
+    public static Model.Finder<Long, RecurringSessionGroup> find =
+            new Model.Finder<>(Long.class, RecurringSessionGroup.class);
 
-    public static void create(SessionRecurrenceGroup group) {
+    public static void create(RecurringSessionGroup group) {
         group.save();
     }
 
     public Session findLastSession() {
         return Session.find
-                .where().eq("recurrenceGroupId", this.id)
+                .where().eq("recurringGroupId", this.id)
                 .orderBy().desc("date")
                 .findList().get(0);
     }
 
     /**
      * Generates new Session objects by cloning the "last" session associated
-     * with this recurrence group.
+     * with this recurring session group.
      *
-     * The "last" session is the session in the recurrence group with the latest
+     * The "last" session is the session in the recurring group with the latest
      * start date.
      * i.e. the return value from "findLastSession()"
      *
@@ -75,7 +73,7 @@ public class SessionRecurrenceGroup extends Model {
     }
 
     private Date nextOccurrenceDate(Date baseDate) {
-        if (this.recurrenceType == REC_TYPE_WEEKLY) {
+        if (this.recurringType == REC_TYPE_WEEKLY) {
             Calendar cal = Calendar.getInstance();
             cal.setTime(baseDate);
             cal.add(Calendar.WEEK_OF_YEAR, 1);
@@ -86,7 +84,7 @@ public class SessionRecurrenceGroup extends Model {
 
     public List<Session> allSessions() {
         List<Session> allSessions =
-                Session.find.where().eq("recurrenceGroupId", this.id).findList();
+                Session.find.where().eq("recurringGroupId", this.id).findList();
 
         return allSessions;
     }

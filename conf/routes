@@ -23,9 +23,6 @@ POST          /resetPassword                controllers.Application.changeUserPa
 GET           /signup                       controllers.Application.signup()
 POST          /signup                       controllers.Application.createUnapprovedUser()
 
-# Test UnapprovedUser population
-GET           /testUU                       controllers.AdminController.fetchUU()
-
 # UnapprovedUser Actions
 POST          /testUU/:id/delete            controllers.AdminController.removeUnapprovedUser(id: String)
 POST          /testUU/:id                   controllers.AdminController.approveUnapprovedUser(id: String)

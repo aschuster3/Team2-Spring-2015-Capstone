@@ -13,7 +13,6 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.With;
 import views.html.coordinatorsPage;
-import views.html.testViewUnapprovedUsers;
 
 @With(SecuredAdminAction.class)
 public class AdminController extends Controller {
@@ -77,16 +76,5 @@ public class AdminController extends Controller {
     public static Result viewCalendar() {
         return ok(views.html.calendarAdmin.render());
     }
-    
-    /**
-     * This is a temporary test action to view current UnapprovedUsers
-     * 
-     * This should be replaced by the admin capabilities
-     * 
-     * @return
-     */
-    public static Result fetchUU() {
-        // TODO: replace with an admin template
-        return ok(testViewUnapprovedUsers.render(UnapprovedUser.getAll()));
-    }
+
 }

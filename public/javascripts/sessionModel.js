@@ -3,10 +3,10 @@ angular.module('mwl.calendar')
     var Sessions = {
       sessions: [],
       create: create,
-      createRecurrence: createRecurrence,
+      createRecurringGroup: createRecurringGroup,
       update: update,
       delete: remove,
-      deleteRecurrence: removeRecurrence
+      deleteRecurringGroup: removeRecurringGroup
     };
     getAll();
     return Sessions;
@@ -45,15 +45,15 @@ angular.module('mwl.calendar')
         });
     }
 
-    function createRecurrence(newSession, recurrenceType) {
-      sessionService.createSessionRecurrence(newSession, recurrenceType)
+    function createRecurringGroup(newSession, recurringType) {
+      sessionService.createRecurringSessions(newSession, recurringType)
         .success(function (data) {
           angular.forEach(data, function (session) {
             Sessions.sessions.push(session);
           });
         })
         .error(function (data, status) {
-          $log.error('sessionService.createSessionRecurrence failed with code ' + status);
+          $log.error('sessionService.createRecurringSessions failed with code ' + status);
         })
     }
 
@@ -79,8 +79,8 @@ angular.module('mwl.calendar')
         })
     }
 
-    function removeRecurrence(session) {
-      sessionService.removeSessionRecurrence(session)
+    function removeRecurringGroup(session) {
+      sessionService.removeRecurringSessions(session)
         .success(function () {
           getAll();
         })

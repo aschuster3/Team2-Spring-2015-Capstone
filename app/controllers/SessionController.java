@@ -1,20 +1,14 @@
 package controllers;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import models.Session;
-import models.SessionRecurrenceGroup;
-import models.UnapprovedUser;
-import play.Logger;
+import models.RecurringSessionGroup;
 import play.data.*;
-import play.data.validation.ValidationError;
 import play.libs.Json;
 import play.mvc.*;
 import views.html.*;
 
 import java.util.List;
-import java.util.Map.Entry;
 
 
 /**
@@ -89,30 +83,30 @@ public class SessionController extends Controller {
 
 	/**
 	 * Expects JSON with two fields:
-	 *   1) sessionRecurrenceGroup [object],
+	 *   1) recurringSessionGroup [object],
 	 *   2) session [object]
 	 * @return list of created sessions
 	 */
 	@BodyParser.Of(BodyParser.Json.class)
 	public static Result createSessionRecurrenceGroup() {
 		JsonNode json = request().body().asJson();
-		JsonNode recGroupJson = json.get("sessionRecurrenceGroup");
+		JsonNode recGroupJson = json.get("recurringSessionGroup");
 		JsonNode sessionJson = json.get("session");
 
 		if (recGroupJson == null || sessionJson == null) {
 			return status(BAD_REQUEST,
 					"JSON must contain a 'session' object " +
-							"and a 'sessionRecurrenceGroup' object");
+							"and a 'recurringSessionGroup' object");
 		}
 
-		SessionRecurrenceGroup recGroup =
-				Json.fromJson(recGroupJson, SessionRecurrenceGroup.class);
+		RecurringSessionGroup recGroup =
+				Json.fromJson(recGroupJson, RecurringSessionGroup.class);
 		Session baseSession =
 				Json.fromJson(sessionJson, Session.class);
 
-		SessionRecurrenceGroup.create(recGroup);
+		RecurringSessionGroup.create(recGroup);
 
-		baseSession.recurrenceGroupId = recGroup.id;
+		baseSession.recurringGroupId = recGroup.id;
 		Session.create(baseSession);
 
 		List<Session> createdSessions = recGroup.generateNewOccurrences(52);
@@ -129,8 +123,8 @@ public class SessionController extends Controller {
 	 */
 	public static Result deleteSessionRecurrenceGroup(String sessionId) {
 		Session startSession = Session.find.byId(sessionId);
-		SessionRecurrenceGroup recGroup =
-				SessionRecurrenceGroup.find.byId(startSession.recurrenceGroupId);
+		RecurringSessionGroup recGroup =
+				RecurringSessionGroup.find.byId(startSession.recurringGroupId);
 
 		if (startSession == null || recGroup == null) {
 			return badRequest("invalid sessionId, or sessionId not part of recurrence group");
@@ -142,7 +136,7 @@ public class SessionController extends Controller {
 			if (session.date.after(startSession.date) || session.date.equals(startSession.date)) {
 				session.delete();
 			} else {
-				session.recurrenceGroupId = null;
+				session.recurringGroupId = null;
 				session.save();
 			}
 		}

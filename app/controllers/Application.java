@@ -25,8 +25,6 @@ import views.html.passwordPage;
 import views.html.registrationForm;
 import views.html.resetPasswordPage;
 import views.html.studentsPage;
-import views.html.testViewUnapprovedUsers;
-import views.html.testViewUserSignup;
 
 /**
  * The application controller for general purpose tasks such as logging in and out.

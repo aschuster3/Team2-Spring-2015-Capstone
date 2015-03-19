@@ -1,6 +1,6 @@
 package jobs;
 
-import models.SessionRecurrenceGroup;
+import models.RecurringSessionGroup;
 import scala.concurrent.duration.FiniteDuration;
 
 import java.util.List;
@@ -8,19 +8,19 @@ import java.util.List;
 /**
  * Creates new Session instances for recurrence groups.
  */
-public class SessionRecurrenceJob extends AkkaJob {
+public class RecurringSessionJob extends AkkaJob {
 
     private final int newSessionsPerRun;
 
-    public SessionRecurrenceJob(FiniteDuration frequency, int newSessionsPerRun) {
+    public RecurringSessionJob(FiniteDuration frequency, int newSessionsPerRun) {
         super(frequency);
         this.newSessionsPerRun = newSessionsPerRun;
     }
 
     @Override
     public void run() {
-        List<SessionRecurrenceGroup> recurrenceGroups = SessionRecurrenceGroup.find.all();
-        for (SessionRecurrenceGroup group: recurrenceGroups) {
+        List<RecurringSessionGroup> recurrenceGroups = RecurringSessionGroup.find.all();
+        for (RecurringSessionGroup group: recurrenceGroups) {
             group.generateNewOccurrences(this.newSessionsPerRun);
         }
     }

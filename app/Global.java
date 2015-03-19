@@ -2,9 +2,8 @@ import com.avaje.ebean.Ebean;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jobs.SessionRecurrenceJob;
+import jobs.RecurringSessionJob;
 import models.Learner;
-import models.SessionRecurrenceGroup;
 import models.User;
 import play.Application;
 import play.GlobalSettings;
@@ -39,7 +38,7 @@ public class Global extends GlobalSettings {
         Json.setObjectMapper(mapper);
 
         // TODO
-        new SessionRecurrenceJob(Duration.create(7, TimeUnit.DAYS), 1)
+        new RecurringSessionJob(Duration.create(7, TimeUnit.DAYS), 1)
                 .schedule(Duration.create(0, TimeUnit.MILLISECONDS));
     }
 }
