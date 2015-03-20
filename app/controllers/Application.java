@@ -69,7 +69,20 @@ public class Application extends Controller {
     	if (filledForm.hasGlobalErrors() || filledForm.hasErrors()) {
             return badRequest(registrationForm.render(filledForm));
         } else {
-            UnapprovedUser.create(filledForm.get());
+            UnapprovedUser newUU = filledForm.get();
+            String otherDepartment = filledForm.data().get("other_department");
+
+            if (newUU.department.toLowerCase().startsWith("other")) {
+                if (otherDepartment != null && !otherDepartment.isEmpty()) {
+                    newUU.department = otherDepartment;
+                } else {
+                    filledForm.reject("Must specify 'other' department");
+                    return badRequest(registrationForm.render(filledForm));
+                }
+            }
+
+            UnapprovedUser.create(newUU);
+
         	return redirect(routes.Application.login());
         }
     }

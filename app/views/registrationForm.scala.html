@@ -78,4 +78,32 @@
             </div>
         </div>
     </div>
+
+    <script>
+    (function () {
+        var departmentSelector = document.getElementById('department');
+        var otherDepartmentInput = document.getElementById('other_department');
+        var otherDepartmentContainer = document.getElementById('other_department_field');
+
+        updateOtherDepartmentVisibility();
+
+        departmentSelector.onchange = function () {
+            otherDepartmentInput.value = '';
+            updateOtherDepartmentVisibility();
+        };
+
+        function updateOtherDepartmentVisibility() {
+            if (otherDeptIsSelected()) {
+                otherDepartmentContainer.style.display = "";
+            } else {
+                otherDepartmentContainer.style.display = "none";
+            }
+        }
+
+        function otherDeptIsSelected() {
+            return departmentSelector.value.toLowerCase().indexOf("other") === 0;
+        }
+
+    })();
+    </script>
 </body>
