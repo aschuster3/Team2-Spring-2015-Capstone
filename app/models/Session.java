@@ -78,6 +78,11 @@ public class Session extends Model {
 		this(title, date, isAM);
 		this.id = id;
     }
+    
+    public Session(String id, String title, Date date, String physician, boolean isAM) {
+        this(id, title, date, isAM);
+        this.physician = physician;
+    }
 
 	public Session(String title, Date date, boolean isAM){
 		this.title = title;
