@@ -49,7 +49,9 @@
               href="javascript:;"
               class="event-item"
               ng-click="eventClick({$event: event})">
-              {{ event.title }}
+              {{ event.title }} | Dr. Doctor{{ event.physician }} |
+              <span ng-if="event.isAM">AM</span>
+              <span ng-if="!event.isAM">PM</span>
             </a>
 
             <a
