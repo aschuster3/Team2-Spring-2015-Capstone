@@ -99,11 +99,6 @@
             <form name="eventForm" novalidate>
               <div class="modal-body">
                 <table class="table table-bordered">
-                  <col>
-                  <col width="50px">
-                  <col>
-                  <col>
-                  <col>
                   <thead>
                     <tr>
                       <th>Location</th>
@@ -121,7 +116,7 @@
                         <div class="form-horizontal">
                           <fieldset>
                               <select
-                                class="form-control col-sm-3"
+                                class="form-control"
                                 ng-model="event.title"
                                 ng-options="clinic as clinic for clinic in clinicOptions"
                                 required>
@@ -130,11 +125,11 @@
                       </div>
                       </td>
 
-                      <td style="max-width: 140px">
+                      <td style="max-width: 120px">
                           <input type="text" class="form-control" ng-model="event.physician">
                       </td>
 
-                      <td style="max-width: 110px">
+                      <td style="max-width: 120px">
                         <p class="input-group">
                           <input type="text" class="form-control" readonly datepicker-popup="EEE MMMM d, yyyy"
                                  ng-model="event.date" is-open="showDatePicker" close-text="Close"
@@ -182,7 +177,6 @@
 
                 </table>
 
-
               <div class="modal-footer">
                 <button ng-show="!isCreateModal" class="btn btn-danger pull-left" ng-click="clickDelete()">Delete Event</button>
                 <button class="btn btn-inverse pull-right" ng-click="clickCancel()">Cancel</button>
@@ -198,10 +192,8 @@
 
     </div>
 
-<<<<<<< Updated upstream
-=======
     <script src="@routes.Assets.at("javascripts/angular.js")"></script>
->>>>>>> Stashed changes
+
     <script src="@routes.Assets.at("javascripts/angular.min.js")"></script>
     <script src="@routes.Assets.at("javascripts/moment.min.js")"></script>
     <script src="@routes.Assets.at("javascripts/angular-bootstrap-calendar-tpls.min.js")"></script>
