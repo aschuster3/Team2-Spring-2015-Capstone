@@ -1,4 +1,4 @@
-@()
+@(learners: List[Learner])
 <html class="no-js">
   <head>
     <title>Coordinator Schedule</title>
@@ -46,9 +46,9 @@
             <h4 class="pull-left">{{ calendarControl.getTitle() }}</h4>
             <select class="form-control form-inline pull-right" id="student-form">
                 <option value="" selected="selected">Select Student</option>
-                <option value="3">Marcia</option>
-                <option value="2">Jan</option>
-                <option value="1">Cindy</option>
+                @for((learner, index) <- learners.zipWithIndex) {
+                <option value="@index">@learner.firstName @learner.lastName</option>
+                }
               </select>
             <div class="pull-right">
 

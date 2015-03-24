@@ -68,7 +68,7 @@ public class CoordinatorController extends Controller {
     }
 
     public static Result viewCoordinatorCalendar() {
-        return ok(calendarCoordinator.render());
+        return ok(calendarCoordinator.render(Learner.getAllOwnedBy(session().get("email"))));
     }
 
 }
