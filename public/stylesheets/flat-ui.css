@@ -688,7 +688,7 @@ a.thumbnail.active {
   }
 .btn {
   font-size: 15px;
-  margin-left: 10px;
+  margin-left: 0px;
   font-weight: normal;
   line-height: 1.4;
   border: none;
@@ -915,7 +915,7 @@ fieldset[disabled] .btn-danger.active {
   }
 .btn-success {
   color: #fff;
-  background-color: #2ecc71;
+  background-color: rgb(51, 63, 127);
   }
 .btn-success:hover,
 .btn-success.hover,
@@ -924,8 +924,8 @@ fieldset[disabled] .btn-danger.active {
 .btn-success.active,
 .open > .dropdown-toggle.btn-success {
   color: #fff;
-  background-color: #58d68d;
-  border-color: #58d68d;
+  background-color: rgb(71, 83, 147);
+  border-color: rgb(71, 83, 147);
   }
 .btn-success:active,
 .btn-success.active,
@@ -3166,6 +3166,7 @@ fieldset[disabled] .input-group-btn .btn-default.active {
   border: none;
   border-radius: 4px;
   box-shadow: none;
+  font-family: 'Lato';
   }
 .dropdown-menu .divider {
   height: 2px;

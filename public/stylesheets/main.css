@@ -72,13 +72,9 @@ p{
 .btn-logout{
   margin-top: 8px;
 }
-.wide-modal
-{
-	width: 800px;
-}
 #student-form{
 	width: 200px;
 	height: 34px;
-	padding-top: 8px;
-	padding-bottom: 8px;
+	padding-top: 4px;
+	padding-bottom: 4px;
 }

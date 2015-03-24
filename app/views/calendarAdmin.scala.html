@@ -62,10 +62,10 @@
               <div class="clearfix"></div>
 
             </div>
-
           </div>
 
           <br>
+
           <mwl-calendar
             calendar-events="events"
             calendar-view="calendarView"
@@ -79,6 +79,15 @@
             calendar-auto-open="true"
             calendar-day-view-starts_at="07:00"
             calendar-day-view-ends_at="20:00"
+
+            calendpublic Session(String title, Date starts_at, Date ends_at){
+            	this.id = UUID.randomUUID().toString();
+            	this.title = title;
+            	this.starts_at = starts_at;
+            	this.ends_at = ends_at;
+            	this.isFree = true;
+            }
+
             ></mwl-calendar>
 
           <br>
@@ -90,12 +99,17 @@
             <form name="eventForm" novalidate>
               <div class="modal-body">
                 <table class="table table-bordered">
-
+                  <col>
+                  <col width="50px">
+                  <col>
+                  <col>
+                  <col>
                   <thead>
                     <tr>
                       <th>Location</th>
                       <th>Physician on Duty</th>
                       <th>Date</th>
+                      <th>Time</th>
                       <th ng-if="isCreateModal">Repeat</th>
                     </tr>
                   </thead>
@@ -103,7 +117,7 @@
                   <tbody>
                     <tr>
 
-                      <td>
+                      <td style="max-width: 110px">
                         <div class="form-horizontal">
                           <fieldset>
                               <select
@@ -116,12 +130,12 @@
                       </div>
                       </td>
 
-                      <td>
+                      <td style="max-width: 140px">
                           <input type="text" class="form-control" ng-model="event.physician">
                       </td>
 
-                      <td>
-                        <p class="input-group" style="max-width: 250px">
+                      <td style="max-width: 110px">
+                        <p class="input-group">
                           <input type="text" class="form-control" readonly datepicker-popup="EEE MMMM d, yyyy"
                                  ng-model="event.date" is-open="showDatePicker" close-text="Close"
                                  ng-change="updateStartsAtEndsAt(event);" required />
@@ -129,6 +143,9 @@
                             <button type="button" class="btn btn-default" ng-click="toggleDatePicker($event)"><i class="glyphicon glyphicon-search"></i></button>
                           </span>
                         </p>
+                      </td>
+
+                      <td style="width: 5∂0px">
                         <div class="radio">
                           <label>
                             <input type="radio" ng-model="event.isAM" ng-value="{{true}}"
@@ -143,10 +160,9 @@
                             PM
                           </label>
                         </div>
-
                       </td>
 
-                      <td ng-if="isCreateModal">
+                      <td ng-if="isCreateModal" style="width: 40px">
                         <div class="radio">
                           <label>
                             <input type="radio" ng-model="event.recurringType" ng-value="REC_TYPE_NONE">
@@ -182,6 +198,10 @@
 
     </div>
 
+<<<<<<< Updated upstream
+=======
+    <script src="@routes.Assets.at("javascripts/angular.js")"></script>
+>>>>>>> Stashed changes
     <script src="@routes.Assets.at("javascripts/angular.min.js")"></script>
     <script src="@routes.Assets.at("javascripts/moment.min.js")"></script>
     <script src="@routes.Assets.at("javascripts/angular-bootstrap-calendar-tpls.min.js")"></script>
