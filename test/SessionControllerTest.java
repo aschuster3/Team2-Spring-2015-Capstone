@@ -1,11 +1,16 @@
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.routes;
 import models.Learner;
 import models.Session;
+import models.ScheduleTemplate;
+import models.SessionTemplate;
+import controllers.SessionController;
 
 import models.User;
 import org.junit.*;
@@ -172,4 +177,50 @@ public class SessionControllerTest {
 
         assertThat(json.path("type").asText()).isEqualTo(Session.TYPE_TAKEN);
     }
+    
+    @Test 
+    public void createScheduleTemplate(){
+    	ScheduleTemplate scheduleTemp = new ScheduleTemplate("subi1");
+    	scheduleTemp.save();
+    	assertThat(ScheduleTemplate.find.byId(scheduleTemp.title)).isNotNull();
+    }
+    
+    @Test
+    public void createSessionTemplate(){
+    	SessionTemplate sessionTemp = new SessionTemplate("Clinic", 1, 1, true);
+    	sessionTemp.save();
+    	assertThat(sessionTemp.find.byId(sessionTemp.id)).isNotNull();
+    }
+    
+    @Test
+    public void addSessionToScheduleTemplate(){
+    	ScheduleTemplate scheduleTemp = new ScheduleTemplate("subi1");
+    	scheduleTemp.save();
+    	SessionTemplate sessionTemp = new SessionTemplate("Clinic", 1, 1, true);
+    	sessionTemp.save();
+ 
+    	assertThat(scheduleTemp.addSession(sessionTemp)).isTrue();
+    }
+    /*
+    @Test
+    public void createSessionsFromScheduleTemplate(){
+    	ScheduleTemplate scheduleTemp = new ScheduleTemplate("subi1");
+    	scheduleTemp.save();
+    	for (int week = 0; week<3; week++){
+    		for(int day = 0; day<5; day++){
+    			String name = "Week" + week + "Day" + day;
+    			SessionTemplate sessionTempAM = new SessionTemplate(name + "AM", week, day, true);
+    			sessionTempAM.save();
+    			SessionTemplate sessionTempPM = new SessionTemplate(name + "PM", week, day, false);
+    			sessionTempPM.save();
+    			scheduleTemp.addSession(sessionTempAM);
+    			scheduleTemp.addSession(sessionTempPM);
+    		}
+    	}
+    	scheduleTemp.save();
+    	
+    	Result result = SessionController.createScheduleSessions(scheduleTemp.title, "2015/03/30");
+    	assertThat(status(result)).isEqualTo(200);
+		assertThat(Session.getAll().size()).isEqualTo(30);
+    } */
 }

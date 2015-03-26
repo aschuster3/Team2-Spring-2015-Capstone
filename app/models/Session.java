@@ -51,6 +51,8 @@ public class Session extends Model {
     public Learner assignedLearner;
 
 	public Long recurringGroupId;
+	
+	public String scheduleTitle;
 
 	/*
 	 * Following "transients" are only for front-end Javascript objects
@@ -100,6 +102,11 @@ public class Session extends Model {
     	catch(Exception e){
     		
     	}
+    }
+    
+    public Session(String title, Date date, boolean isAM, String schedule){
+    	this(title, date, isAM);
+    	this.scheduleTitle = schedule;
     }
 
     public static Finder<String, Session> find = new Finder<String, Session>(

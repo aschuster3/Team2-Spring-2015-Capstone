@@ -7,9 +7,14 @@ import play.data.*;
 import play.libs.Json;
 import play.mvc.*;
 import views.html.*;
+import models.ScheduleTemplate;
+import models.SessionTemplate;
 
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
-
+import java.util.Calendar;
 
 /**
  * The session controller for tasks that involve adding, deleting and editing sessions.
@@ -143,5 +148,28 @@ public class SessionController extends Controller {
 		recGroup.delete();
 
 		return status(204);
+	}
+	
+	public static Result createScheduleSessions(String scheduleID, String date){
+		ScheduleTemplate schedule = ScheduleTemplate.find.byId(scheduleID);
+		if(schedule == null){
+			return badRequest("Failed: Schedule with title " + scheduleID + " does not exist");
+		}
+		Date startDate; 
+		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    	try{
+    		startDate = formatter.parse(date);
+    		for (SessionTemplate session: schedule.sessions){
+    			int days = (session.week - 1)*7 + (session.day - 1);
+    			Calendar cal = Calendar.getInstance();
+    	        cal.setTime(startDate);
+    	        cal.add(Calendar.DATE, days); 
+    			Session.create(new Session(session.title, cal.getTime(), session.isAM, scheduleID));
+    		}
+    	}
+    	catch(Exception e){
+    		return badRequest("Failed: Date not formatted correctly.");
+		}
+		return status(200);
 	}
 }

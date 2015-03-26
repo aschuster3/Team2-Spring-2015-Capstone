@@ -17,6 +17,11 @@ create table recurring_session_group (
   constraint pk_recurring_session_group primary key (id))
 ;
 
+create table schedule_template (
+  title                     varchar(255) not null,
+  constraint pk_schedule_template primary key (title))
+;
+
 create table session (
   id                        varchar(255) not null,
   title                     varchar(255),
@@ -25,7 +30,17 @@ create table session (
   physician                 varchar(255),
   assigned_learner_email    varchar(255),
   recurring_group_id        bigint,
+  schedule_title            varchar(255),
   constraint pk_session primary key (id))
+;
+
+create table session_template (
+  id                        varchar(255) not null,
+  title                     varchar(255),
+  week                      integer,
+  day                       integer,
+  is_am                     boolean,
+  constraint pk_session_template primary key (id))
 ;
 
 create table unapproved_user (
@@ -57,7 +72,11 @@ create sequence learner_seq;
 
 create sequence recurring_session_group_seq;
 
+create sequence schedule_template_seq;
+
 create sequence session_seq;
+
+create sequence session_template_seq;
 
 create sequence unapproved_user_seq;
 
@@ -78,7 +97,11 @@ drop table if exists learner;
 
 drop table if exists recurring_session_group;
 
+drop table if exists schedule_template;
+
 drop table if exists session;
+
+drop table if exists session_template;
 
 drop table if exists unapproved_user;
 
@@ -92,7 +115,11 @@ drop sequence if exists learner_seq;
 
 drop sequence if exists recurring_session_group_seq;
 
+drop sequence if exists schedule_template_seq;
+
 drop sequence if exists session_seq;
+
+drop sequence if exists session_template_seq;
 
 drop sequence if exists unapproved_user_seq;
 
