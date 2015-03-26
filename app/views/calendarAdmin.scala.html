@@ -26,9 +26,10 @@
       <nav class="navbar navbar-default navbar-static-top">
         <div class="container">
           <ul class="nav navbar-nav pull-left">
-            <li><a href="@routes.Application.index()">Home</a></li>
+            <li class="active"><a href="@routes.Application.index()">Home</a></li>
                   <li class="active"><a href="@routes.AdminController.viewAllCoordinators()">Coordinators</a></li>
-                  <li><a href="@routes.AdminController.viewCalendar()">Schedule</a></li>
+                  <li class="active"><a href="@routes.AdminController.viewCalendar()">Schedule</a></li>
+                  <li class="active"><a href="@routes.AdminController.viewCalendar()">Manage Templates</a></li>
               </ul>
               <div class="pull-right">
               <button onclick="location.href='@routes.Application.logout()';" type="button" class="btn btn-block btn-sm btn-danger btn-logout">Log Out</button>
@@ -125,7 +126,7 @@
                       </div>
                       </td>
 
-                      <td style="max-width: 120px">
+                      <td style="max-width: 100px">
                           <input type="text" class="form-control" ng-model="event.physician">
                       </td>
 

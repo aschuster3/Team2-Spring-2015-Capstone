@@ -14,7 +14,7 @@
         ng-class="{pointer: day.events.length > 0}">
         <div class="cal-month-day" ng-class="{'cal-day-outmonth': !day.inMonth, 'cal-day-inmonth': day.inMonth, 'cal-day-weekend': $index == 5 || $index == 6, 'cal-day-today': day.isToday}">
           <small class="cal-events-num badge badge-inverse pull-left" ng-show="day.events.length > 0">{{ day.events.length }}</small>
-          <span class="pull-right" data-cal-date ng-click="drillDown(day.label)">{{ day.label }}</span>
+          <span class="pull-right" data-cal-date>{{ day.label }}</span>
           <div class="cal-day-tick" ng-show="day.isOpened">
             <i class="glyphicon glyphicon-chevron-up"></i>
             <i class="fa fa-chevron-up"></i>
@@ -49,7 +49,7 @@
               href="javascript:;"
               class="event-item"
               ng-click="eventClick({$event: event})">
-              {{ event.title }} | Dr. Doctor{{ event.physician }} |
+              {{  event.title  }}  |  {{  event.physician  }}  | 
               <span ng-if="event.isAM">AM</span>
               <span ng-if="!event.isAM">PM</span>
             </a>
