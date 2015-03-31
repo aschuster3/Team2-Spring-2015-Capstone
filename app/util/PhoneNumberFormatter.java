@@ -14,11 +14,11 @@ public class PhoneNumberFormatter {
     public static boolean isValidNumber(String phoneNumber) {
         PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
         try {
-            phoneUtil.parse(phoneNumber, "US");
+            PhoneNumber pn = phoneUtil.parse(phoneNumber, "US");
+            return phoneUtil.isValidNumberForRegion(pn, "US");
         } catch (NumberParseException e) {
             return false;
         }
-        return true;
     }
 
     /**
@@ -33,13 +33,19 @@ public class PhoneNumberFormatter {
      * if there is a parse exception
      */
     public static String safeTransformToCommonFormat(String phoneNumber) {
+        if (!isValidNumber(phoneNumber)) {
+            return phoneNumber;
+        }
+
         PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
         String formattedString;
         try {
             PhoneNumber numberToFormat = phoneUtil.parse(phoneNumber, "US");
+            System.out.println("Hello, ");
             formattedString = phoneUtil.format(
                     numberToFormat,
                     PhoneNumberUtil.PhoneNumberFormat.NATIONAL);
+            System.out.println("Word");
         } catch (NumberParseException e) {
             formattedString = phoneNumber;
         }
