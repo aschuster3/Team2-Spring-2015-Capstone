@@ -5,6 +5,7 @@ import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import play.data.validation.Constraints.*;
@@ -113,6 +114,9 @@ public class Session extends Model {
             String.class, Session.class);
     
     public static void create(Session session) {
+		if (session.id == null) {
+			session.id = UUID.randomUUID().toString();
+		}
     	session.save();
     }
 
