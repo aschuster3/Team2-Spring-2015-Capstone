@@ -51,6 +51,12 @@
                             'placeholder -> "E-mail",
                             '_label -> null,
                             '_showConstraints -> false)
+                        @inputText(registrationForm("phoneNumber"),
+                            'type -> "tel",
+                            'class -> "form-control",
+                            'placeholder -> "Phone Number",
+                            '_label -> null,
+                            '_showConstraints -> false)
                         @select(registrationForm("department"),
                             options(Seq("Emory Internal Medicine","Morehouse Internal Medicine","Emory Family Medicine","Emory Pediatrics",
                             "Emory Rheumatology", "Emory Allergy ", "Emory Plastic Surgery", "Emory Nurse Practitioner Student", "Emory Physicians Assistant Student", "Other - Please specify below")),

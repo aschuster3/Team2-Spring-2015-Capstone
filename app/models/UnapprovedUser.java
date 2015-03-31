@@ -10,6 +10,9 @@ import play.data.validation.Constraints.EmailValidator;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
 
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import util.PhoneNumberFormatter;
+
 @Entity
 @SuppressWarnings("serial")
 /**
@@ -34,19 +37,31 @@ public class UnapprovedUser extends Model {
     @Required
     public String lastName;
 
+    @Required
+    public String phoneNumber;
+
     public String token;
-    
+
+
     public UnapprovedUser(String firstName, String lastName, String email, String department) {
+        this(firstName, lastName, email, department, "555-123-4567");
+    }
+
+    public UnapprovedUser(
+            String firstName, String lastName, String email,
+            String department, String phoneNumber) {
         this.email = email;
         this.department = department;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
     }
 
     public static Finder<String, UnapprovedUser> find = new Finder<String, UnapprovedUser>(
             String.class, UnapprovedUser.class);
     
     public static void create(UnapprovedUser user) {
+        user.phoneNumber = PhoneNumberFormatter.safeTransformToCommonFormat(user.phoneNumber);
         user.save();
     }
     
@@ -63,6 +78,10 @@ public class UnapprovedUser extends Model {
         EmailValidator val = new EmailValidator();
         if(!val.isValid(this.email)) {
             return "The email address is not valid.";
+        }
+
+        if (!PhoneNumberFormatter.isValidNumber(this.phoneNumber)) {
+            return "The phone number is not valid.";
         }
         
         return null;

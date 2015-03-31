@@ -30,7 +30,7 @@ public class AdminControllerTest {
         start(fakeApplication(inMemoryDatabase(), fakeGlobal()));
 
         new User("Admin", "User", ADMIN_EMAIL, "adminpassword", true).save();
-        new User("Coord", "User", COORDINATOR_EMAIL, "coordpassword", false, "dept").save();
+        new User("Coord", "User", COORDINATOR_EMAIL, "coordpassword", false, "dept", "555-123-4567").save();
     }
 
     @Test

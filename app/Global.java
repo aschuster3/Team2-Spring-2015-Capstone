@@ -25,12 +25,12 @@ public class Global extends GlobalSettings {
         if (User.find.findRowCount() == 0) {
             Logger.info("Data added");
 
-            User bahb = new User("Bob", "Lob", "bob@gmail.com", "secret", false, "Emory Internal Medicine");
-            User frank = new User("Frank", "Knarf", "frank@gmail.com", "allyourbase", false, "Emory Allergy");
+            User bahb = new User("Bob", "Lob", "bob@gmail.com", "secret", false, "Emory Internal Medicine", "770-820-1063");
+            User frank = new User("Frank", "Knarf", "frank@gmail.com", "allyourbase", false, "Emory Allergy", "770-241-2206");
             
-            Ebean.save(bahb);
-            Ebean.save(new User("Sharon", "Norahs", "sharon@gmail.com", "kitty", true));
-            Ebean.save(frank);
+            User.create(bahb);
+            User.create(new User("Sharon", "Norahs", "sharon@gmail.com", "kitty", true));
+            User.create(frank);
             
             Ebean.save(new Learner("harry@cat.meow", "Harry", "Cat", bahb.email));
             Ebean.save(new Learner("ooooo@octopus.noise", "Monkey", "Octopus", bahb.email));

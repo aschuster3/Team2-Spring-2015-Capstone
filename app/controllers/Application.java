@@ -166,7 +166,8 @@ public class Application extends Controller {
                             user.email,
                             filledForm.get().password,
                             false,
-                            user.department)
+                            user.department,
+                            user.phoneNumber)
                 );
             session("email", user.email);
             user.delete();

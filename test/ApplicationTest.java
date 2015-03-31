@@ -75,7 +75,8 @@ public class ApplicationTest {
                         "firstName", "Big",
                         "lastName", "Octopus",
                         "email", "new_email@gmail.com",
-                        "department", "Aquatic Life"))
+                        "department", "Aquatic Life",
+                        "phoneNumber", "917-555-1234"))
         );
         
         assertThat(303).isEqualTo(status(result));

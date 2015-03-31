@@ -48,6 +48,7 @@ create table unapproved_user (
   department                varchar(255),
   first_name                varchar(255),
   last_name                 varchar(255),
+  phone_number              varchar(255),
   token                     varchar(255),
   constraint pk_unapproved_user primary key (email))
 ;
@@ -58,6 +59,7 @@ create table user (
   is_admin                  boolean,
   first_name                varchar(255),
   last_name                 varchar(255),
+  phone_number              varchar(255),
   department                varchar(255),
   constraint pk_user primary key (email))
 ;

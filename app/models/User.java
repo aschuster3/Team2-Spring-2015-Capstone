@@ -9,6 +9,7 @@ import javax.persistence.OneToMany;
 import play.data.validation.Constraints.Email;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
+import util.PhoneNumberFormatter;
 
 @Entity
 @SuppressWarnings("serial")
@@ -37,6 +38,9 @@ public class User extends Model {
     
     @Required
     public String lastName;
+
+    @Required
+    public String phoneNumber;
     
     public String department;
 
@@ -46,21 +50,20 @@ public class User extends Model {
     */
     
     public User(String firstName, String lastName, String email, String password, boolean isAdmin) {
-        this.email = email;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.isAdmin = isAdmin;
-        //this.learners = new ArrayList<Learner>();
+        this(firstName, lastName, email, password, isAdmin, "unknown dept", "555-123-4567");
     }
 
-    public User(String firstName, String lastName, String email, String password, boolean isAdmin, String department) {
+    public User(
+            String firstName, String lastName, String email, String password,
+            boolean isAdmin, String department, String phoneNumber) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.isAdmin = isAdmin;
         this.department = department;
+        this.phoneNumber = phoneNumber;
+        //this.learners = new ArrayList<Learner>();
     }
 
     public static Finder<String, User> find = new Finder<String, User>(
@@ -82,6 +85,7 @@ public class User extends Model {
     }
     
     public static void create(User user) {
+        user.phoneNumber = PhoneNumberFormatter.safeTransformToCommonFormat(user.phoneNumber);
         user.save();
     }
     
