@@ -9,7 +9,7 @@ angular.module('mwl.calendar')
          */
         service.getLearners = function () {
             return $http.get(urlBase);
-        }
+        };
 
         return service;
     }]);

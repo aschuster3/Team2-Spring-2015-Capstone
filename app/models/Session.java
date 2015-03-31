@@ -49,7 +49,7 @@ public class Session extends Model {
 	public String physician;
 
 	@ManyToOne
-    public Learner assignedLearner;
+    public String assignedLearner;
 
 	public Long recurringGroupId;
 	

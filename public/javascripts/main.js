@@ -45,7 +45,26 @@ angular.module('mwl.calendar')
     };
 
     $scope.eventDeleted = deleteEvent;
+    
+    /***********************************************************************
+     * General Functions relevant to adding Sessions to Learners
+     ***********************************************************************/
+    $scope.currentLearner = "error";
+    
+    $scope.$watch('learnerDropdown', function(email) {
+    	if (!(typeof email === "undefined")) {
+        	$scope.currentLearner = email;
+    	}
+    });
+    
+    $scope.addSessionToLearner = function(session) {
+    	session.assignedLearner = $scope.currentLearner;
+        Sessions.update(session);
+        alert("Running");
+    }
 
+    // Create a general method that updates the event.type for each event when 
+    // its status has changed.
 
     /***********************************************************************
      * General Functions relevant to Grouping or Deleting Sessions

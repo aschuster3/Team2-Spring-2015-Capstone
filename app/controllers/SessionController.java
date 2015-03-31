@@ -55,6 +55,10 @@ public class SessionController extends Controller {
 		if (!session.id.equals(id)) {
 			return badRequest("update failed: parameter id does not match session object id");
 		}
+		
+		if (session.assignedLearner.equals("error")) {
+		    return badRequest("update failed: please choose a valid student");
+		}
 
 		if (Session.find.byId(id) == null) {
 			Session.create(session);
