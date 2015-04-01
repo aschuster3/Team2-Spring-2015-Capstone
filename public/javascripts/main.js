@@ -58,10 +58,14 @@ angular.module('mwl.calendar')
     });
     
     $scope.addSessionToLearner = function(session) {
-    	session.assignedLearner = $scope.currentLearner;
-        Sessions.update(session);
-        alert("Running");
+    	if(session.assignedLearner == null && $scope.currentLearner != "error") {
+	    	session.assignedLearner = $scope.currentLearner;
+	    	session.type = "invalid";
+	        Sessions.update(session);
+    	}
     }
+    
+    
 
     // Create a general method that updates the event.type for each event when 
     // its status has changed.

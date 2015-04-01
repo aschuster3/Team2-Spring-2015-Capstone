@@ -25,12 +25,16 @@ import static org.fest.assertions.Assertions.*;
 public class SessionControllerTest {
 
     private static final String ADMIN_EMAIL = "admin@gmail.com";
+    private static final String COORDINATOR_EMAIL = "coordinator@gmail.com";
+    private static final String LEARNER_EMAIL = "learner@gmail.com";
 
     @Before
 	public void setup(){
 		start(fakeApplication(inMemoryDatabase(), fakeGlobal()));
 
         new User("Admin", "User", ADMIN_EMAIL, "adminpassword", true).save();
+        new User("Coordinator", "User", COORDINATOR_EMAIL, "coordinatorpassword", false).save();
+        new Learner(LEARNER_EMAIL, "Learner", "nonuser", COORDINATOR_EMAIL).save();
 	}
 	
 	@Test
@@ -112,7 +116,10 @@ public class SessionControllerTest {
         Session.create(session);
         JsonNode jsonForUpdatedSession = Json.toJson(
                 new Session("1", "new-title", new Date(0)));
-
+        
+        assertThat(jsonForUpdatedSession).isNotNull();
+        
+        
         Result result = callAction(
                 routes.ref.SessionController.updateSession("1"),
                 fakeRequest()
@@ -170,8 +177,7 @@ public class SessionControllerTest {
     @Test
     public void ensureTakenTypeIsSerializedToJSON() {
         Session session = new Session("1", "title", new Date(0));
-        Learner learner = new Learner("email", "first", "last", ADMIN_EMAIL);
-        session.assignedLearner = learner;
+        session.assignedLearner = LEARNER_EMAIL;
 
         JsonNode json = Json.toJson(session);
 
@@ -200,6 +206,26 @@ public class SessionControllerTest {
     	sessionTemp.save();
  
     	assertThat(scheduleTemp.addSession(sessionTemp)).isTrue();
+    }
+    
+    @Test
+    public void addSessionToLearner() {
+        Session session = new Session("20", "something", new Date(0));
+        Session.create(session);
+        session.assignedLearner = LEARNER_EMAIL;
+        JsonNode jsonForUpdatedSession = Json.toJson(
+                session);
+    
+        Result result = callAction(
+                routes.ref.SessionController.updateSession("20"),
+                fakeRequest()
+                    .withSession("email", COORDINATOR_EMAIL)
+                    .withJsonBody(jsonForUpdatedSession)
+        );
+        Session updatedSession = Session.find.byId("20");
+    
+        assertThat(status(result)).isEqualTo(204);
+        assertThat(updatedSession.assignedLearner).isEqualTo(LEARNER_EMAIL);
     }
     /*
     @Test

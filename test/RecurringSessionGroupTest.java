@@ -35,7 +35,7 @@ public class RecurringSessionGroupTest {
         Calendar baseCal = Calendar.getInstance();
         baseCal.set(2015, 5, 1);
         Session base = new Session("title", baseCal.getTime(), true);
-        base.assignedLearner = learner;
+        base.assignedLearner = learner.email;
         base.recurringGroupId = recGroup.id;
         base.save();
 
