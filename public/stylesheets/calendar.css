@@ -421,6 +421,7 @@
 .cal-month-box {
   border-right: 0px;
   border-bottom: 0px;
+  margin-bottom: 50px;
 }
 span[data-cal-date] {
   font-size: 1.2em;

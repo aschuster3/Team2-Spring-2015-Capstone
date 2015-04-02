@@ -104,6 +104,7 @@
                     <tr>
                       <th>Location</th>
                       <th>Physician on Duty</th>
+                      <th>Learner Type</th>
                       <th>Date</th>
                       <th>Time</th>
                       <th ng-if="isCreateModal">Repeat</th>
@@ -113,7 +114,7 @@
                   <tbody>
                     <tr>
 
-                      <td style="max-width: 110px">
+                      <td style="max-width: 120px">
                         <div class="form-horizontal">
                           <fieldset>
                               <select
@@ -126,11 +127,60 @@
                       </div>
                       </td>
 
-                      <td style="max-width: 100px">
+                      <td style="max-width: 85px">
                           <input type="text" class="form-control" ng-model="event.physician">
                       </td>
 
-                      <td style="max-width: 120px">
+                      <!-- CHANGE THE VALUES TO SUIT YOUR NEEDS -->
+                      <td style="max-width: 170px">
+                        <div class="checkbox">
+                          <label><input type="checkbox" value="sub-i">Sub-I Medical Student</label>
+                        </div>
+                        <div class="checkbox">
+                          <label><input type="checkbox" value="ambulatory">Ambulatory Medical Student</label>
+                        </div>
+                        <div class="checkbox">
+                          <label><input type="checkbox" value="dermatology">Dermatology Resident</label>
+                        </div>
+                        <div class="checkbox">
+                          <label><input type="checkbox" value="pediatrics">Pediatrics Resident</label>
+                        </div>
+                        <div class="checkbox">
+                          <label><input type="checkbox" value="emory">Emory Internal Medicine</label>
+                        </div>
+                        <div class="checkbox">
+                          <label><input type="checkbox" value="morehouse">Morehouse Internal Medicine</label>
+                        </div>
+                        <div class="checkbox">
+                          <label><input type="checkbox" value="family">Family Medicine</label>
+                        </div>
+                        <div class="checkbox">
+                          <label><input type="checkbox" value="podiatry">Podiatry Resident</label>
+                        </div>
+                        <div class="checkbox">
+                          <label><input type="checkbox" value="geriatrics">Geriatrics Resident</label>
+                        </div>
+                        <div class="checkbox">
+                          <label><input type="checkbox" value="rheumatology">Rheumatology Resident</label>
+                        </div>
+                        <div class="checkbox">
+                          <label><input type="checkbox" value="nurse">Nurse Practitioner Student</label>
+                        </div>
+                        <div class="checkbox">
+                          <label><input type="checkbox" value="physician">Physician Assistant Student</label>
+                        </div>
+                        <div class="checkbox">
+                          <label><input type="checkbox" value="pediatrics-allergy">Pediatrics Allergy Fellow</label>
+                        </div>
+                        <div class="checkbox">
+                          <label><input type="checkbox" value="international">International Student</label>
+                        </div>
+                        <div class="checkbox">
+                          <label><input type="checkbox" value="pre-med">Pre-Med Student</label>
+                        </div>
+                      </td>
+
+                      <td style="max-width: 140px">
                         <p class="input-group">
                           <input type="text" class="form-control" readonly datepicker-popup="EEE MMMM d, yyyy"
                                  ng-model="event.date" is-open="showDatePicker" close-text="Close"
@@ -141,7 +191,7 @@
                         </p>
                       </td>
 
-                      <td style="width: 5∂0px">
+                      <td style="width: 40px">
                         <div class="radio">
                           <label>
                             <input type="radio" ng-model="event.isAM" ng-value="{{true}}"
