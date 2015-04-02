@@ -5,17 +5,23 @@ import java.util.ArrayList;
 import models.ScheduleTemplate;
 import models.Session;
 import models.SessionTemplate;
+import play.data.Form;
 import play.mvc.*;
+import views.html.*;
 
 @Security.Authenticated(Secured.class)
 public class TemplateController extends Controller {
-
+	
 	public static Result createScheduleTemplate(String title){
 		return TODO;
 	}
 	
 	public static Result createSessionTemplate(){
 		return TODO;
+	}
+	
+	public static Result templates(){
+		return ok(manageTemplates.render(ScheduleTemplate.find.all()));
 	}
 	
 	public static Result addSessionToSchedule(String scheduleTitle, String sessionID){

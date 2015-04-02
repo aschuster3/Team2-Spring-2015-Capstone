@@ -54,3 +54,6 @@ GET           /coordinators                 controllers.AdminController.viewAllC
 
 # Admin View: Calendar Page
 GET           /admincalendar                controllers.AdminController.viewCalendar()
+
+#Template View
+GET           /templates                    controllers.TemplateController.templates()

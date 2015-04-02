@@ -40,6 +40,7 @@ create table session_template (
   week                      integer,
   day                       integer,
   is_am                     boolean,
+  schedule_title            varchar(255),
   constraint pk_session_template primary key (id))
 ;
 
@@ -86,6 +87,8 @@ create sequence user_seq;
 
 create sequence user_reset_seq;
 
+alter table session_template add constraint fk_session_template_schedule_1 foreign key (schedule_title) references schedule_template (title) on delete restrict on update restrict;
+create index ix_session_template_schedule_1 on session_template (schedule_title);
 
 
 

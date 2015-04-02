@@ -1,12 +1,11 @@
 package models;
 
 import play.db.ebean.Model;
-import play.db.ebean.Model.Finder;
 import play.data.validation.Constraints.*;
 import javax.persistence.*;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class ScheduleTemplate extends Model {
@@ -14,20 +13,19 @@ public class ScheduleTemplate extends Model {
 	@Id
 	public String title;
 	
-	//@Required
-	//public Date starts_at;
-	
 	@Required
+	@OneToMany(mappedBy="schedule", cascade=CascadeType.ALL)
 	public List<SessionTemplate> sessions;
 	
 	public ScheduleTemplate(String title){
 		this.title = title;
-		sessions = new ArrayList<SessionTemplate>();
+		this.sessions = new ArrayList<SessionTemplate>();
 	}
 	
 	public boolean addSession(SessionTemplate session){
-		if(!sessions.contains(session))
+		if(!sessions.contains(session)){
 			return sessions.add(session);
+		}
 		else return false;
 	}
 	
@@ -39,6 +37,8 @@ public class ScheduleTemplate extends Model {
 		ScheduleTemplate st = new ScheduleTemplate(title);
 		st.save();
 	}
+	
+	//NEED TO ADD AN UPDATE FOR SCHEDULE
 	
 	 public static Finder<String, ScheduleTemplate> find = new Finder<String, ScheduleTemplate>(
 	            String.class, ScheduleTemplate.class);

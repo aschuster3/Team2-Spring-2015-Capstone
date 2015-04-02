@@ -160,7 +160,7 @@ public class SessionController extends Controller {
 			return badRequest("Failed: Schedule with title " + scheduleID + " does not exist");
 		}
 		Date startDate; 
-		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		DateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
     	try{
     		startDate = formatter.parse(date);
     		for (SessionTemplate session: schedule.sessions){

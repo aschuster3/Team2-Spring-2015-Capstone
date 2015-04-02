@@ -1,4 +1,4 @@
-@(learners: java.util.List[models.Learner], learnerForm: play.data.Form[CoordinatorController.PreLearner])
+@(templates: java.util.List[models.ScheduleTemplate])
 
 @import helper._
 @import java.math.BigInteger; var panelNum = 1
@@ -33,7 +33,7 @@
 				<li class="active"><a href="@routes.Application.index()">Home</a></li>
                 <li class="active"><a href="@routes.AdminController.viewAllCoordinators()">Coordinators</a></li>
                 <li class="active"><a href="@routes.AdminController.viewCalendar()">Schedule</a></li>
-                <li class="active"><a href="@routes.AdminController.viewCalendar()">Manage Templates</a></li>
+                <li class="active"><a href="@routes.TemplateController.templates()">Manage Templates</a></li>
          	</ul>
          	<div class="pull-right">
 		  		<button onclick="location.href='@routes.Application.logout()';" type="button" class="btn btn-block btn-sm btn-danger btn-logout">Log Out</button>
@@ -44,16 +44,16 @@
 
 <!-- Templates list -->
 <!--Somehow dynamically create these based on how many templates are listed in the database-->
-<div class="studentsSection container">
+<div class="templates container">
 	<h4>My Templates</h4>
 	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 		
-		@for(learner <- learners) {
+		@for(template <- templates) {
 		  <div class="panel panel-default">
 		  	<div class="panel-heading" role="tab" id="heading@panelNum">
 		  		<h4 class="panel-title">
 		  			<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse@panelNum" aria-expanded="false" aria-controls="collapse@panelNum">
-		  				@template.name
+		  				@template.title
 		  			</a>
 		  		</h4>
 		    </div>
@@ -62,9 +62,10 @@
 		    		<div class = "pull-left">
 
 		    			<!-- CREATE LIST OF SESSIONS HERE -->
-						<h6>Sessions: </h6>
-						<br>
-						@session.location  |  @session.physician  |  @session.month @session.day @session.time
+		    			<h6>Sessions: </h6>
+		    			@for(s <- template.sessions) {
+		    				@s.title  |  @s.week @s.day @s.isAM
+		    			}
 					</div>
 					<div class="pull-right">
 				  		<button type="button" class="btn btn-block btn-sm btn-warning" ng-click="showModalForCreate()">Add Session</button>
@@ -81,8 +82,8 @@
 
 <!-- Leftover comment from Maggie's student page that I copied and pasted below -->
 <!--Andrew!!! Can you change this to Play's form format (and the format for the dropdown is probably wrong anyways)-->
-	<div class="collapse submitform" id="collapseExample">
-		@form(routes.AdminController.createTemplate) {
+	@*<div class="collapse submitform" id="collapseExample">
+		@form(routes.TemplateController.createTemplate) {
 		  @inputText(learnerForm("templateName"), 
 		      'type -> "text",
 		      'class -> "form-control", 
@@ -92,7 +93,7 @@
 		      '_showConstraints -> false)
           <input role="button" class="btn btn-inverse" type="submit" value="Submit"></input>
 		}
-	</div>
+	</div>*@
 
 	<!-- MODAL FOR ADDING A SESSION -->
 	<script id="modalContent.html">
