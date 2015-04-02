@@ -29,7 +29,55 @@
                         <h2 class="text-center">Rotation Request Form</h2>
                     </div>
                     <br>
-                    <h4 class="sub-header text-center">Your information has been submitted. You will be sent an approval email within 24 hours.</h4>
+                    <p class="sub-header text-center">Please register for credentials</p>
+
+                    <div class="form-signin">
+                    @form(routes.Application.createUnapprovedUser) {
+                        @inputText(registrationForm("firstName"), 
+                            'type -> "text",
+                            'class -> "form-control",
+                            'placeholder -> "First Name",
+                            '_label -> null,
+                            '_showConstraints -> false)
+                       @inputText(registrationForm("lastName"), 
+                            'type -> "text",
+                            'class -> "form-control",
+                            'placeholder -> "Last Name",
+                            '_label -> null,
+                            '_showConstraints -> false)
+                        @inputText(registrationForm("email"), 
+                            'type -> "text",
+                            'class -> "form-control",
+                            'placeholder -> "E-mail",
+                            '_label -> null,
+                            '_showConstraints -> false)
+                        @inputText(registrationForm("phoneNumber"),
+                            'type -> "tel",
+                            'class -> "form-control",
+                            'placeholder -> "Phone Number",
+                            '_label -> null,
+                            '_showConstraints -> false)
+                        @select(registrationForm("department"),
+                            options(Seq("Emory Internal Medicine","Morehouse Internal Medicine","Emory Family Medicine","Emory Pediatrics",
+                            "Emory Rheumatology", "Emory Allergy ", "Emory Plastic Surgery", "Emory Nurse Practitioner Student", "Emory Physicians Assistant Student", "Other - Please specify below")),
+                            '_label -> "Department", '_default -> "Select Department",
+                            'class -> "form-control",
+                            '_label -> null,
+                            '_showConstraints -> false)
+                        @inputText(registrationForm("other_department"), 
+                            'type -> "text",
+                            'class -> "form-control",
+                            'placeholder -> "Other Department",
+                            '_label -> null,
+                            '_showConstraints -> false)
+                        <input role="button" class="btn btn-lg btn-primary btn-block" value="Register" type="submit"></input>
+                        @if(registrationForm.hasGlobalErrors()) {
+                            <p class="text-center"><font color="red">@registrationForm.globalError.message</font></p>
+                        }
+                        <a href="@routes.Application.login()" class="new-account">Return to login screen</a>
+                    }  
+           
+                    </div>
 
                 </div>
                
@@ -37,4 +85,31 @@
         </div>
     </div>
 
+    <script>
+    (function () {
+        var departmentSelector = document.getElementById('department');
+        var otherDepartmentInput = document.getElementById('other_department');
+        var otherDepartmentContainer = document.getElementById('other_department_field');
+
+        updateOtherDepartmentVisibility();
+
+        departmentSelector.onchange = function () {
+            otherDepartmentInput.value = '';
+            updateOtherDepartmentVisibility();
+        };
+
+        function updateOtherDepartmentVisibility() {
+            if (otherDeptIsSelected()) {
+                otherDepartmentContainer.style.display = "";
+            } else {
+                otherDepartmentContainer.style.display = "none";
+            }
+        }
+
+        function otherDeptIsSelected() {
+            return departmentSelector.value.toLowerCase().indexOf("other") === 0;
+        }
+
+    })();
+    </script>
 </body>
