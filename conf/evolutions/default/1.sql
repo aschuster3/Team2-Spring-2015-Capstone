@@ -28,7 +28,7 @@ create table session (
   is_am                     boolean,
   date                      timestamp,
   physician                 varchar(255),
-  assigned_learner_email    varchar(255),
+  assigned_learner          varchar(255),
   recurring_group_id        bigint,
   schedule_title            varchar(255),
   constraint pk_session primary key (id))
@@ -86,8 +86,6 @@ create sequence user_seq;
 
 create sequence user_reset_seq;
 
-alter table session add constraint fk_session_assignedLearner_1 foreign key (assigned_learner_email) references learner (email) on delete restrict on update restrict;
-create index ix_session_assignedLearner_1 on session (assigned_learner_email);
 
 
 
