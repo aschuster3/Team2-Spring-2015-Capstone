@@ -131,52 +131,12 @@
                           <input type="text" class="form-control" ng-model="event.physician">
                       </td>
 
-                      <!-- CHANGE THE VALUES TO SUIT YOUR NEEDS -->
                       <td style="max-width: 170px">
-                        <div class="checkbox">
-                          <label><input type="checkbox" value="sub-i">Sub-I Medical Student</label>
-                        </div>
-                        <div class="checkbox">
-                          <label><input type="checkbox" value="ambulatory">Ambulatory Medical Student</label>
-                        </div>
-                        <div class="checkbox">
-                          <label><input type="checkbox" value="dermatology">Dermatology Resident</label>
-                        </div>
-                        <div class="checkbox">
-                          <label><input type="checkbox" value="pediatrics">Pediatrics Resident</label>
-                        </div>
-                        <div class="checkbox">
-                          <label><input type="checkbox" value="emory">Emory Internal Medicine</label>
-                        </div>
-                        <div class="checkbox">
-                          <label><input type="checkbox" value="morehouse">Morehouse Internal Medicine</label>
-                        </div>
-                        <div class="checkbox">
-                          <label><input type="checkbox" value="family">Family Medicine</label>
-                        </div>
-                        <div class="checkbox">
-                          <label><input type="checkbox" value="podiatry">Podiatry Resident</label>
-                        </div>
-                        <div class="checkbox">
-                          <label><input type="checkbox" value="geriatrics">Geriatrics Resident</label>
-                        </div>
-                        <div class="checkbox">
-                          <label><input type="checkbox" value="rheumatology">Rheumatology Resident</label>
-                        </div>
-                        <div class="checkbox">
-                          <label><input type="checkbox" value="nurse">Nurse Practitioner Student</label>
-                        </div>
-                        <div class="checkbox">
-                          <label><input type="checkbox" value="physician">Physician Assistant Student</label>
-                        </div>
-                        <div class="checkbox">
-                          <label><input type="checkbox" value="pediatrics-allergy">Pediatrics Allergy Fellow</label>
-                        </div>
-                        <div class="checkbox">
-                          <label><input type="checkbox" value="international">International Student</label>
-                        </div>
-                        <div class="checkbox">
-                          <label><input type="checkbox" value="pre-med">Pre-Med Student</label>
+                        <div class="checkbox" ng-repeat="learnerType in allLearnerTypes">
+                          <label><input type="checkbox"
+                                        value="{{learnerType}}"
+                                        ng-checked="learnerTypeIsChecked(event, learnerType)"
+                                        ng-click="toggleLearnerTypeChecked(event, learnerType)">{{ learnerType }}</label>
                         </div>
                       </td>
 
@@ -242,8 +202,6 @@
       </div>
 
     </div>
-
-    <script src="@routes.Assets.at("javascripts/angular.js")"></script>
 
     <script src="@routes.Assets.at("javascripts/angular.min.js")"></script>
     <script src="@routes.Assets.at("javascripts/moment.min.js")"></script>

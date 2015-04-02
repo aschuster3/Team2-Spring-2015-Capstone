@@ -14,6 +14,8 @@ angular.module('mwl.calendar')
      * CALENDAR CODE
      ***********************************************************************/
 
+
+
     $scope.events = Sessions.sessions;
 
     var currentYear = moment().year();
@@ -151,6 +153,7 @@ angular.module('mwl.calendar')
             'VA Telederm',
             'Emory Dermpath'
           ];
+
           $scope.$modalInstance = $modalInstance;
           $scope.event = event;
           $scope.isCreateModal = !angular.isDefined(event.id);
@@ -200,6 +203,48 @@ angular.module('mwl.calendar')
           /* form validation will not accept epoch time as valid Date */
           if (angular.isDefined(event.date) && !(event.date instanceof Date)) {
             event.date = new Date(event.date);
+          }
+
+
+          /* FOR LEARNER TYPES */
+
+          /* currently:  from Learner.LEARNER_TYPES */
+          $scope.allLearnerTypes = [
+            "Sub-I",
+            "Sub-I Medical Student",
+            "Ambulatory Medical Student",
+            "Dermatology Resident",
+            "Pediatrics Resident",
+            "Emory Internal Medicine",
+            "Morehouse Internal Medicine",
+            "Family Medicine",
+            "Podiatry Resident",
+            "Geriatrics Resident",
+            "Rheumatology Resident",
+            "Nurse Practitioner Student",
+            "Physician Assistant Student",
+            "Pediatrics Allergy Fellow",
+            "International Student",
+            "Pre-Med Student"
+          ];
+
+          $scope.event.supportedLearnerTypes = [];
+
+          $scope.toggleLearnerTypeChecked = toggleLearnerTypeChecked;
+          $scope.learnerTypeIsChecked = learnerTypeIsChecked;
+
+          function toggleLearnerTypeChecked(event, learnerType) {
+            var index = event.supportedLearnerTypes.indexOf(learnerType);
+
+            if (index === -1) {
+              event.supportedLearnerTypes.push(learnerType);
+            } else {
+              event.supportedLearnerTypes.splice(index, 1);
+            }
+          }
+
+          function learnerTypeIsChecked(event, learnerType) {
+            return event.supportedLearnerTypes.indexOf(learnerType) !== -1;
           }
         }
       });
