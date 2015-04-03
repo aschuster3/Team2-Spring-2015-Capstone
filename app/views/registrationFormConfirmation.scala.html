@@ -1,4 +1,4 @@
-@(registrationForm: play.data.Form[UnapprovedUser])
+@()
 
 @import helper._
 <html>
@@ -29,9 +29,11 @@
                         <h2 class="text-center">Rotation Request Form</h2>
                     </div>
                     <br>
-                    <h4 class="sub-header text-center">Thank you for registering. If you are approved, you will recieve an email from our admins within 24 hours.</h4>
+                    <h4 class="sub-header text-center">Thank you for registering. If you are approved, you will receive an email from our admins within 24 hours.</h4>
 
-                    <input role="button" class="btn btn-lg btn-primary btn-block" value="Ok" type="submit"></input>
+                    <form action="@routes.Application.login()" method="get">
+                        <input role="button" class="btn btn-lg btn-primary btn-block" value="Ok" type="submit"></input>
+                    </form>
 
                 </div>
                
