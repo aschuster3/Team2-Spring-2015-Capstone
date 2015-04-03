@@ -42,16 +42,17 @@
       <div class="cal-slide-content cal-event-list">
         <ul class="unstyled list-unstyled">
 
-          <li ng-repeat="event in openEvents track by $index">
+          <li ng-repeat="event in openEvents | orderBy:['-isAM','+title','+physician'] track by $index">
             <span class="pull-left event event-{{ event.type }}"></span>
             &nbsp;
             <a
               href="javascript:;"
               class="event-item"
               ng-click="eventClick({$event: event})">
-              {{  event.title  }}  |  {{  event.physician  }}  | 
-              <span ng-if="event.isAM">AM</span>
-              <span ng-if="!event.isAM">PM</span>
+              {{  event.title  }}
+              <span ng-if="event.physician">  |  {{  event.physician  }}</span>
+              <span ng-if="event.isAM">  |  AM</span>
+              <span ng-if="!event.isAM">  |  PM</span>
             </a>
 
             <a
