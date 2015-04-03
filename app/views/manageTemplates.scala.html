@@ -1,0 +1,271 @@
+@(templates: java.util.List[models.ScheduleTemplate])
+
+@import helper._
+@import java.math.BigInteger; var panelNum = 1
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Admin: Templates</title>
+
+	<meta charset="UTF-8">
+
+	<link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap3/css/bootstrap.min.css")">
+    <!--<link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap3/css/bootstrap-theme.min.css")">-->
+    <link rel="stylesheet" href="@routes.Assets.at("stylesheets/flat-ui.css")">
+    <link rel="stylesheet" href="@routes.Assets.at("stylesheets/main.css")">
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+	<!--<script type="text/javascript" src="components/bootstrap3/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="components/jquery/jquery.min.js"></script>-->
+
+</head>
+<body>
+
+<!-- Jumbotron and nav bar -->
+<div class="container">
+	<div class="jumbotron">
+		<h1>Manage Templates</h1>	
+	</div>
+	<nav class="navbar navbar-default navbar-static-top">
+		<div class="container">
+			<ul class="nav navbar-nav pull-left">
+				<li class="active"><a href="@routes.Application.index()">Home</a></li>
+                <li class="active"><a href="@routes.AdminController.viewAllCoordinators()">Coordinators</a></li>
+                <li class="active"><a href="@routes.AdminController.viewCalendar()">Schedule</a></li>
+                <li class="active"><a href="@routes.TemplateController.templates()">Manage Templates</a></li>
+         	</ul>
+         	<div class="pull-right">
+		  		<button onclick="location.href='@routes.Application.logout()';" type="button" class="btn btn-block btn-sm btn-danger btn-logout">Log Out</button>
+			</div>
+ 		</div>
+	</nav>
+</div>
+
+<!-- Templates list -->
+<!--Somehow dynamically create these based on how many templates are listed in the database-->
+<div class="templates container">
+	<h4>My Templates</h4>
+	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+		
+		@for(template <- templates) {
+		  <div class="panel panel-default">
+		  	<div class="panel-heading" role="tab" id="heading@panelNum">
+		  		<h4 class="panel-title">
+		  			<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse@panelNum" aria-expanded="false" aria-controls="collapse@panelNum">
+		  				@template.title
+		  			</a>
+		  		</h4>
+		    </div>
+		    <div id="collapse@panelNum" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading@panelNum">
+		    	<div class="panel-body">
+		    		<div class = "pull-left">
+
+		    			<!-- CREATE LIST OF SESSIONS HERE -->
+		    			<h6>Sessions: </h6>
+		    			@for(s <- template.sessions) {
+		    				@s.title  |  @s.week @s.day @s.isAM
+		    			}
+					</div>
+					<div class="pull-right">
+				  		<button type="button" class="btn btn-block btn-sm btn-warning" ng-click="showModalForCreate()">Add Session</button>
+					</div>
+		    	</div>
+		    </div>
+		</div>
+		@(panelNum += 1)
+		}
+	</div>
+	<a class="btn btn-inverse" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+		Add Template
+	</a>
+
+<!-- Leftover comment from Maggie's student page that I copied and pasted below -->
+<!--Andrew!!! Can you change this to Play's form format (and the format for the dropdown is probably wrong anyways)-->
+	@*<div class="collapse submitform" id="collapseExample">
+		@form(routes.TemplateController.createTemplate) {
+		  @inputText(learnerForm("templateName"), 
+		      'type -> "text",
+		      'class -> "form-control", 
+		      'id -> "inputTemplateName",
+		      'placeholder -> "Template Name",
+		      '_label -> null,
+		      '_showConstraints -> false)
+          <input role="button" class="btn btn-inverse" type="submit" value="Submit"></input>
+		}
+	</div>*@
+
+	<!-- MODAL FOR ADDING A SESSION -->
+	<script id="modalContent.html">
+	    <div class="modal-header">
+	      <h4 class="modal-title">{{ modalTitle }}</h4>
+	    </div>
+	    <form name="eventForm" novalidate>
+	      <div class="modal-body">
+	        <table class="table table-bordered">
+	          <thead>
+	            <tr>
+	              <th>Location</th>
+	              <th>Physician on Duty</th>
+	              <th>Learner Type</th>
+	              <th>Date</th>
+	              <th>Time</th>
+	              <th ng-if="isCreateModal">Repeat</th>
+	            </tr>
+	          </thead>
+
+	          <tbody>
+	            <tr>
+	            	// Clinic options
+	              <td style="max-width: 110px">
+                        <div class="form-horizontal">
+                          <fieldset>
+                              <select
+                                class="form-control"
+                                ng-model="event.title"
+                                ng-options="clinic as clinic for clinic in clinicOptions"
+                                required>
+                              </select>
+                          </fieldset>
+                      </div>
+                      </td>
+
+                      // Physician
+                      <td style="max-width: 85px">
+                          <input type="text" class="form-control" ng-model="event.physician">
+                      </td>
+
+                      // Learner Type
+                      // <!-- CHANGE THE VALUES TO SUIT YOUR NEEDS -->
+                      <td style="max-width: 170px">
+                        <div class="checkbox">
+                          <label><input type="checkbox" value="sub-i">Sub-I Medical Student</label>
+                        </div>
+                        <div class="checkbox">
+                          <label><input type="checkbox" value="ambulatory">Ambulatory Medical Student</label>
+                        </div>
+                        <div class="checkbox">
+                          <label><input type="checkbox" value="dermatology" disabled>Dermatology Resident</label>
+                        </div>
+                        <div class="checkbox">
+                          <label><input type="checkbox" value="pediatrics" disabled>Pediatrics Resident</label>
+                        </div>
+                        <div class="checkbox">
+                          <label><input type="checkbox" value="emory" disabled>Emory Internal Medicine</label>
+                        </div>
+                        <div class="checkbox">
+                          <label><input type="checkbox" value="morehouse" disabled>Morehouse Internal Medicine</label>
+                        </div>
+                        <div class="checkbox">
+                          <label><input type="checkbox" value="family" disabled>Family Medicine</label>
+                        </div>
+                        <div class="checkbox">
+                          <label><input type="checkbox" value="podiatry" disabled>Podiatry Resident</label>
+                        </div>
+                        <div class="checkbox">
+                          <label><input type="checkbox" value="geriatrics" disabled>Geriatrics Resident</label>
+                        </div>
+                        <div class="checkbox">
+                          <label><input type="checkbox" value="rheumatology" disabled>Rheumatology Resident</label>
+                        </div>
+                        <div class="checkbox">
+                          <label><input type="checkbox" value="nurse" disabled>Nurse Practitioner Student</label>
+                        </div>
+                        <div class="checkbox">
+                          <label><input type="checkbox" value="physician" disabled>Physician Assistant Student</label>
+                        </div>
+                        <div class="checkbox">
+                          <label><input type="checkbox" value="pediatrics-allergy" disabled>Pediatrics Allergy Fellow</label>
+                        </div>
+                        <div class="checkbox">
+                          <label><input type="checkbox" value="international" disabled>International Student</label>
+                        </div>
+                        <div class="checkbox">
+                          <label><input type="checkbox" value="pre-med" disabled>Pre-Med Student</label>
+                        </div>
+                      </td>
+
+                      // Datepicker
+                      <td style="max-width: 120px">
+                        <p class="input-group">
+                          <input type="text" class="form-control" readonly datepicker-popup="EEE MMMM d, yyyy"
+                                 ng-model="event.date" is-open="showDatePicker" close-text="Close"
+                                 ng-change="updateStartsAtEndsAt(event);" required />
+                          <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="toggleDatePicker($event)"><i class="glyphicon glyphicon-search"></i></button>
+                          </span>
+                        </p>
+                      </td>
+
+                      // AM or PM
+                      <td style="width: 40px">
+                        <div class="radio">
+                          <label>
+                            <input type="radio" ng-model="event.isAM" ng-value="{{true}}"
+                                   ng-change="updateStartsAtEndsAt(event);" ng-required="!angular.isDefined(event.isAM)">
+                            AM
+                          </label>
+                        </div>
+                        <div class="radio">
+                          <label>
+                            <input type="radio" ng-model="event.isAM" ng-value="{{false}}"
+                                   ng-change="updateStartsAtEndsAt(event);" ng-required="!angular.isDefined(event.isAM)">
+                            PM
+                          </label>
+                        </div>
+                      </td>
+
+                      // Repeat
+                      <td ng-if="isCreateModal" style="width: 40px">
+                        <div class="radio">
+                          <label>
+                            <input type="radio" ng-model="event.recurringType" ng-value="REC_TYPE_NONE">
+                            None
+                            </label>
+                          </div>
+                        <div class="radio">
+                          <label>
+                            <input type="radio" ng-model="event.recurringType" ng-value="REC_TYPE_WEEKLY">
+                            Weekly
+                          </label>
+                        </div>
+                      </td>
+
+	            </tr>
+	          </tbody>
+
+	        </table>
+
+	      <div class="modal-footer">
+	        <button ng-show="!isCreateModal" class="btn btn-danger pull-left" ng-click="clickDelete()">Delete Event</button>
+	        <button class="btn btn-inverse pull-right" ng-click="clickCancel()">Cancel</button>
+	        <button ng-show="isCreateModal" ng-disabled="eventForm.$invalid" class="btn btn-inverse pull-right" ng-click="clickCreate()">Submit</button>
+	        <button ng-show="!isCreateModal" ng-disabled="eventForm.$invalid" class="btn btn-inverse pull-right" ng-click="clickUpdate()">Save</button>
+	      </div>
+	    </form>
+
+	  </script>
+
+
+	</div>
+
+	<script src="@routes.Assets.at("javascripts/angular.js")"></script>
+    <script src="@routes.Assets.at("javascripts/angular.min.js")"></script>
+    <script src="@routes.Assets.at("javascripts/moment.min.js")"></script>
+    <script src="@routes.Assets.at("javascripts/angular-bootstrap-calendar-tpls.min.js")"></script>
+    <script src="@routes.Assets.at("javascripts/ui-bootstrap-tpls.min.js")"></script>
+    <script src="@routes.Assets.at("javascripts/app.js")"></script>
+    <script src="@routes.Assets.at("javascripts/main.js")"></script>
+    <script src="@routes.Assets.at("javascripts/mwlcalendar.js")"></script>
+    <script src="@routes.Assets.at("javascripts/truncateEventTitle.js")"></script>
+    <script src="@routes.Assets.at("javascripts/calendarhelper.js")"></script>
+    <script src="@routes.Assets.at("javascripts/moment.js")"></script>
+    <script src="@routes.Assets.at("javascripts/mwlcalendaryear.js")"></script>
+    <script src="@routes.Assets.at("javascripts/mwlcalendarmonth.js")"></script>
+    <script src="@routes.Assets.at("javascripts/mwlcalendarweek.js")"></script>
+    <script src="@routes.Assets.at("javascripts/mwlcalendarday.js")"></script>
+    <script src="@routes.Assets.at("javascripts/sessionService.js")"></script>
+    <script src="@routes.Assets.at("javascripts/learnerService.js")"></script>
+    <script src="@routes.Assets.at("javascripts/sessionModel.js")"></script>
+</body>
+</html>

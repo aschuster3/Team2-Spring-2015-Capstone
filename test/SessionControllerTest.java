@@ -189,23 +189,6 @@ public class SessionControllerTest {
     }
     
     @Test
-    public void createSessionTemplate(){
-    	SessionTemplate sessionTemp = new SessionTemplate("Clinic", 1, 1, true);
-    	sessionTemp.save();
-    	assertThat(sessionTemp.find.byId(sessionTemp.id)).isNotNull();
-    }
-    
-    @Test
-    public void addSessionToScheduleTemplate(){
-    	ScheduleTemplate scheduleTemp = new ScheduleTemplate("subi1");
-    	scheduleTemp.save();
-    	SessionTemplate sessionTemp = new SessionTemplate("Clinic", 1, 1, true);
-    	sessionTemp.save();
- 
-    	assertThat(scheduleTemp.addSession(sessionTemp)).isTrue();
-    }
-    
-    @Test
     public void addSessionToLearner() {
         Session session = new Session("20", "something", new Date(0));
         Session.create(session);
@@ -236,18 +219,28 @@ public class SessionControllerTest {
         assertThat(typesSet.contains("type1")).isTrue();
         assertThat(typesSet.contains("type2")).isTrue();
     }
-    /*
+
+    @Test
+    public void addSessionToScheduleTemplate(){
+    	ScheduleTemplate scheduleTemp = new ScheduleTemplate("subi1");
+    	scheduleTemp.save();
+    	SessionTemplate sessionTemp = new SessionTemplate("Clinic", 1, 1, true);
+    	sessionTemp.save();
+ 
+    	assertThat(scheduleTemp.addSession(sessionTemp)).isTrue();
+    }
+    
     @Test
     public void createSessionsFromScheduleTemplate(){
     	ScheduleTemplate scheduleTemp = new ScheduleTemplate("subi1");
     	scheduleTemp.save();
+		//SessionTemplate sessionTemp = new SessionTemplate("session", 1, 1, true);
+		//scheduleTemp.addSession(sessionTemp);
     	for (int week = 0; week<3; week++){
     		for(int day = 0; day<5; day++){
     			String name = "Week" + week + "Day" + day;
     			SessionTemplate sessionTempAM = new SessionTemplate(name + "AM", week, day, true);
-    			sessionTempAM.save();
     			SessionTemplate sessionTempPM = new SessionTemplate(name + "PM", week, day, false);
-    			sessionTempPM.save();
     			scheduleTemp.addSession(sessionTempAM);
     			scheduleTemp.addSession(sessionTempPM);
     		}
@@ -257,5 +250,6 @@ public class SessionControllerTest {
     	Result result = SessionController.createScheduleSessions(scheduleTemp.title, "2015/03/30");
     	assertThat(status(result)).isEqualTo(200);
 		assertThat(Session.getAll().size()).isEqualTo(30);
-    } */
+    } 
+    
 }

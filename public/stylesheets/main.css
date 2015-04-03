@@ -78,3 +78,11 @@ p{
 	padding-top: 4px;
 	padding-bottom: 4px;
 }
+#inputFirstName_field{
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+dl{
+	margin-bottom: 0px;
+	margin-top: 0px;
+}

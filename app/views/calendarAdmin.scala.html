@@ -29,7 +29,7 @@
             <li class="active"><a href="@routes.Application.index()">Home</a></li>
                   <li class="active"><a href="@routes.AdminController.viewAllCoordinators()">Coordinators</a></li>
                   <li class="active"><a href="@routes.AdminController.viewCalendar()">Schedule</a></li>
-                  <li class="active"><a href="@routes.AdminController.viewCalendar()">Manage Templates</a></li>
+                  <li class="active"><a href="@routes.TemplateController.templates()">Manage Templates</a></li>
               </ul>
               <div class="pull-right">
               <button onclick="location.href='@routes.Application.logout()';" type="button" class="btn btn-block btn-sm btn-danger btn-logout">Log Out</button>
@@ -77,7 +77,7 @@
             calendar-delete-event-html="'<i class=\'glyphicon glyphicon-remove\'></i>'"
             calendar-edit-event-click="showModalForUpdate($event)"
             calendar-delete-event-click="eventDeleted($event)"
-            calendar-auto-open="true"
+            calendar-auto-open="false"
             calendar-day-view-starts_at="07:00"
             calendar-day-view-ends_at="20:00"
 

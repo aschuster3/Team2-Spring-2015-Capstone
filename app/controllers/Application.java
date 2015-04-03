@@ -25,6 +25,7 @@ import views.html.passwordPage;
 import views.html.registrationForm;
 import views.html.resetPasswordPage;
 import views.html.studentsPage;
+import views.html.registrationFormConfirmation;
 
 /**
  * The application controller for general purpose tasks such as logging in and out.
@@ -83,8 +84,12 @@ public class Application extends Controller {
 
             UnapprovedUser.create(newUU);
 
-        	return redirect(routes.Application.login());
+        	return redirect(routes.Application.viewRegistrationFormConfirmation());
         }
+    }
+
+    public static Result viewRegistrationFormConfirmation() {
+        return ok(registrationFormConfirmation.render());
     }
     
     public static Result authenticate() {

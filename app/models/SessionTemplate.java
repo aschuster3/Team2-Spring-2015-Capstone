@@ -23,6 +23,9 @@ public class SessionTemplate extends Model{
 	
 	@Required
 	public boolean isAM;
+	
+	@ManyToOne
+	public ScheduleTemplate schedule;
 			
 	public SessionTemplate(String title, int week, int day, boolean isAM){
     	this.id = UUID.randomUUID().toString();
@@ -44,6 +47,8 @@ public class SessionTemplate extends Model{
 		SessionTemplate st = new SessionTemplate(title, week, day, isAM);
 		st.save();
 	}
+	
+	//NEED TO ADD AN UPDATE AND DELETE?
 	
     public static Finder<String, SessionTemplate> find = new Finder<String, SessionTemplate>(
             String.class, SessionTemplate.class);
