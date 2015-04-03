@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -226,6 +223,18 @@ public class SessionControllerTest {
     
         assertThat(status(result)).isEqualTo(204);
         assertThat(updatedSession.assignedLearner).isEqualTo(LEARNER_EMAIL);
+    }
+
+    @Test
+    public void testGetSupportedLearnerTypes() {
+        Session session = new Session("session", new Date(0), true);
+        session.supportedLearnerTypesAsString = "type1,type2";
+
+        Set<String> typesSet = session.getSupportedLearnerTypes();
+
+        assertThat(typesSet.size()).isEqualTo(2);
+        assertThat(typesSet.contains("type1")).isTrue();
+        assertThat(typesSet.contains("type2")).isTrue();
     }
     /*
     @Test

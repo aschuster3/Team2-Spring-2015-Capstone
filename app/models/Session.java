@@ -1,12 +1,10 @@
 package models;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import play.data.validation.Constraints.*;
 
@@ -55,12 +53,24 @@ public class Session extends Model {
 	
 	public String scheduleTitle;
 
+	/**
+	 * This is a comma separated list.
+	 *
+	 * Becaues eBean does not support @ElementCollection!
+	 */
+	public String supportedLearnerTypesAsString;
+
+
+
 	/*
 	 * Following "transients" are only for front-end Javascript objects
 	 *
 	 * Do not directly assign to these.
 	 * These are read-only via getters, only (because they are dependent on other properties).
 	 */
+	@Transient
+	private Set<String> supportedLearnerTypes;
+
 	@Transient
 	private String type;
 
@@ -72,45 +82,47 @@ public class Session extends Model {
 	@JsonProperty("ends_at")
 	private Date endsAt;
 
+
+	public Session(String id, String title, Date date, String physician, boolean isAM) {
+		this.title = title;
+		this.date = date;
+		this.isAM = isAM;
+		this.id = id;
+		this.physician = physician;
+		this.supportedLearnerTypesAsString = "";
+	}
+
+	public Session(String id, String title, Date date, boolean isAM) {
+		this(id, title, date, "", isAM);
+	}
+
+	public Session(String title, Date date, boolean isAM){
+		this(null, title, date, isAM);
+	}
+
 	/** Creates  an AM session */
 	public Session(String id, String title, Date date) {
 		this(id, title, date, true);
 	}
-    
-    public Session(String id, String title, Date date, boolean isAM) {
-		this(title, date, isAM);
-		this.id = id;
-    }
-    
-    public Session(String id, String title, Date date, String physician, boolean isAM) {
-        this(id, title, date, isAM);
-        this.physician = physician;
-    }
 
-	public Session(String title, Date date, boolean isAM){
-		this.title = title;
-		this.date = date;
-		this.isAM = isAM;
-	}
-    
-    public Session(String id, String title, String date, boolean isAM){
-    	this.id = id;
-    	this.title = title;
-    	DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");    	
-    	try{
-    		this.date = formatter.parse(date);
-    	}
-    	catch(Exception e){
-    		
-    	}
-    }
-    
     public Session(String title, Date date, boolean isAM, String schedule){
     	this(title, date, isAM);
     	this.scheduleTitle = schedule;
     }
 
-    public static Finder<String, Session> find = new Finder<String, Session>(
+	public Session(String id, String title, String date, boolean isAM){
+		this.id = id;
+		this.title = title;
+		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try{
+			this.date = formatter.parse(date);
+		}
+		catch(Exception e){
+
+		}
+	}
+
+	public static Finder<String, Session> find = new Finder<String, Session>(
             String.class, Session.class);
     
     public static void create(Session session) {
@@ -155,6 +167,18 @@ public class Session extends Model {
 		cal.setTime(this.date);
 		cal.set(Calendar.HOUR_OF_DAY, hour);
 		return cal.getTime();
+	}
+
+	public Set<String> getSupportedLearnerTypes() {
+		if (this.supportedLearnerTypesAsString == null) {
+			return new HashSet<>();
+		}
+
+		String[] typesArray = this.supportedLearnerTypesAsString.split(",");
+		List<String> typesList = Arrays.asList(typesArray);
+		Set<String> typesSet = new HashSet<>(typesList);
+
+		return typesSet;
 	}
 
 	/**

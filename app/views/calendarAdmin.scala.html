@@ -104,7 +104,7 @@
                     <tr>
                       <th>Location</th>
                       <th>Physician on Duty</th>
-                      <th>Learner Type</th>
+                      <th>Learner Types</th>
                       <th>Date</th>
                       <th>Time</th>
                       <th ng-if="isCreateModal">Repeat</th>
@@ -112,6 +112,8 @@
                   </thead>
 
                   <tbody>
+                    Supported Learner Types = {{ event.supportedLearnerTypes }}
+                    String = {{ event.supportedLearnerTypesAsString }}
                     <tr>
 
                       <td style="max-width: 120px">

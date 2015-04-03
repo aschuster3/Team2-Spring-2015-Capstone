@@ -33,7 +33,15 @@ angular.module('mwl.calendar')
     };
 
     $scope.showModalForCreate = function () {
-      var defaultSession = {};
+      var defaultSession = {
+        /* the modal's checkboxes do not use ng-model like other inputs.
+
+         * So, initialize these properties before passing to modal
+         * to avoid undefined exceptions
+         */
+        supportedLearnerTypes: [],
+        supportedLearnerTypesAsString: ''
+      };
       showModal(defaultSession);
     };
 
@@ -208,7 +216,7 @@ angular.module('mwl.calendar')
 
           /* FOR LEARNER TYPES */
 
-          /* currently:  from Learner.LEARNER_TYPES */
+          // currently:  from Learner.LEARNER_TYPES
           $scope.allLearnerTypes = [
             "Sub-I",
             "Sub-I Medical Student",
@@ -228,8 +236,6 @@ angular.module('mwl.calendar')
             "Pre-Med Student"
           ];
 
-          $scope.event.supportedLearnerTypes = [];
-
           $scope.toggleLearnerTypeChecked = toggleLearnerTypeChecked;
           $scope.learnerTypeIsChecked = learnerTypeIsChecked;
 
@@ -241,6 +247,8 @@ angular.module('mwl.calendar')
             } else {
               event.supportedLearnerTypes.splice(index, 1);
             }
+
+            event.supportedLearnerTypesAsString = event.supportedLearnerTypes.join(',');
           }
 
           function learnerTypeIsChecked(event, learnerType) {
