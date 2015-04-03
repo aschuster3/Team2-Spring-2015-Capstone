@@ -81,7 +81,11 @@ public class UnapprovedUser extends Model {
         }
 
         if (!PhoneNumberFormatter.isValidNumber(this.phoneNumber)) {
-            return "The phone number is not valid.";
+            if (PhoneNumberFormatter.isMissingAreaCode(this.phoneNumber)) {
+                return "Invalid phone number (area code is required).";
+            } else {
+                return "Invalid phone number.";
+            }
         }
         
         return null;

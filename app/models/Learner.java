@@ -1,6 +1,7 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -14,6 +15,25 @@ import play.db.ebean.Model;
 @SuppressWarnings("serial")
 public class Learner extends Model {
 
+    public static final List<String> LEARNER_TYPES = Arrays.asList(
+            "Sub-I",
+            "Sub-I Medical Student",
+            "Ambulatory Medical Student",
+            "Dermatology Resident",
+            "Pediatrics Resident",
+            "Emory Internal Medicine",
+            "Morehouse Internal Medicine",
+            "Family Medicine",
+            "Podiatry Resident",
+            "Geriatrics Resident",
+            "Rheumatology Resident",
+            "Nurse Practitioner Student",
+            "Physician Assistant Student",
+            "Pediatrics Allergy Fellow",
+            "International Student",
+            "Pre-Med Student"
+    );
+
     @Id
     public String email;
 
@@ -26,6 +46,9 @@ public class Learner extends Model {
     @Required
     @ManyToOne
     public String ownerEmail;
+
+    @Required
+    public String learnerType;
 
     public static Finder<String, Learner> find = new Finder<String, Learner>(
             String.class, Learner.class);
