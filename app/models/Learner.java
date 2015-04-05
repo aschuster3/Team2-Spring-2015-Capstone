@@ -52,14 +52,19 @@ public class Learner extends Model {
 
     public static Finder<String, Learner> find = new Finder<String, Learner>(
             String.class, Learner.class);
-    
-    public Learner(String email, String first, String last, String ownerEmail) {
+
+    public Learner(String email, String first, String last, String ownerEmail, String learnerType) {
         this.email = email;
         this.firstName = first;
         this.lastName = last;
         this.ownerEmail = ownerEmail;
+        this.learnerType = learnerType;
     }
-    
+
+    public Learner(String email, String first, String last, String ownerEmail) {
+        this(email, first, last, ownerEmail, "");
+    }
+
     public static void create(String email, String firstName, String lastName, String ownerEmail) {
         Learner newLearner = new Learner(email, firstName, lastName, ownerEmail);
         newLearner.save();

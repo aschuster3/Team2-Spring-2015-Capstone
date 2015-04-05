@@ -58,3 +58,8 @@ GET           /admincalendar                      controllers.AdminController.vi
 
 #Template View
 GET           /templates                          controllers.TemplateController.templates()
+
+# End-of-rotation actions
+GET           /csv                                controllers.AdminController.testViewCSVStuff()
+GET           /csv/learners.csv                   controllers.AdminController.generateLearnersCSV()
+GET           /csv/coordinators.csv                   controllers.AdminController.generateCoordinatorsCSV()

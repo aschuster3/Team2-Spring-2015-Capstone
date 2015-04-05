@@ -1,10 +1,16 @@
 package controllers;
 
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
+import models.Learner;
 import models.UnapprovedUser;
 import models.User;
 import play.libs.mailer.Email;
@@ -12,6 +18,7 @@ import play.libs.mailer.MailerPlugin;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.With;
+import util.CSVUtil;
 import views.html.coordinatorsPage;
 
 @With(SecuredAdminAction.class)
@@ -75,6 +82,40 @@ public class AdminController extends Controller {
 
     public static Result viewCalendar() {
         return ok(views.html.calendarAdmin.render());
+    }
+
+    public static Result testViewCSVStuff() {
+        return ok(views.html.testCSV.render());
+    }
+
+    public static Result generateLearnersCSV() {
+        StringWriter csvStringWriter = new StringWriter();
+
+        try {
+            CSVUtil.writeLearnerCSV(Learner.getAll(), csvStringWriter);
+        } catch (IOException e) {
+            return internalServerError("server error: unable to write CSV learner data");
+        }
+
+        InputStream csvResponseStream = new ByteArrayInputStream(
+                csvStringWriter.toString().getBytes(StandardCharsets.UTF_8));
+        response().setContentType("text/csv");
+        return ok(csvResponseStream);
+    }
+
+    public static Result generateCoordinatorsCSV() {
+        StringWriter csvStringWriter = new StringWriter();
+
+        try {
+            CSVUtil.writeCoordinatorCSV(User.getAllCoordinators(), csvStringWriter);
+        } catch (IOException e) {
+            return internalServerError("server error: unable to write CSV coordinator data");
+        }
+
+        InputStream csvResponseStream = new ByteArrayInputStream(
+                csvStringWriter.toString().getBytes(StandardCharsets.UTF_8));
+        response().setContentType("text/csv");
+        return ok(csvResponseStream);
     }
 
 }

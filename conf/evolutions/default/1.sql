@@ -8,6 +8,7 @@ create table learner (
   first_name                varchar(255),
   last_name                 varchar(255),
   owner_email               varchar(255),
+  learner_type              varchar(255),
   constraint pk_learner primary key (email))
 ;
 
