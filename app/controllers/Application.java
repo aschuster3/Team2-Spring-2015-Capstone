@@ -12,6 +12,7 @@ import play.Logger;
 import play.data.Form;
 import play.data.validation.Constraints.EmailValidator;
 import play.data.validation.Constraints.Required;
+import play.data.validation.ValidationError;
 import play.libs.mailer.Email;
 import play.libs.mailer.MailerPlugin;
 import play.mvc.Controller;
@@ -204,9 +205,9 @@ public class Application extends Controller {
     public static Result sendNewPassword() {
         Form<ForgotPassword> filledForm = forgotPasswordTemplate.bindFromRequest();
         if(filledForm.hasGlobalErrors() || filledForm.hasErrors()) {
-            return badRequest(forgotPasswordForm.render(forgotPasswordTemplate));
-        } else if(User.find.byId(filledForm.get().email) == null) {
-            return badRequest(forgotPasswordForm.render(forgotPasswordTemplate));
+            // We want to clear the form, but keep the error message
+            filledForm.data().clear();
+            return badRequest(forgotPasswordForm.render(filledForm));
         } else {
             String userEmail = filledForm.get().email;
             
@@ -228,7 +229,7 @@ public class Application extends Controller {
                 
                 return redirect(routes.Application.login());
             } catch (MalformedURLException e) {
-                return TODO;
+                return internalServerError("Server error: unable to generate valid URL for password reset page.");
             }
         }
     }
@@ -239,7 +240,7 @@ public class Application extends Controller {
         if (userReset == null && user == null) {
             return redirect(routes.Application.login());
         }
-        
+
         return ok(resetPasswordPage.render(passwordForm, user));
     }
     
@@ -270,7 +271,11 @@ public class Application extends Controller {
         public String validate() {
             EmailValidator val = new EmailValidator();
             if(!val.isValid(this.email)) {
-                return "The email address is not valid.";
+                return "\"" + this.email + "\" is not a valid email address.";
+            }
+
+            if (User.find.byId(this.email) == null) {
+                return "There is no account associated with the email address \"" + this.email + "\".";
             }
             return null;
         }
