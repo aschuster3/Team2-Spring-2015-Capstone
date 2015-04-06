@@ -220,11 +220,15 @@ public class Application extends Controller {
                 // Verifies that the URL is not malformed
                 sendResetPasswordEmail(userEmail, token);
                 UserReset.create(userEmail, token);
-                return redirect(routes.Application.login());
+                return redirect(routes.Application.viewForgotPasswordConfirmation());
             } catch (MalformedURLException e) {
                 return internalServerError("Server error: unable to generate valid URL for password reset page.");
             }
         }
+    }
+
+    public static Result viewForgotPasswordConfirmation() {
+        return ok(views.html.forgotPasswordFormConfirmation.render());
     }
 
     @With(SecuredAdminAction.class)
@@ -261,8 +265,12 @@ public class Application extends Controller {
     
     public static Result resetPassword(String token) {
         UserReset userReset = UserReset.find.where().eq("resetToken", token).findUnique();
+        if (userReset == null) {
+            return redirect(routes.Application.login());
+        }
+
         User user = User.find.where().eq("email", userReset.userEmail).findUnique();
-        if (userReset == null && user == null) {
+        if (user == null) {
             return redirect(routes.Application.login());
         }
 

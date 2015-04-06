@@ -16,6 +16,7 @@ GET           /logout                             controllers.Application.logout
 # Forgot Password
 GET           /forgotPassword                     controllers.Application.forgotPassword()
 POST          /forgotPassword                     controllers.Application.sendNewPassword()
+GET           /forgotPasswordConfirmed            controllers.Application.viewForgotPasswordConfirmation()
 GET           /resetPassword/:token               controllers.Application.resetPassword(token: String)
 POST          /resetPassword                      controllers.Application.changeUserPassword(email: String)
 

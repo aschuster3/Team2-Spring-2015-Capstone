@@ -1,3 +1,4 @@
+import controllers.routes;
 import models.UnapprovedUser;
 import models.User;
 import models.UserReset;
@@ -240,5 +241,22 @@ public class ApplicationTest {
         
         assertThat(303).isEqualTo(status(result));
         assertThat(PasswordUtil.check("newPassword", user.password)).isTrue();
+    }
+
+    @Test
+    public void cannotViewResetPasswordPageWithInvalidToken() {
+        User.create(new User("Jeff", "Jefferson", "jeff@gmail.com", "password", false));
+        String validToken = "validtoken";
+        String invalidToken = "___invalidtoken___";
+
+        User user = User.find.byId("jeff@gmail.com");
+        UserReset.create(user.email, validToken);
+
+        Result result = callAction(
+                routes.ref.Application.resetPassword(invalidToken),
+                fakeRequest()
+        );
+
+        assertThat(status(result)).isEqualTo(303);
     }
 }
