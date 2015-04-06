@@ -1,14 +1,13 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import models.Session;
-import models.RecurringSessionGroup;
+import models.*;
 import play.data.*;
 import play.libs.Json;
+import play.libs.mailer.Email;
+import play.libs.mailer.MailerPlugin;
 import play.mvc.*;
 import views.html.*;
-import models.ScheduleTemplate;
-import models.SessionTemplate;
 
 import java.util.Date;
 import java.text.DateFormat;
@@ -83,11 +82,49 @@ public class SessionController extends Controller {
 	public static Result deleteSession(String id) {
 		Session session = Session.find.byId(id);
 		if (session == null) {
-			return badRequest("delete failed: session with id '" + id + "' does not exist");
-		} else {
-			session.delete();
 			return status(204);
 		}
+		sendDeletedSessionNotifications(session);
+		session.delete();
+		return status(204);
+	}
+
+	private static void sendDeletedSessionNotifications(Session session) {
+		if (session == null || session.assignedLearner == null) {
+			return;
+		}
+
+		Learner learner = Learner.find.byId(session.assignedLearner);
+		if (learner != null) {
+			sendDeletedSessionNotificationTo(learner.email, session);
+		}
+		
+		if (learner.ownerEmail == null) {
+			return;
+		}
+
+		User coordinator = User.find.byId(learner.ownerEmail);
+		if (coordinator != null) {
+			sendDeletedSessionNotificationTo(coordinator.email, session);
+		}
+	}
+
+	private static void sendDeletedSessionNotificationTo(String emailAddress, Session session) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("M/d/yyyy");
+		String dateString = dateFormat.format(session.date);
+
+		String subject = "[Emory Dermatology] Clinic Cancellation for " + dateString;
+		String message = "This is a notification that the following clinic has been cancelled:\n"
+				+ "\n\t" + session.title
+				+ "\n\t" + session.physician
+				+ "\n\t" + dateString + " " + (session.isAM ? "(AM)" : "(PM)");
+
+		Email email = new Email();
+		email.addTo(emailAddress);
+		email.setSubject(subject);
+		email.setBodyText(message);
+
+		MailerPlugin.send(email);
 	}
 
 	/**
