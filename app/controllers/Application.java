@@ -9,6 +9,7 @@ import models.UnapprovedUser;
 import models.User;
 import models.UserReset;
 import play.Logger;
+import play.core.Router;
 import play.data.Form;
 import play.data.validation.Constraints.EmailValidator;
 import play.data.validation.Constraints.Required;
@@ -16,6 +17,7 @@ import play.data.validation.ValidationError;
 import play.libs.mailer.Email;
 import play.libs.mailer.MailerPlugin;
 import play.mvc.*;
+import util.PasswordUtil;
 import views.html.adminIndex;
 import views.html.coordinatorIndex;
 import views.html.forgotPasswordForm;
@@ -191,9 +193,12 @@ public class Application extends Controller {
         public String passwordConfirm;
         
         public String validate() {
-            if (password == null) {
-                return "Darn";
-            } else if (!password.equals(passwordConfirm)) {
+            String error = PasswordUtil.validateClearPassword(password);
+            if (error != null) {
+                return error;
+            }
+
+            if (!password.equals(passwordConfirm)) {
               return "Passwords do not match!";
             }
             return null;

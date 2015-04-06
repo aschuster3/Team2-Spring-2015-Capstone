@@ -4,11 +4,11 @@ import java.util.*;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 
 import play.data.validation.Constraints.Email;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
+import util.PasswordUtil;
 import util.PhoneNumberFormatter;
 
 @Entity
@@ -26,7 +26,11 @@ public class User extends Model {
     @Email
     @Id
     public String email;
-    
+
+    /**
+     * Once user is created (via User.create),
+     * this holds the encrypted password.
+     */
     @Required
     public String password;
     
@@ -69,23 +73,33 @@ public class User extends Model {
     public static Finder<String, User> find = new Finder<String, User>(
             String.class, User.class);
     
-    public static User authenticate(String email, String password) {
-        return find.where().eq("email", email)
-               .eq("password", password).findUnique();
+    public static User authenticate(String email, String clearPassword) {
+        if (email == null) {
+            return null;
+        }
+
+        User user = find.byId(email);
+        if (user == null) {
+            return null;
+        }
+
+        return PasswordUtil.check(clearPassword, user.password) ? user : null;
     }
     
     /**
-     * For convenience to add encryption later
-     * 
-     * @param newPassword New password for account
+     * @param clearPassword New password for account
      */
-    public void changePassword(String newPassword) {
-        this.password = newPassword;
+    public void changePassword(String clearPassword) {
+        this.password = PasswordUtil.encrypt(clearPassword);
         this.save();
     }
-    
+
+    /**
+     * @param user User with password field still set to a clear password
+     */
     public static void create(User user) {
         user.phoneNumber = PhoneNumberFormatter.safeTransformToCommonFormat(user.phoneNumber);
+        user.password = PasswordUtil.encrypt(user.password);
         user.save();
     }
     
@@ -96,13 +110,13 @@ public class User extends Model {
     public static List<User> getAllCoordinators() {
         return find.where().eq("isAdmin", false).findList();
     }
-    
+
     public String validate() {
         User user = User.find.where().eq("email", this.email).findUnique();
         if (user != null) {
             return "Email " + user.email + " is already taken.";
         }
         
-        return null;
+        return PasswordUtil.validateClearPassword(user.password);
     }
 }

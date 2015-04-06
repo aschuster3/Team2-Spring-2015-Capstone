@@ -27,9 +27,9 @@ public class LearnerControllerTest {
     public void setup(){
         start(fakeApplication(inMemoryDatabase(), fakeGlobal()));
 
-        new User("Admin", "User", ADMIN_EMAIL, "adminpassword", true).save();
-        new User("Coordinator", "A", COORDINATOR_A_EMAIL, "password", false).save();
-        new User("Coordinator", "B", COORDINATOR_B_EMAIL, "password", false).save();
+        User.create(new User("Admin", "User", ADMIN_EMAIL, "adminpassword", true));
+        User.create(new User("Coordinator", "A", COORDINATOR_A_EMAIL, "password", false));
+        User.create(new User("Coordinator", "B", COORDINATOR_B_EMAIL, "password", false));
 
         new Learner(LEARNER_A_EMAIL, "Learner", "A", COORDINATOR_A_EMAIL).save();
         new Learner(LEARNER_B_EMAIL, "Learner", "B", COORDINATOR_B_EMAIL).save();

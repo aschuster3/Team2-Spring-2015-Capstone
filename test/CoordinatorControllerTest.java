@@ -32,7 +32,7 @@ public class CoordinatorControllerTest {
         ObjectMapper mapper = new ObjectMapper()
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         Json.setObjectMapper(mapper);
-        new User("John", "Stamos", "fullhouse@gmail.com", "olsens", false).save();
+        User.create(new User("John", "Stamos", "fullhouse@gmail.com", "olsens", false));
     }
     
     @Test

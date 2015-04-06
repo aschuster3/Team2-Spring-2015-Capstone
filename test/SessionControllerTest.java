@@ -29,8 +29,8 @@ public class SessionControllerTest {
 	public void setup(){
 		start(fakeApplication(inMemoryDatabase(), fakeGlobal()));
 
-        new User("Admin", "User", ADMIN_EMAIL, "adminpassword", true).save();
-        new User("Coordinator", "User", COORDINATOR_EMAIL, "coordinatorpassword", false).save();
+        User.create(new User("Admin", "User", ADMIN_EMAIL, "adminpassword", true));
+        User.create(new User("Coordinator", "User", COORDINATOR_EMAIL, "coordinatorpassword", false));
         new Learner(LEARNER_EMAIL, "Learner", "nonuser", COORDINATOR_EMAIL).save();
 	}
 	

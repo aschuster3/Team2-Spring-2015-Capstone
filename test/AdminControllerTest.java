@@ -29,8 +29,8 @@ public class AdminControllerTest {
     public void setup() {
         start(fakeApplication(inMemoryDatabase(), fakeGlobal()));
 
-        new User("Admin", "User", ADMIN_EMAIL, "adminpassword", true).save();
-        new User("Coord", "User", COORDINATOR_EMAIL, "coordpassword", false, "dept", "555-123-4567").save();
+        User.create(new User("Admin", "User", ADMIN_EMAIL, "adminpassword", true));
+        User.create(new User("Coord", "User", COORDINATOR_EMAIL, "coordpassword", false, "dept", "555-123-4567"));
     }
 
     @Test

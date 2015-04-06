@@ -20,7 +20,7 @@ public class RecurringSessionGroupTest {
     public void setup() {
         start(fakeApplication(inMemoryDatabase(), fakeGlobal()));
 
-        new User("Coordinator", "User", COORDINATOR_EMAIL, "adminpassword", false).save();
+        User.create(new User("Coordinator", "User", COORDINATOR_EMAIL, "adminpassword", false));
     }
 
     @Test

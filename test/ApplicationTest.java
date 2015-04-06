@@ -8,6 +8,8 @@ import com.google.common.collect.ImmutableMap;
 
 import play.Logger;
 import play.mvc.Result;
+import util.PasswordUtil;
+
 import static play.test.Helpers.*;
 import static org.fest.assertions.Assertions.*;
 
@@ -25,8 +27,8 @@ public class ApplicationTest {
     public void setup() {
         start(fakeApplication(inMemoryDatabase(), fakeGlobal()));
 
-        new User("Sharon", "Norahs", "sharon@gmail.com", "kitty", true).save();
-        new User("Bob", "Lob", "bob@gmail.com", "secret", false).save();
+        User.create(new User("Sharon", "Norahs", "sharon@gmail.com", "kitty", true));
+        User.create(new User("Bob", "Lob", "bob@gmail.com", "secret", false));
     }
 
     @Test
@@ -101,7 +103,7 @@ public class ApplicationTest {
         assertThat(BAD_REQUEST).isEqualTo(status(result));
         assertThat("Bob").isEqualTo(bob.firstName);
         assertThat("Lob").isEqualTo(bob.lastName);
-        assertThat("secret").isEqualTo(bob.password);
+        assertThat(PasswordUtil.check("secret", bob.password));
     }
     
     @Test
@@ -169,7 +171,7 @@ public class ApplicationTest {
     
     @Test
     public void requestPasswordResetSuccess() {
-        new User("Larry", "Lobster", "bluelagoon@gmail.com", "posewithme", false).save();
+        User.create(new User("Larry", "Lobster", "bluelagoon@gmail.com", "posewithme", false));
         
         Result result = callAction(
                 controllers.routes.ref.Application.sendNewPassword(),
@@ -220,12 +222,12 @@ public class ApplicationTest {
     
     @Test
     public void resetPasswordSucceed() {
-        new User("Jeff", "Jefferson", "jeff@gmail.com", "password", false).save();
+        User.create(new User("Jeff", "Jefferson", "jeff@gmail.com", "password", false));
         
         User user = User.find.byId("jeff@gmail.com");
         UserReset.create(user.email, "abcdefghijklmnopqrstuvwxyz");
         
-        assertThat(user.password).isEqualTo("password");
+        assertThat(PasswordUtil.check("password", user.password)).isTrue();
         
         Result result = callAction(
                 controllers.routes.ref.Application.changeUserPassword(user.email),
@@ -237,6 +239,6 @@ public class ApplicationTest {
         user = User.find.byId("jeff@gmail.com");
         
         assertThat(303).isEqualTo(status(result));
-        assertThat(user.password).isEqualTo("newPassword");
+        assertThat(PasswordUtil.check("newPassword", user.password)).isTrue();
     }
 }
