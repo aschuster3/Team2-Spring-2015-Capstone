@@ -94,7 +94,7 @@ public class SessionControllerTest {
     }
 
     @Test
-    public void deleteSession_failsOnBadSessionID() {
+    public void deleteSession_doesNotFailOnBadSessionID() {
         Session session = new Session("1", "session-to-delete", new Date(0));
         Session.create(session);
 
@@ -103,7 +103,7 @@ public class SessionControllerTest {
                 fakeRequest().withSession("email", ADMIN_EMAIL)
         );
 
-        assertThat(status(result)).isEqualTo(BAD_REQUEST);
+        assertThat(status(result)).isEqualTo(204);
         assertThat(Session.getAll().size()).isEqualTo(1);
     }
 
