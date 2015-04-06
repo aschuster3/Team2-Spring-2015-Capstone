@@ -18,6 +18,8 @@ import static org.fest.assertions.Assertions.*;
 *
 */
 public class ApplicationTest {
+
+    private static final String ADMIN_EMAIL = "sharon@gmail.com";
     
     @Before
     public void setup() {
@@ -190,6 +192,30 @@ public class ApplicationTest {
         
         assertThat(BAD_REQUEST).isEqualTo(status(result));
         assertThat(UserReset.find.byId("somerandomemail@gmail.com")).isNull();
+    }
+
+    @Test
+    public void adminInitiatedPasswordResetSuccess() {
+        User.create(new User("first", "last", "email@gmail.com", "password", false));
+
+        Result result = callAction(
+                controllers.routes.ref.Application.sendNewPasswordToUser("email@gmail.com"),
+                fakeRequest().withSession("email", ADMIN_EMAIL)
+        );
+
+        assertThat(status(result)).isEqualTo(303);
+        assertThat(UserReset.find.byId("email@gmail.com")).isNotNull();
+    }
+
+    @Test
+    public void adminInitiatedPasswordResetFail() {
+        Result result = callAction(
+                controllers.routes.ref.Application.sendNewPasswordToUser("unregisteredUser@gmail.com"),
+                fakeRequest().withSession("email", ADMIN_EMAIL)
+        );
+
+        assertThat(status(result)).isEqualTo(BAD_REQUEST);
+        assertThat(UserReset.find.byId("unregisteredUser@gmail.com")).isNull();
     }
     
     @Test

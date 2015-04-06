@@ -52,6 +52,7 @@ GET           /calendar                           controllers.CoordinatorControl
 
 # Admin View: Coordinators List
 GET           /coordinators                       controllers.AdminController.viewAllCoordinators()
+POST          /forgotPassword/:userEmail          controllers.Application.sendNewPasswordToUser(userEmail: String)
 
 # Admin View: Calendar Page
 GET           /admincalendar                      controllers.AdminController.viewCalendar()
@@ -62,4 +63,4 @@ GET           /templates                          controllers.TemplateController
 # End-of-rotation actions
 GET           /csv                                controllers.AdminController.testViewCSVStuff()
 GET           /csv/learners.csv                   controllers.AdminController.generateLearnersCSV()
-GET           /csv/coordinators.csv                   controllers.AdminController.generateCoordinatorsCSV()
+GET           /csv/coordinators.csv               controllers.AdminController.generateCoordinatorsCSV()

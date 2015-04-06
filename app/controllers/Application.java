@@ -15,9 +15,7 @@ import play.data.validation.Constraints.Required;
 import play.data.validation.ValidationError;
 import play.libs.mailer.Email;
 import play.libs.mailer.MailerPlugin;
-import play.mvc.Controller;
-import play.mvc.Result;
-import play.mvc.Security;
+import play.mvc.*;
 import views.html.adminIndex;
 import views.html.coordinatorIndex;
 import views.html.forgotPasswordForm;
@@ -215,23 +213,45 @@ public class Application extends Controller {
 
             try {
                 // Verifies that the URL is not malformed
-                URL url = new URL("http://localhost:9000" + (routes.Application.resetPassword(token)).url());
-                
-                Email email = new Email();
-                email.setSubject("Reset Password");
-                email.setFrom("admin@emory.edu");
-                email.addTo(userEmail);
-                email.setBodyText("Your new password is available here: " + url.toString());
-                
-                MailerPlugin.send(email);
-                
+                sendResetPasswordEmail(userEmail, token);
                 UserReset.create(userEmail, token);
-                
                 return redirect(routes.Application.login());
             } catch (MalformedURLException e) {
                 return internalServerError("Server error: unable to generate valid URL for password reset page.");
             }
         }
+    }
+
+    @With(SecuredAdminAction.class)
+    public static Result sendNewPasswordToUser(String userEmail) {
+        User coordinator = User.find.byId(userEmail);
+        if (coordinator == null) {
+            return badRequest(views.html.coordinatorsPage.render(
+                    UnapprovedUser.getAll(),
+                    User.getAllCoordinators()
+            ));
+        }
+
+        try {
+            String token = UUID.randomUUID().toString();
+            sendResetPasswordEmail(userEmail, token);
+            UserReset.create(userEmail, token);
+            return redirect(routes.AdminController.viewAllCoordinators());
+        } catch (MalformedURLException e) {
+            return internalServerError("Server error: unable to generate valid URL for password reset page.");
+        }
+    }
+
+    private static void sendResetPasswordEmail(String userEmail, String token) throws MalformedURLException {
+        URL url = new URL("http://localhost:9000" + (routes.Application.resetPassword(token)).url());
+
+        Email email = new Email();
+        email.setSubject("Reset Password");
+        email.setFrom("admin@emory.edu");
+        email.addTo(userEmail);
+        email.setBodyText("Your new password is available here: " + url.toString());
+
+        MailerPlugin.send(email);
     }
     
     public static Result resetPassword(String token) {
