@@ -198,6 +198,28 @@ public class ApplicationTest {
     }
 
     @Test
+    public void twoConsecutivePasswordResetRequests_UsesSecondTokenForAuthorization() {
+        User.create(new User("Larry", "Lobster", "bluelagoon@gmail.com", "posewithme", false));
+
+        Result firstResult = callAction(
+                controllers.routes.ref.Application.sendNewPassword(),
+                fakeRequest().withFormUrlEncodedBody(ImmutableMap.of(
+                        "email", "bluelagoon@gmail.com"))
+        );
+        String firstToken = UserReset.find.byId("bluelagoon@gmail.com").resetToken;
+
+        Result secondResult = callAction(
+                controllers.routes.ref.Application.sendNewPassword(),
+                fakeRequest().withFormUrlEncodedBody(ImmutableMap.of(
+                        "email", "bluelagoon@gmail.com"))
+        );
+        String secondToken = UserReset.find.byId("bluelagoon@gmail.com").resetToken;
+
+        assertThat(status(secondResult)).isEqualTo(303);
+        assertThat(secondToken).isNotEqualTo(firstToken);
+    }
+
+    @Test
     public void adminInitiatedPasswordResetSuccess() {
         User.create(new User("first", "last", "email@gmail.com", "password", false));
 

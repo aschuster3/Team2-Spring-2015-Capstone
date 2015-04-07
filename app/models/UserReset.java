@@ -23,10 +23,18 @@ public class UserReset extends Model {
         this.userEmail = userEmail;
         this.resetToken = resetToken;
     }
-    
+
+    /**
+     * If a UserReset already exists for this userEmail, update the token.
+     * Otherwise, create a new UserReset.
+     */
     public static void create(String userEmail, String resetToken) {
         UserReset ur = new UserReset(userEmail, resetToken);
-        ur.save();
+        if (UserReset.find.byId(userEmail) == null) {
+            ur.save();
+        } else {
+            ur.update();
+        }
     }
 
 }
