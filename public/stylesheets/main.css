@@ -4,6 +4,9 @@ h1,h2,h3,h4,h5{
 h2{
 	size: 24px;
 }
+h6{
+	padding-top: 5px;
+}
 p{
 	font-family: 'Lora', serif;
 }
