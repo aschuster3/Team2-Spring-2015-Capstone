@@ -8,15 +8,41 @@ import models.SessionTemplate;
 import play.data.Form;
 import play.mvc.*;
 import views.html.*;
+import play.data.validation.Constraints.Required;
 
 @With(SecuredAdminAction.class)
 public class TemplateController extends Controller {
 	
-	public static Result createScheduleTemplate(String title){
-		if(ScheduleTemplate.find.byId(title)!=null)
-			return badRequest("Schedule with title " + title + " already exists.");
-		ScheduleTemplate.create(title);
-		return status(204);
+	    static Form<PreTemplate> templateForm = Form.form(PreTemplate.class);
+
+	    public static class PreTemplate {
+        @Required
+        public String title;
+       
+        public String validate() {
+            
+            if((title == null || title.equals(""))) {
+                return "Must have a title for the template";
+            }
+            if(ScheduleTemplate.find.where().eq("title", title).findUnique()!=null){
+            	return "Template with title " + title + " already exists.";
+            }
+            
+            return null;
+        }
+    }
+
+	public static Result createScheduleTemplate(){
+
+	Form<PreTemplate> filledForm = templateForm.bindFromRequest();
+        
+        if (filledForm.hasGlobalErrors() || filledForm.hasErrors()) {
+            return badRequest(manageTemplates.render(ScheduleTemplate.find.all(), filledForm));
+        } else {
+            PreTemplate template = filledForm.get();
+            ScheduleTemplate.create(template.title);
+            return redirect(routes.TemplateController.templates());
+        }
 	}
 	
 	public static Result createSessionTemplate(String title, int week, int day, boolean isAM){
@@ -29,7 +55,7 @@ public class TemplateController extends Controller {
 	}
 	
 	public static Result templates(){
-		return ok(manageTemplates.render(ScheduleTemplate.find.all()));
+		return ok(manageTemplates.render(ScheduleTemplate.find.all(), templateForm));
 	}
 	
 	public static Result addSessionToSchedule(String scheduleTitle, String sessionID){

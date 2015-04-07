@@ -1,4 +1,4 @@
-@(templates: java.util.List[models.ScheduleTemplate])
+@(templates: java.util.List[models.ScheduleTemplate], templateForm: play.data.Form[TemplateController.PreTemplate])
 
 @import helper._
 @import java.math.BigInteger; var panelNum = 1
@@ -64,7 +64,7 @@
 		    			<!-- CREATE LIST OF SESSIONS HERE -->
 		    			<h6>Sessions:</h6>
 		    			@for(s <- template.sessions) {
-		    				<p id="session">@s.title @s.week @s.day @s.isAM</p>
+		    				<p class="session">@s.title @s.week @s.day @s.isAM</p>
 		    			}
 					</div>
 					<div class="pull-right">
@@ -79,12 +79,20 @@
 	<a class="btn btn-inverse" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
 		Add Template
 	</a>
+  @if(templateForm.hasGlobalErrors()) {
+              <p class="text-center"><font color="red">@templateForm.globalError.message</font></p>
+          }
+          @if(templateForm.hasErrors()) {
+            @for(error <- templateForm("title").errors) {
+              <p class="text-center"><font color="red">@error.message</font></p>
+            }
+          }
 
 <!-- Leftover comment from Maggie's student page that I copied and pasted below -->
 <!--Andrew!!! Can you change this to Play's form format (and the format for the dropdown is probably wrong anyways)-->
-	@*<div class="collapse submitform" id="collapseExample">
-		@form(routes.TemplateController.createTemplate) {
-		  @inputText(learnerForm("templateName"), 
+	<div class="collapse submitform" id="collapseExample">
+		@form(routes.TemplateController.createScheduleTemplate) {
+		  @inputText(templateForm("title"), 
 		      'type -> "text",
 		      'class -> "form-control", 
 		      'id -> "inputTemplateName",
@@ -92,8 +100,9 @@
 		      '_label -> null,
 		      '_showConstraints -> false)
           <input role="button" class="btn btn-inverse" type="submit" value="Submit"></input>
+          
 		}
-	</div>*@
+	</div>
 
 	<!-- MODAL FOR ADDING A SESSION -->
 	<script type="text/ng-template" id="modalContent.html">
