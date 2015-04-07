@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jobs.RecurringSessionJob;
 import models.Learner;
+import models.ScheduleTemplate;
 import models.Session;
+import models.SessionTemplate;
 import models.User;
 import play.Application;
 import play.GlobalSettings;
@@ -72,6 +74,19 @@ public class Global extends GlobalSettings {
             
             Ebean.save(new Session("9", "Emory Clinic", date.getTime(), "Dr. Dorian", true));
             Ebean.save(new Session("10", "Grady Clinic", date.getTime(), "Dr. House", false));
+            
+            ScheduleTemplate scheduleTemp = new ScheduleTemplate("subi1");
+            
+            for (int week = 0; week<3; week++){
+                for(int day = 0; day<5; day++){
+                    String name = "Week" + week + "Day" + day;
+                    SessionTemplate sessionTempAM = new SessionTemplate(name + "AM", week, day, true);
+                    SessionTemplate sessionTempPM = new SessionTemplate(name + "PM", week, day, false);
+                    scheduleTemp.addSession(sessionTempAM);
+                    scheduleTemp.addSession(sessionTempPM);
+                }
+            }
+            scheduleTemp.save();
         }
 
         ObjectMapper mapper = new ObjectMapper()
