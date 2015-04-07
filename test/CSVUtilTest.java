@@ -2,6 +2,8 @@ import models.Learner;
 import models.User;
 import org.junit.*;
 import static org.junit.Assert.*;
+import static play.test.Helpers.*;
+
 import util.CSVUtil;
 
 import java.io.File;
@@ -17,6 +19,7 @@ public class CSVUtilTest {
 
     @Before
     public void setup() {
+        start(fakeApplication(inMemoryDatabase(), fakeGlobal()));
         testWriter = new StringWriter();
     }
 
