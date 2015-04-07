@@ -10,6 +10,12 @@ h6{
 p{
 	font-family: 'Lora', serif;
 }
+p.session
+{
+	font-family: 'Open Sans', sans-serif;
+	font-size: 12pt;
+	margin-top: 5px;
+}
 .btn .btn-default{
 	padding-top: 2px;
 	font-family: 'Open Sans', sans-serif;
@@ -88,4 +94,8 @@ p{
 dl{
 	margin-bottom: 0px;
 	margin-top: 0px;
+}
+.student{
+	margin-bottom: 0px;
+	margin-top: 10px;
 }

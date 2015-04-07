@@ -58,7 +58,7 @@
                 </div>
                 <div class="pull-right">
                 @form(routes.AdminController.approveUnapprovedUser(unapproved.email)) {
-                    <button class="btn btn-lg btn-primary btn-block btn-sm btn-inverse" type="submit">Approve</button>
+                    <button class="btn btn-lg btn-primary btn-block btn-sm btn-inverse" type="submit" ng-click="showModalForCreate()">Approve</button>
                 }
                 
                 @form(routes.AdminController.removeUnapprovedUser(unapproved.email)) {
@@ -101,6 +101,21 @@
 	}
 	
 	</div>
+
+
+	<script type="text/ng-template" id="modalContent.html">
+	    <div class="modal-header">
+	      <h4 class="modal-title">{{ modalTitle }}</h4>
+	    </div>
+	    <div class="modal-body">
+	      <p>You have approved this coordinator. They will recieve instructions so that they can complete their registration.</p>
+	    </div>
+	    <div class="modal-footer">
+            <button class="btn btn-inverse pull-right" ng-click="clickCancel()">Ok</button>
+        </div>
+    </script>
+
+
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>

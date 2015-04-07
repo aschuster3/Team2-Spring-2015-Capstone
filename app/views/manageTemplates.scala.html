@@ -62,9 +62,9 @@
 		    		<div class = "pull-left">
 
 		    			<!-- CREATE LIST OF SESSIONS HERE -->
-		    			<h6>Sessions: </h6>
+		    			<h6>Sessions:</h6>
 		    			@for(s <- template.sessions) {
-		    				@s.title |  @s.week @s.day @s.isAM
+		    				<p id="session">@s.title @s.week @s.day @s.isAM</p>
 		    			}
 					</div>
 					<div class="pull-right">
@@ -96,7 +96,7 @@
 	</div>*@
 
 	<!-- MODAL FOR ADDING A SESSION -->
-	<script id="modalContent.html">
+	<script type="text/ng-template" id="modalContent.html">
 	    <div class="modal-header">
 	      <h4 class="modal-title">{{ modalTitle }}</h4>
 	    </div>
