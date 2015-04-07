@@ -117,5 +117,30 @@ public class TemplateControllerTest {
     	assertThat(SessionTemplate.find.byId(st1.id).isAM).isEqualTo(false);
 
     }
-    //STILL NEED TO ADD TEST FOR REMOVING SESSIONS FROM A SCHEDULE AND EDITTING SESSIONS
+    
+    @Test
+	public void removeSessionFromSchedule(){
+    	ScheduleTemplate scheduleTemp = new ScheduleTemplate("subi2");
+    	SessionTemplate clinic1 = new SessionTemplate("Clinic1", 1, 1, true);
+    	SessionTemplate clinic2 = new SessionTemplate("Clinic2", 1, 2, true);
+
+    	scheduleTemp.addSession(clinic1);
+    	scheduleTemp.addSession(clinic2);
+    	scheduleTemp.save();
+    	
+    	assertThat(ScheduleTemplate.find.byId(scheduleTemp.title)).isNotNull();
+    	assertThat(SessionTemplate.find.byId(clinic1.id)).isNotNull();
+    	assertThat(SessionTemplate.find.byId(clinic2.id)).isNotNull();
+    	
+    	List<SessionTemplate> sessions = ScheduleTemplate.find.byId(scheduleTemp.title).sessions;
+
+    	assertThat(sessions).isNotNull();
+    	assertThat(sessions.size()).isEqualTo(new Integer(2));
+    	
+    	assertThat(scheduleTemp.deleteSession(clinic1)).isEqualTo(true);
+    	assertThat(ScheduleTemplate.find.byId(scheduleTemp.title).sessions.size()).isEqualTo(1);
+    	
+    	assertThat(SessionTemplate.find.all().size()).isEqualTo(1);
+    }
+    //STILL NEED TO ADD TEST FOR REMOVING SESSIONS FROM A SCHEDULE
 }

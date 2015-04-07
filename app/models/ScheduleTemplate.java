@@ -30,7 +30,11 @@ public class ScheduleTemplate extends Model {
 	}
 	
 	public boolean deleteSession(SessionTemplate session){
-		return sessions.remove(session);
+		boolean result = sessions.remove(session);
+		if(result){
+			return SessionTemplate.delete(session);
+		}
+		return result;
 	}
 	
 	public static void create(String title){
