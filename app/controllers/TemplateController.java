@@ -9,15 +9,23 @@ import play.data.Form;
 import play.mvc.*;
 import views.html.*;
 
-@Security.Authenticated(Secured.class)
+@With(SecuredAdminAction.class)
 public class TemplateController extends Controller {
 	
 	public static Result createScheduleTemplate(String title){
-		return TODO;
+		if(ScheduleTemplate.find.byId(title)!=null)
+			return badRequest("Schedule with title " + title + " already exists.");
+		ScheduleTemplate.create(title);
+		return status(204);
 	}
 	
-	public static Result createSessionTemplate(){
-		return TODO;
+	public static Result createSessionTemplate(String title, int week, int day, boolean isAM){
+		if(SessionTemplate.find.where().eq("title", title).eq("week", week).eq("day", day).eq("isAM", isAM).findUnique()!=null){
+			return badRequest("session with title " + title + ", on week " + week + 
+					" day " + day + "in the " + isAM + " already exists in this schedule");
+		}
+		SessionTemplate.create(title, week, day, isAM);
+		return status(204);	
 	}
 	
 	public static Result templates(){
@@ -41,7 +49,6 @@ public class TemplateController extends Controller {
 		
 	}
 	
-	@With(SecuredAdminAction.class)
 	public static Result deleteSessionFromSchedule(String id) {
 		SessionTemplate session = SessionTemplate.find.byId(id);
 		if (session == null) {
@@ -51,4 +58,5 @@ public class TemplateController extends Controller {
 			return status(200);
 		}
 	}
+	
 } 

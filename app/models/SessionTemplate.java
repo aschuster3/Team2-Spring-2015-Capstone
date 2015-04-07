@@ -48,8 +48,39 @@ public class SessionTemplate extends Model{
 		st.save();
 	}
 	
-	//NEED TO ADD AN UPDATE AND DELETE?
+	public static void create(String title, int week, int day, boolean isAM){
+		SessionTemplate st = new SessionTemplate(title, week, day, isAM);
+		st.save();
+	}
 	
+	public static Boolean delete(SessionTemplate st){
+		if(SessionTemplate.find.byId(st.id)!=null){
+			st.delete();
+			return true;
+		}
+		return false;
+	}
+	
+	public void updateTitle(String title){
+		this.title = title;
+		this.save();
+	}
+	
+	public void updateWeek(int week){
+		this.week = week;
+		this.save();
+	}
+	
+	public void updateDay(int day){
+		this.day = day;
+		this.save();
+	}
+	
+	public void updateAM(boolean isAM){
+		this.isAM = isAM;
+		this.save();
+	}
+		
     public static Finder<String, SessionTemplate> find = new Finder<String, SessionTemplate>(
             String.class, SessionTemplate.class);
 }

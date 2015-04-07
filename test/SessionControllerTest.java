@@ -234,8 +234,6 @@ public class SessionControllerTest {
     public void createSessionsFromScheduleTemplate(){
     	ScheduleTemplate scheduleTemp = new ScheduleTemplate("subi1");
     	scheduleTemp.save();
-		//SessionTemplate sessionTemp = new SessionTemplate("session", 1, 1, true);
-		//scheduleTemp.addSession(sessionTemp);
     	for (int week = 0; week<3; week++){
     		for(int day = 0; day<5; day++){
     			String name = "Week" + week + "Day" + day;
