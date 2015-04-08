@@ -71,6 +71,7 @@ angular.module('mwl.calendar')
     	if(sessionWithNewLearner.assignedLearner == null && $scope.currentLearner != "error") {
 	    	sessionWithNewLearner.assignedLearner = $scope.currentLearner.email;
 	    	sessionWithNewLearner.type = "invalid";
+        sessionWithNewLearner.editable = false;
 	      Sessions.update(sessionWithNewLearner);
     	}
     };
