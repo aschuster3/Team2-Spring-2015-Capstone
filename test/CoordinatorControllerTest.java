@@ -45,7 +45,8 @@ public class CoordinatorControllerTest {
                              .withFormUrlEncodedBody(ImmutableMap.of(
                                 "email", "student@gmail.com",
                                 "firstName", "John",
-                                "lastName", "Doe"))
+                                "lastName", "Doe",
+                                "learnerType", "Sub-I"))
             );
         
         assertThat(303).isEqualTo(status(result));
@@ -64,7 +65,8 @@ public class CoordinatorControllerTest {
                              .withFormUrlEncodedBody(ImmutableMap.of(
                                 "email", "notanemail",
                                 "firstName", "Name",
-                                "lastName", "Doe"))
+                                "lastName", "Doe",
+                                "learnerType", "Sub-I"))
             );
         
         assertThat(400).isEqualTo(status(result));

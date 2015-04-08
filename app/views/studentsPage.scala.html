@@ -1,4 +1,6 @@
-@(learners: java.util.List[models.Learner], learnerForm: play.data.Form[CoordinatorController.PreLearner])
+@(learners: java.util.List[models.Learner],
+		learnerTypeOptions: List[String],
+		learnerForm: play.data.Form[CoordinatorController.PreLearner])
 
 @import helper._
 @import java.math.BigInteger; var panelNum = 1
@@ -38,7 +40,7 @@
  		</div>
 	</nav>
 </div>
-<!--Somehow dynamically create these based on how many students are listed in the database under this coordinator-->
+
 <div class="studentsSection container">
 	<h4>Your Students</h4>
 	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
@@ -57,6 +59,7 @@
 		    		<div class = "col-md-3 pull-left">
 						<h6 class="student">Name:</h6>@learner.firstName @learner.lastName
 						<h6 class="student">E-mail:</h6>@learner.email
+						<h6 class="type">Type:</h6>@learner.learnerType
 					</div>
 					<div class = "col-md-8 pull-left">
 						<h6>Schedule:</h6>
@@ -73,8 +76,12 @@
 	<a class="btn btn-inverse" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
 		Add Student
 	</a>
-<!--Andrew!!! Can you change this to Play's form format (and the format for the dropdown is probably wrong anyways)-->
-	<div class="collapse submitform" id="collapseExample">
+
+	@*
+		If the user submitted an invalid form, we want them to see this form immediately.
+		So, don't set the class to 'collapse' for the above scenario!
+	 *@
+	<div class="@(if (learnerForm.hasErrors() || learnerForm.hasGlobalErrors()) "" else "collapse") submitform" id="collapseExample">
 		@form(routes.CoordinatorController.createLearner) {
 		  @inputText(learnerForm("firstName"),
 		      'type -> "text",
@@ -97,6 +104,13 @@
               'placeholder -> "Email",
               '_label -> null,
               '_showConstraints -> false)
+		  @select(learnerForm("learnerType"),
+		      options(learnerTypeOptions),
+		      'class -> "form-control",
+		      'placeholder -> "Learner Type",
+		      '_label -> null,
+		  	  '_default -> "Learner Type",
+		      '_showConstraints -> false)
           <input role="button" class="btn btn-inverse" type="submit" value="Submit"></input>
 		}
 	</div>

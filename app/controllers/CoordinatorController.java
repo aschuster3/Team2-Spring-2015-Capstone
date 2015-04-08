@@ -23,7 +23,7 @@ public class CoordinatorController extends Controller {
         if(user.isAdmin) {
             return redirect(routes.Application.index());
         } else {
-            return ok(studentsPage.render(Learner.getAllOwnedBy(email), learnerForm));
+            return ok(studentsPage.render(Learner.getAllOwnedBy(email), Learner.LEARNER_TYPES, learnerForm));
         }
     }
     
@@ -36,6 +36,9 @@ public class CoordinatorController extends Controller {
         
         @Required
         public String lastName;
+
+        @Required
+        public String learnerType;
         
         public String validate() {
             
@@ -59,10 +62,10 @@ public class CoordinatorController extends Controller {
         // Fix need for Owner info
         
         if (filledForm.hasGlobalErrors() || filledForm.hasErrors()) {
-            return badRequest(studentsPage.render(Learner.getAllOwnedBy(ownerEmail), filledForm));
+            return badRequest(studentsPage.render(Learner.getAllOwnedBy(ownerEmail), Learner.LEARNER_TYPES, filledForm));
         } else {
             PreLearner learner = filledForm.get();
-            Learner.create(learner.email, learner.firstName, learner.lastName, ownerEmail);
+            Learner.create(learner.email, learner.firstName, learner.lastName, learner.learnerType, ownerEmail);
             return redirect(routes.CoordinatorController.students());
         }
     }

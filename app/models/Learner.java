@@ -65,8 +65,8 @@ public class Learner extends Model {
         this(email, first, last, ownerEmail, "");
     }
 
-    public static void create(String email, String firstName, String lastName, String ownerEmail) {
-        Learner newLearner = new Learner(email, firstName, lastName, ownerEmail);
+    public static void create(String email, String firstName, String lastName, String learnerType, String ownerEmail) {
+        Learner newLearner = new Learner(email, firstName, lastName, ownerEmail, learnerType);
         newLearner.save();
     }
     
