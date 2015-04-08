@@ -13,9 +13,10 @@ import play.data.validation.Constraints.Required;
 @With(SecuredAdminAction.class)
 public class TemplateController extends Controller {
 	
-	    static Form<PreTemplate> templateForm = Form.form(PreTemplate.class);
-
-	    public static class PreTemplate {
+	static Form<PreTemplate> templateForm = Form.form(PreTemplate.class);
+	
+	public static class PreTemplate {
+		
         @Required
         public String title;
        

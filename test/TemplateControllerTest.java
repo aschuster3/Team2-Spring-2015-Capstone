@@ -2,8 +2,10 @@
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.*;
+import static play.test.Helpers.callAction;
 import static play.test.Helpers.fakeApplication;
 import static play.test.Helpers.fakeGlobal;
+import static play.test.Helpers.fakeRequest;
 import static play.test.Helpers.inMemoryDatabase;
 import static play.test.Helpers.start;
 import static play.test.Helpers.status;
@@ -11,12 +13,15 @@ import static play.test.Helpers.status;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.Learner;
 import models.ScheduleTemplate;
 import models.SessionTemplate;
 import models.User;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import com.google.common.collect.ImmutableMap;
 
 import play.mvc.Result;
 
@@ -43,14 +48,28 @@ public class TemplateControllerTest {
 	
 	@Test
     public void createScheduleTemplate(){
-		Result result = TemplateController.createScheduleTemplate("subi1");
-        assertThat(status(result)).isEqualTo(204);
-
-    	assertThat(ScheduleTemplate.find.byId("subi1")).isNotNull();
-    	assertThat(ScheduleTemplate.find.all().size()).isEqualTo(1);
-    	
-    	result = TemplateController.createScheduleTemplate("subi1");
-        assertThat(status(result)).isEqualTo(400);
+		User.create(new User("Admin", "User", "admin@gmail.com", "adminpassword", true));
+		
+		 Result result = callAction(
+	                controllers.routes.ref.TemplateController.createScheduleTemplate(),
+	                fakeRequest().withSession("email", "admin@gmail.com")
+	                			.withFormUrlEncodedBody(ImmutableMap.of("title", "subi1"))
+	            );
+	        
+	        assertThat(303).isEqualTo(status(result));
+	        ScheduleTemplate st = ScheduleTemplate.find.byId("subi1");
+	        assertThat(st).isNotNull();
+	        assertThat(st.title).isEqualTo("subi1");
+	        assertThat(ScheduleTemplate.find.all().size()).isEqualTo(1);
+	        
+	     result = callAction(
+	                controllers.routes.ref.TemplateController.createScheduleTemplate(),
+	                fakeRequest().withSession("email", "admin@gmail.com")
+	                			.withFormUrlEncodedBody(ImmutableMap.of("title", "subi1"))
+	            );
+	        
+	        assertThat(400).isEqualTo(status(result));
+	        assertThat(ScheduleTemplate.find.all().size()).isEqualTo(1);
     }
     
     @Test
