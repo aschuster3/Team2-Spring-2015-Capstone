@@ -26,7 +26,7 @@ public class TemplateController extends Controller {
                 return "Must have a title for the template";
             }
             if(ScheduleTemplate.find.where().eq("title", title).findUnique()!=null){
-            	return "Template with title " + title + " already exists.";
+            	return "Template with title \"" +  title + "\" already exists.";
             }
             
             return null;

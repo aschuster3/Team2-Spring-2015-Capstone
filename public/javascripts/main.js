@@ -302,7 +302,31 @@ angular.module('mwl.calendar')
       });
     }
 
+    /***********************************************************************
+     * Modal for creating a session in a template -- HElP!
+     ***********************************************************************/
+
+    function showSessionModal(event) {
+      $modal.open({
+        templateUrl: 'sessionModal.html'
+      });
+        
+      $scope.clickCreate = function () {
+        // if ($scope.event.recurringType !== REC_TYPE_NONE) {
+        //   Sessions.createRecurringGroup($scope.event, $scope.event.recurringType);
+        // } else {
+        //   Sessions.create($scope.event);
+        // }
+        $modalInstance.dismiss('cancel');
+      };
+
+      $scope.clickCancel = function () {
+        $modalInstance.dismiss('cancel');
+      };
+          
   })
+
+
   .directive('datepickerPopup', ['datepickerPopupConfig', 'dateParser', 'dateFilter', function (datepickerPopupConfig, dateParser, dateFilter) {
     /*
      * Taken from https://github.com/angular-ui/bootstrap/issues/2659

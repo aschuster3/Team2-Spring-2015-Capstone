@@ -64,11 +64,11 @@
 		    			<!-- CREATE LIST OF SESSIONS HERE -->
 		    			<h6>Sessions:</h6>
 		    			@for(s <- template.sessions) {
-		    				<p class="session">@s.title @s.week @s.day @s.isAM</p>
+		    				<p class="session">@s.title, @s.week, @s.day, @s.isAM</p>
 		    			}
 					</div>
 					<div class="pull-right">
-				  		<button type="button" class="btn btn-block btn-sm btn-warning" ng-click="showModalForCreate()">Add Session</button>
+				  		<button type="button" class="btn btn-block btn-sm btn-warning" ng-click="showSessionModal()">Add Session</button>
 					</div>
 		    	</div>
 		    </div>
@@ -79,17 +79,19 @@
 	<a class="btn btn-inverse" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
 		Add Template
 	</a>
-  @if(templateForm.hasGlobalErrors()) {
-              <p class="text-center"><font color="red">@templateForm.globalError.message</font></p>
-          }
-          @if(templateForm.hasErrors()) {
-            @for(error <- templateForm("title").errors) {
-              <p class="text-center"><font color="red">@error.message</font></p>
-            }
-          }
 
-<!-- Leftover comment from Maggie's student page that I copied and pasted below -->
-<!--Andrew!!! Can you change this to Play's form format (and the format for the dropdown is probably wrong anyways)-->
+
+  <!-- Error messages -->
+  @if(templateForm.hasGlobalErrors()) {
+    <p class="text-center"><font color="red" face="Open Sans">@templateForm.globalError.message</font></p>
+  }
+  @if(templateForm.hasErrors()) {
+    @for(error <- templateForm("title").errors) {
+      <p class="text-center"><font color="red" face="Open Sans">@error.message</font></p>
+    }
+  }
+
+
 	<div class="collapse submitform" id="collapseExample">
 		@form(routes.TemplateController.createScheduleTemplate) {
 		  @inputText(templateForm("title"), 
@@ -105,7 +107,7 @@
 	</div>
 
 	<!-- MODAL FOR ADDING A SESSION -->
-	<script type="text/ng-template" id="modalContent.html">
+	<script type="text/ng-template" id="sessionModal.html">
 	    <div class="modal-header">
 	      <h4 class="modal-title">{{ modalTitle }}</h4>
 	    </div>
@@ -246,10 +248,8 @@
 	        </table>
 
 	      <div class="modal-footer">
-	        <button ng-show="!isCreateModal" class="btn btn-danger pull-left" ng-click="clickDelete()">Delete Event</button>
 	        <button class="btn btn-inverse pull-right" ng-click="clickCancel()">Cancel</button>
 	        <button ng-show="isCreateModal" ng-disabled="eventForm.$invalid" class="btn btn-inverse pull-right" ng-click="clickCreate()">Submit</button>
-	        <button ng-show="!isCreateModal" ng-disabled="eventForm.$invalid" class="btn btn-inverse pull-right" ng-click="clickUpdate()">Save</button>
 	      </div>
 	    </form>
 
