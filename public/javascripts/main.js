@@ -96,7 +96,6 @@ angular.module('mwl.calendar')
     // TODO Refactor this for better separation of Admin and Coordinator!!!!
     var isAdminView = document.querySelector("#student-form") === null;
     $scope.isAdminView = isAdminView;
-    console.log(isAdminView);
     if (!isAdminView) {
       // temporary hack to control icon via editable attribute
       // only when in coordinator view
@@ -106,7 +105,6 @@ angular.module('mwl.calendar')
             event.editable = event.type === "info";
           });
         } else {
-          console.log("ALL FALSE");
           $scope.events.forEach(function (event) {
             event.editable = false;
           });
@@ -332,7 +330,7 @@ angular.module('mwl.calendar')
           $scope.REC_TYPE_WEEKLY = REC_TYPE_WEEKLY;
           $scope.event.recurringType = REC_TYPE_NONE;
 
-          $scope.toggleDatePicker = function($event) {
+          $scope.toggleDatePicker = function ($event) {
             $event.preventDefault();
             $event.stopPropagation();
 
@@ -412,8 +410,7 @@ angular.module('mwl.calendar')
           }
         }
       });
-
-          
+    }
   })
 
 
