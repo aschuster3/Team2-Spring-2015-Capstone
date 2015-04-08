@@ -308,21 +308,111 @@ angular.module('mwl.calendar')
 
     function showSessionModal(event) {
       $modal.open({
-        templateUrl: 'sessionModal.html'
-      });
-        
-      $scope.clickCreate = function () {
-        // if ($scope.event.recurringType !== REC_TYPE_NONE) {
-        //   Sessions.createRecurringGroup($scope.event, $scope.event.recurringType);
-        // } else {
-        //   Sessions.create($scope.event);
-        // }
-        $modalInstance.dismiss('cancel');
-      };
+        templateUrl: 'sessionModal.html',
+        controller: function modalController($scope, $modalInstance, Sessions) {
+          $scope.clinicOptions = [
+            'Emory Clinic',
+            'Grady Clinic',
+            'VA Clinic',
+            'VA Telederm',
+            'Emory Dermpath'
+          ];
 
-      $scope.clickCancel = function () {
-        $modalInstance.dismiss('cancel');
-      };
+          $scope.$modalInstance = $modalInstance;
+          $scope.event = event;
+          $scope.isCreateModal = !angular.isDefined(event.id);
+          $scope.modalTitle = $scope.isCreateModal ? 'Create Event' : 'Edit Event';
+
+          $scope.updateStartsAtEndsAt = updateStartsAtEndsAt;
+
+          $scope.showDatePicker = false;
+
+
+          $scope.REC_TYPE_NONE = REC_TYPE_NONE;
+          $scope.REC_TYPE_WEEKLY = REC_TYPE_WEEKLY;
+          $scope.event.recurringType = REC_TYPE_NONE;
+
+          $scope.toggleDatePicker = function($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+
+            $scope.showDatePicker = !$scope.showDatePicker;
+          };
+
+
+          $scope.clickDelete = function () {
+            // TODO provide option to delete recurring session group
+            deleteEvent($scope.event);
+            $modalInstance.dismiss('cancel');
+          };
+
+          $scope.clickUpdate = function () {
+            Sessions.update($scope.event);
+            $modalInstance.dismiss('cancel');
+          };
+
+          $scope.clickCreate = function () {
+            if ($scope.event.recurringType !== REC_TYPE_NONE) {
+              Sessions.createRecurringGroup($scope.event, $scope.event.recurringType);
+            } else {
+              Sessions.create($scope.event);
+            }
+            $modalInstance.dismiss('cancel');
+          };
+
+          $scope.clickCancel = function () {
+            $modalInstance.dismiss('cancel');
+          };
+
+          /* form validation will not accept epoch time as valid Date */
+          if (angular.isDefined(event.date) && !(event.date instanceof Date)) {
+            event.date = new Date(event.date);
+          }
+
+
+          /* FOR LEARNER TYPES */
+
+          // currently:  from Learner.LEARNER_TYPES
+          $scope.allLearnerTypes = [
+            "Sub-I",
+            "Sub-I Medical Student",
+            "Ambulatory Medical Student",
+            "Dermatology Resident",
+            "Pediatrics Resident",
+            "Emory Internal Medicine",
+            "Morehouse Internal Medicine",
+            "Family Medicine",
+            "Podiatry Resident",
+            "Geriatrics Resident",
+            "Rheumatology Resident",
+            "Nurse Practitioner Student",
+            "Physician Assistant Student",
+            "Pediatrics Allergy Fellow",
+            "International Student",
+            "Pre-Med Student"
+          ];
+
+          $scope.toggleLearnerTypeChecked = toggleLearnerTypeChecked;
+          $scope.learnerTypeIsChecked = learnerTypeIsChecked;
+
+          function toggleLearnerTypeChecked(event, learnerType) {
+            var index = event.supportedLearnerTypes.indexOf(learnerType);
+
+            if (index === -1) {
+              event.supportedLearnerTypes.push(learnerType);
+            } else {
+              event.supportedLearnerTypes.splice(index, 1);
+            }
+
+            event.supportedLearnerTypesAsString = event.supportedLearnerTypes.join(',');
+          }
+
+          function learnerTypeIsChecked(event, learnerType) {
+            return event.supportedLearnerTypes.indexOf(learnerType) !== -1;
+          }
+        }
+      });
+
           
   })
 
