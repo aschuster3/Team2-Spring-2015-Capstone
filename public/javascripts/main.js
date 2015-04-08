@@ -14,8 +14,6 @@ angular.module('mwl.calendar')
      * CALENDAR CODE
      ***********************************************************************/
 
-
-
     $scope.events = Sessions.sessions;
 
     var currentYear = moment().year();
@@ -61,24 +59,70 @@ angular.module('mwl.calendar')
      ***********************************************************************/
     $scope.currentLearner = "error";
     
-    $scope.$watch('learnerDropdown', function(email) {
-    	if (!(typeof email === "undefined")) {
-        	$scope.currentLearner = email;
+    $scope.$watch('learnerDropdown', function(learnerJSONString) {
+    	if (!(typeof learnerJSONString === "undefined")) {
+        $scope.currentLearner = JSON.parse(learnerJSONString);
+        updateEventTypes($scope.events, $scope.currentLearner);
     	}
     });
     
     $scope.addSessionToLearner = function(session) {
     	if(session.assignedLearner == null && $scope.currentLearner != "error") {
-	    	session.assignedLearner = $scope.currentLearner;
+	    	session.assignedLearner = $scope.currentLearner.email;
 	    	session.type = "invalid";
-	        Sessions.update(session);
+	      Sessions.update(session);
     	}
+    };
+    
+    function updateEventTypes(events, currentLearner) {
+      events.forEach(function (event) {
+        //console.log(event);
+        if (event.assignedLearner !== null) {
+          //console.log(event.title + " is being flagged as INVALID (1)");
+          event.type = "invalid";
+        } else if (typeof currentLearner !== "object") {
+          //console.log(event.title + " is being flagged as info (2)");
+          event.type = "info";
+        } else if (event.supportedLearnerTypes.indexOf(currentLearner.learnerType) === -1) {
+          //console.log(event.title + " is being flagged as INVALID (3)");
+          event.type = "invalid";
+        } else {
+          //console.log(event.title + " is being flagged as info (4)");
+          event.type = "info";
+        }
+      });
     }
-    
-    
 
-    // Create a general method that updates the event.type for each event when 
-    // its status has changed.
+    // TODO Refactor this for better separation of Admin and Coordinator!!!!
+    var isAdminView = document.querySelector("#student-form") === null;
+    $scope.isAdminView = isAdminView;
+    console.log(isAdminView);
+    if (!isAdminView) {
+      // temporary hack to control icon via editable attribute
+      // only when in coordinator view
+      $scope.$watch('currentLearner', function() {
+        if (typeof $scope.currentLearner === "object") {
+          $scope.events.forEach(function (event) {
+            event.editable = event.type === "info";
+          });
+        } else {
+          console.log("ALL FALSE");
+          $scope.events.forEach(function (event) {
+            event.editable = false;
+          });
+        }
+      });
+    }
+
+    $scope.displayEditIcon = function (event) {
+      if ($scope.isAdminView) {
+        return true;
+      } else if (typeof $scope.assignedLearner !== "object") {
+        return false;
+      } else {
+        return event.type !== "invalid";
+      }
+    };
 
     /***********************************************************************
      * General Functions relevant to Grouping or Deleting Sessions

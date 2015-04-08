@@ -21,9 +21,19 @@ angular.module('mwl.calendar')
         editEventHtml: '=calendarEditEventHtml',
         deleteEventHtml: '=calendarDeleteEventHtml',
         autoOpen: '=calendarAutoOpen',
-        useIsoWeek: '=calendarUseIsoWeek'
+        useIsoWeek: '=calendarUseIsoWeek',
+        displayEditIcon: '=',
+        isAdminView: '='
       },
       link: function postLink(scope, element, attrs, calendarCtrl) {
+
+        scope.eventFontColor = function (event) {
+          if (event.type === "invalid") {
+            return {"color":"#999999"};
+          } else {
+            return {"color":"white"};
+          }
+        }
 
         var firstRun = false;
 

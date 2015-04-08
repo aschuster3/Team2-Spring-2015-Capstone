@@ -33,10 +33,19 @@ public class Global extends GlobalSettings {
             User.create(bahb);
             User.create(new User("Sharon", "Norahs", "sharon@gmail.com", "kitty", true));
             User.create(frank);
-            
-            Ebean.save(new Learner("harry@cat.meow", "Harry", "Cat", bahb.email));
-            Ebean.save(new Learner("ooooo@octopus.noise", "Monkey", "Octopus", bahb.email));
-            Ebean.save(new Learner("fire@Ispit.it", "Peyton", "Manning", frank.email));
+
+            final String LEARNER_TYPE_A = Learner.LEARNER_TYPES.get(0);
+            final String LEARNER_TYPE_B = Learner.LEARNER_TYPES.get(2);
+            final String LEARNER_TYPE_C = Learner.LEARNER_TYPES.get(3);
+
+            final String LEARNER_TYPES_A = LEARNER_TYPE_A;
+            final String LEARNER_TYPES_AB = LEARNER_TYPE_A + "," + LEARNER_TYPE_B;
+            final String LEARNER_TYPES_BC = LEARNER_TYPE_C + "," + LEARNER_TYPE_B;
+            final String LEARNER_TYPES_ABC = LEARNER_TYPES_A + "," + LEARNER_TYPE_B + "," + LEARNER_TYPE_C;
+
+            Ebean.save(new Learner("harry@cat.meow", "Harry", "Cat", bahb.email, LEARNER_TYPE_A));
+            Ebean.save(new Learner("ooooo@octopus.noise", "Monkey", "Octopus", bahb.email, LEARNER_TYPE_B));
+            Ebean.save(new Learner("fire@Ispit.it", "Peyton", "Manning", frank.email, LEARNER_TYPE_C));
             
             
             // today    
@@ -48,32 +57,32 @@ public class Global extends GlobalSettings {
             date.set(Calendar.MILLISECOND, 0);
 
             
-            Ebean.save(new Session("1", "Emory Clinic", date.getTime(), "Dr. Payne", true));
-            Ebean.save(new Session("2", "Grady Clinic", date.getTime(), "Dr. Grey", false));
+            Ebean.save(new Session("1", "Emory Clinic", date.getTime(), "Dr. Payne", true, LEARNER_TYPES_A));
+            Ebean.save(new Session("2", "Grady Clinic", date.getTime(), "Dr. Grey", false, LEARNER_TYPES_AB));
 
             // next day
             date.add(Calendar.DAY_OF_MONTH, 1);
             
-            Ebean.save(new Session("3", "Grady Clinic", date.getTime(), "Dr. Professor Patrick", true));
-            Ebean.save(new Session("4", "Another Clinic", date.getTime(), "Dr. Cox", false));
+            Ebean.save(new Session("3", "Grady Clinic", date.getTime(), "Dr. Professor Patrick", true, LEARNER_TYPES_BC));
+            Ebean.save(new Session("4", "Another Clinic", date.getTime(), "Dr. Cox", false, LEARNER_TYPES_ABC));
             
             // next day
             date.add(Calendar.DAY_OF_MONTH, 1);
             
-            Ebean.save(new Session("5", "Yet Another Clinic", date.getTime(), "Dr. McDreamy", true));
-            Ebean.save(new Session("6", "Emory Clinic", date.getTime(), "Dr. Howser", false));
+            Ebean.save(new Session("5", "Yet Another Clinic", date.getTime(), "Dr. McDreamy", true, LEARNER_TYPES_A));
+            Ebean.save(new Session("6", "Emory Clinic", date.getTime(), "Dr. Howser", false, LEARNER_TYPES_AB));
             
             // next day
             date.add(Calendar.DAY_OF_MONTH, 1);
             
-            Ebean.save(new Session("7", "Sacred Heart Clinic", date.getTime(), "Dr. Horrible", true));
-            Ebean.save(new Session("8", "90210 Clinic", date.getTime(), "Dr. Doctor", false));
+            Ebean.save(new Session("7", "Sacred Heart Clinic", date.getTime(), "Dr. Horrible", true, LEARNER_TYPES_ABC));
+            Ebean.save(new Session("8", "90210 Clinic", date.getTime(), "Dr. Doctor", false, LEARNER_TYPES_BC));
             
             // next day
             date.add(Calendar.DAY_OF_MONTH, 1);
             
-            Ebean.save(new Session("9", "Emory Clinic", date.getTime(), "Dr. Dorian", true));
-            Ebean.save(new Session("10", "Grady Clinic", date.getTime(), "Dr. House", false));
+            Ebean.save(new Session("9", "Emory Clinic", date.getTime(), "Dr. Dorian", true, LEARNER_TYPES_A));
+            Ebean.save(new Session("10", "Grady Clinic", date.getTime(), "Dr. House", false, LEARNER_TYPES_AB));
             
             ScheduleTemplate scheduleTemp = new ScheduleTemplate("subi1");
             

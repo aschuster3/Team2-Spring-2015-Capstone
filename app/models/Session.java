@@ -83,13 +83,17 @@ public class Session extends Model {
 	private Date endsAt;
 
 
-	public Session(String id, String title, Date date, String physician, boolean isAM) {
+	public Session(String id, String title, Date date, String physician, boolean isAM, String supportedLearnerTypesAsString) {
 		this.title = title;
 		this.date = date;
 		this.isAM = isAM;
 		this.id = id;
 		this.physician = physician;
-		this.supportedLearnerTypesAsString = "";
+		this.supportedLearnerTypesAsString = supportedLearnerTypesAsString;
+	}
+
+	public Session(String id, String title, Date date, String physician, boolean isAM) {
+		this(id, title, date, physician, isAM, "");
 	}
 
 	public Session(String id, String title, Date date, boolean isAM) {

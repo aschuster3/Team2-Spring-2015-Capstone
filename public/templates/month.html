@@ -49,16 +49,18 @@
               href="javascript:;"
               class="event-item"
               ng-click="eventClick({$event: event})">
-              {{  event.title  }}
-              <span ng-if="event.physician">  |  {{  event.physician  }}</span>
-              <span ng-if="event.isAM">  |  AM</span>
-              <span ng-if="!event.isAM">  |  PM</span>
+              <span ng-style="eventFontColor(event)">
+                {{  event.title  }}
+                <span ng-if="event.physician">  |  {{  event.physician  }}</span>
+                <span ng-if="event.isAM">  |  AM</span>
+                <span ng-if="!event.isAM">  |  PM</span>
+              </span>
             </a>
 
             <a
               href="javascript:;"
               class="event-item-edit"
-              ng-if="editEventHtml && event.editable !== false"
+              ng-show="editEventHtml && (isAdminView || event.editable)"
               ng-bind-html="$sce.trustAsHtml(editEventHtml)"
               ng-click="eventEditClick({$event: event})">
             </a>

@@ -46,7 +46,7 @@
             <h4 class="pull-left">{{ calendarControl.getTitle() }}</h4>
             <select ng-model='learnerDropdown' class="form-control form-inline pull-right" id="student-form">
                 @for(learner <- learners) {
-                <option value="@learner.email">@learner.firstName @learner.lastName</option>
+                <option value='{"email": "@learner.email", "learnerType": "@learner.learnerType"}'>@learner.firstName @learner.lastName</option>
                 }
               </select>
             <div class="pull-right">
@@ -77,6 +77,8 @@
             calendar-auto-open="false"
             calendar-day-view-starts_at="06:00"
             calendar-day-view-ends_at="22:00"
+            display-edit-icon="displayEditIcon($event)"
+            is-admin-view="isAdminView"
             ></mwl-calendar>
 
           
