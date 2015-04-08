@@ -49,23 +49,34 @@ public class SessionController extends Controller {
 	@BodyParser.Of(BodyParser.Json.class)
 	public static Result updateSession(String id) {
 		JsonNode json = request().body().asJson();
-		Session session = Json.fromJson(json, Session.class);
+		Session sessionWithNewData = Json.fromJson(json, Session.class);
 
-		if (!session.id.equals(id)) {
+		if (!sessionWithNewData.id.equals(id)) {
 			return badRequest("update failed: parameter id does not match session object id");
 		}
 		
-		if (session.assignedLearner != null && session.assignedLearner.equals("error")) {
+		if (sessionWithNewData.assignedLearner != null && sessionWithNewData.assignedLearner.equals("error")) {
 		    return badRequest("update failed: please choose a valid student");
 		}
 
-		if (Session.find.byId(id) == null) {
-			Session.create(session);
-			return status(CREATED, Json.toJson(session));
-		} else {
-			session.update();
-			return status(204);
+		Session existingSession = Session.find.byId(id);
+
+		if (existingSession == null) {
+			Session.create(sessionWithNewData);
+			return status(CREATED, Json.toJson(sessionWithNewData));
 		}
+
+		// trying to assign a new learner to a taken session
+		String currentLearnerId = existingSession.assignedLearner;
+		String newLearnerId = sessionWithNewData.assignedLearner;
+		if (currentLearnerId != null
+				&& newLearnerId != null
+				&& !currentLearnerId.equals(newLearnerId)) {
+			return badRequest("update failed: session is already taken by another learner");
+		}
+
+		sessionWithNewData.update();
+		return status(204);
 	}
 
 	@With(SecuredAdminAction.class)

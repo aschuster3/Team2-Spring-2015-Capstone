@@ -209,6 +209,29 @@ public class SessionControllerTest {
     }
 
     @Test
+    public void addSessionToLearner_asCoordinator_failsWhenSessionHasALearner() {
+        Session session = new Session("id", "title", new Date(0));
+        session.assignedLearner = LEARNER_EMAIL;
+        Session.create(session);
+
+        String otherLearnerEmail = "otherlearner@gmail.com";
+        Session sessionWithOtherLearnerAssigned = new Session("id", "title", new Date(0));
+        sessionWithOtherLearnerAssigned.assignedLearner = otherLearnerEmail;
+        JsonNode jsonForUpdatedSession = Json.toJson(sessionWithOtherLearnerAssigned);
+
+        Result result = callAction(
+                routes.ref.SessionController.updateSession("id"),
+                fakeRequest()
+                    .withSession("email", COORDINATOR_EMAIL)
+                    .withJsonBody(jsonForUpdatedSession)
+        );
+        Session updatedSession = Session.find.byId("id");
+
+        assertThat(status(result)).isEqualTo(BAD_REQUEST);
+        assertThat(updatedSession.assignedLearner).isEqualTo(LEARNER_EMAIL);
+    }
+
+    @Test
     public void testGetSupportedLearnerTypes() {
         Session session = new Session("session", new Date(0), true);
         session.supportedLearnerTypesAsString = "type1,type2";
@@ -248,6 +271,6 @@ public class SessionControllerTest {
     	Result result = SessionController.createScheduleSessions(scheduleTemp.title, "2015/03/30");
     	assertThat(status(result)).isEqualTo(200);
 		assertThat(Session.getAll().size()).isEqualTo(30);
-    } 
+    }
     
 }

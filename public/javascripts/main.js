@@ -67,10 +67,11 @@ angular.module('mwl.calendar')
     });
     
     $scope.addSessionToLearner = function(session) {
-    	if(session.assignedLearner == null && $scope.currentLearner != "error") {
-	    	session.assignedLearner = $scope.currentLearner.email;
-	    	session.type = "invalid";
-	      Sessions.update(session);
+      var sessionWithNewLearner = angular.copy(session);
+    	if(sessionWithNewLearner.assignedLearner == null && $scope.currentLearner != "error") {
+	    	sessionWithNewLearner.assignedLearner = $scope.currentLearner.email;
+	    	sessionWithNewLearner.type = "invalid";
+	      Sessions.update(sessionWithNewLearner);
     	}
     };
     
