@@ -1,4 +1,5 @@
 import static org.fest.assertions.Assertions.assertThat;
+import static play.mvc.Http.Status.NO_CONTENT;
 import static play.mvc.Http.Status.OK;
 import static play.mvc.Http.Status.TEMPORARY_REDIRECT;
 import static play.test.Helpers.callAction;
@@ -79,7 +80,7 @@ public class AdminControllerTest {
         // Gets the updated version of the user
         user = UnapprovedUser.find.byId(user.email);
         
-        assertThat(303).isEqualTo(status(result));
+        assertThat(status(result)).isEqualTo(NO_CONTENT);
         assertThat(user.token).isNotNull();
     }
 

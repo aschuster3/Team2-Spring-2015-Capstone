@@ -228,7 +228,7 @@ public class ApplicationTest {
                 fakeRequest().withSession("email", ADMIN_EMAIL)
         );
 
-        assertThat(status(result)).isEqualTo(303);
+        assertThat(status(result)).isEqualTo(NO_CONTENT);
         assertThat(UserReset.find.byId("email@gmail.com")).isNotNull();
     }
 

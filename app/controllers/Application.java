@@ -245,7 +245,7 @@ public class Application extends Controller {
             String token = UUID.randomUUID().toString();
             sendResetPasswordEmail(userEmail, token);
             UserReset.create(userEmail, token);
-            return redirect(routes.AdminController.viewAllCoordinators());
+            return status(NO_CONTENT);
         } catch (MalformedURLException e) {
             return internalServerError("Server error: unable to generate valid URL for password reset page.");
         }

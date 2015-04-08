@@ -72,7 +72,7 @@ public class AdminController extends Controller {
                     " to complete your signup process");
             
             MailerPlugin.send(email);
-            return redirect(routes.AdminController.viewAllCoordinators());
+            return status(NO_CONTENT);
         } catch (MalformedURLException e) {
             return badRequest(views.html.coordinatorsPage.render(
                     UnapprovedUser.getAll(),

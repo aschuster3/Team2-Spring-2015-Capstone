@@ -58,7 +58,7 @@
                 </div>
                 <div class="pull-right">
                 @form(routes.AdminController.approveUnapprovedUser(unapproved.email)) {
-                    <button class="btn btn-lg btn-primary btn-block btn-sm btn-inverse" type="submit" ng-click="showModalForCreate()">Approve</button>
+                    <button class="btn btn-lg btn-primary btn-block btn-sm btn-inverse" type="submit" data-toggle="modal" data-target="#approvedModal">Approve</button>
                 }
                 
                 @form(routes.AdminController.removeUnapprovedUser(unapproved.email)) {
@@ -89,7 +89,7 @@
 					<h6>Name:
 						<span class="pull-right">
 						@form(routes.Application.sendNewPasswordToUser(coord.email)) {
-							<button class="btn btn-lg btn-primary btn-block btn-sm btn-inverse" type="submit">Reset Password</button>
+							<button class="btn btn-lg btn-primary btn-block btn-sm btn-inverse" type="submit" data-toggle="modal" data-target="#passwordResetModal">Reset Password</button>
 						}
 						</span></h6>  @coord.firstName @coord.lastName
 					<h6>E-mail:</h6> @coord.email
@@ -102,18 +102,37 @@
 	
 	</div>
 
+	<div id="approvedModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+				  <h4 class="modal-title">Coordinator Approved!</h4>
+				</div>
+				<div class="modal-body">
+				  <p>You have approved this coordinator. They have been emailed instructions so that they can complete their registration.</p>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-inverse pull-right" data-dismiss="modal">Ok</button>
+				</div>
+			</div>
+		</div>
+    </div>
 
-	<script type="text/ng-template" id="modalContent.html">
-	    <div class="modal-header">
-	      <h4 class="modal-title">{{ modalTitle }}</h4>
-	    </div>
-	    <div class="modal-body">
-	      <p>You have approved this coordinator. They will recieve instructions so that they can complete their registration.</p>
-	    </div>
-	    <div class="modal-footer">
-            <button class="btn btn-inverse pull-right" ng-click="clickCancel()">Ok</button>
-        </div>
-    </script>
+	<div id="passwordResetModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Coordinator Password Reset</h4>
+				</div>
+				<div class="modal-body">
+					<p>You have reset this coordinator's password. They have been emailed instructions so that they can setup their new password.</p>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-inverse pull-right" data-dismiss="modal">Ok</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 
 </div>
