@@ -1,6 +1,10 @@
 package controllers;
 
+import java.util.HashMap;
+import java.util.List;
+
 import models.Learner;
+import models.Session;
 import models.User;
 import play.data.Form;
 import play.data.validation.Constraints.EmailValidator;
@@ -23,7 +27,13 @@ public class CoordinatorController extends Controller {
         if(user.isAdmin) {
             return redirect(routes.Application.index());
         } else {
-            return ok(studentsPage.render(Learner.getAllOwnedBy(email), Learner.LEARNER_TYPES, learnerForm));
+            List<Learner> learners = Learner.getAllOwnedBy(email);
+            HashMap<String, List<Session>> learnerSchedules = new HashMap<String, List<Session>>();
+            for(Learner l: learners) {
+                learnerSchedules.put(l.email, Session.getLearnerSchedule(l.email));
+            }
+            
+            return ok(studentsPage.render(learners, learnerSchedules, Learner.LEARNER_TYPES, learnerForm));
         }
     }
     
@@ -62,7 +72,13 @@ public class CoordinatorController extends Controller {
         // Fix need for Owner info
         
         if (filledForm.hasGlobalErrors() || filledForm.hasErrors()) {
-            return badRequest(studentsPage.render(Learner.getAllOwnedBy(ownerEmail), Learner.LEARNER_TYPES, filledForm));
+            List<Learner> learners = Learner.getAllOwnedBy(ownerEmail);
+            HashMap<String, List<Session>> learnerSchedules = new HashMap<String, List<Session>>();
+            for(Learner l: learners) {
+                learnerSchedules.put(l.email, Session.getLearnerSchedule(l.email));
+            }
+            
+            return badRequest(studentsPage.render(learners, learnerSchedules, Learner.LEARNER_TYPES, filledForm));
         } else {
             PreLearner learner = filledForm.get();
             Learner.create(learner.email, learner.firstName, learner.lastName, learner.learnerType, ownerEmail);

@@ -136,6 +136,10 @@ public class Session extends Model {
         return Session.find.all();
     }
     
+    public static List<Session> getLearnerSchedule(String learner) {
+        return Session.find.where().eq("assignedLearner", learner).findList();
+    }
+    
     public String validate() {
     	Session session = Session.find.byId(this.id);
     	if (session != null) {

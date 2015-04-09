@@ -1,6 +1,6 @@
 @(learners: java.util.List[models.Learner],
-		learnerTypeOptions: List[String],
-		learnerForm: play.data.Form[CoordinatorController.PreLearner])
+        schedules: Map[String, List[Session]],
+		learnerTypeOptions: List[String])
 
 @import helper._
 @import java.math.BigInteger; var panelNum = 1
