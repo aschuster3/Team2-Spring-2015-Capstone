@@ -112,16 +112,16 @@ angular.module('mwl.calendar')
       events.forEach(function (event) {
         //console.log(event);
         if (event.assignedLearner !== null) {
-          console.log(event.title + " is being flagged as INVALID (1)");
+          //console.log(event.title + " is being flagged as INVALID (1)");
           event.type = "invalid";
         } else if (typeof currentLearner !== "object") {
-          console.log(event.title + " is being flagged as info (2)");
+          //console.log(event.title + " is being flagged as info (2)");
           event.type = "info";
         } else if (event.supportedLearnerTypes.indexOf(currentLearner.learnerType) === -1) {
-          console.log(event.title + " is being flagged as INVALID (3)");
+          //console.log(event.title + " is being flagged as INVALID (3)");
           event.type = "invalid";
         } else {
-          console.log(event.title + " is being flagged as info (4)");
+          //console.log(event.title + " is being flagged as info (4)");
           event.type = "info";
         }
       });

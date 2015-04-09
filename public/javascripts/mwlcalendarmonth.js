@@ -44,13 +44,50 @@ angular.module('mwl.calendar')
         };
 
         function updateView() {
+          var oldView = scope.view;  // scope.view may not be initialized yet!
           scope.view = calendarHelper.getMonthView(scope.events, scope.currentDay, scope.useIsoWeek);
+
+          /*
+           * This code is not originally here!
+           *
+           * We don't want the box to collapse if an event is edited.
+           * So, reassign all isOpened properties to their original state to achieve this.
+           *
+           */
+          if (oldView) {
+            var openWeekIndex = -1;
+            var openDayIndex = -1;
+            scope.view.forEach(function (week, weekIndex) {
+              week.isOpened = !!oldView[weekIndex].isOpened;
+              if (week.isOpened) {
+                openWeekIndex = weekIndex;
+              }
+
+              week.forEach(function (day, dayIndex) {
+                day.isOpened = !!oldView[weekIndex][dayIndex].isOpened;
+                if (day.isOpened) {
+                  openDayIndex = dayIndex;
+                }
+              });
+            });
+
+            /*
+             * openEvents does not appear to pickup changes immediately from
+             * the main events array (prototype issue? child scope issue?)
+             *
+             * So, reset it here to pickup the changes.
+             */
+            if (openWeekIndex !== -1 && openDayIndex !== -1) {
+              scope.openEvents = scope.view[openWeekIndex][openDayIndex].events;
+            }
+          }
 
           //Auto open the calendar to the current day if set
           if (scope.autoOpen && !firstRun) {
             scope.view.forEach(function(week, rowIndex) {
               week.forEach(function(day, cellIndex) {
                 if (day.inMonth && moment(scope.currentDay).startOf('day').isSame(day.date.startOf('day'))) {
+                  console.log("I am a moron who is clicking... " + rowIndex + "|" + cellIndex);
                   scope.dayClicked(rowIndex, cellIndex);
                   $timeout(function() {
                     firstRun = false;
