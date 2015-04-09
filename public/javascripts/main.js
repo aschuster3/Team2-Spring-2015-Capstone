@@ -58,6 +58,11 @@ angular.module('mwl.calendar')
      * General Functions relevant to adding Sessions to Learners
      ***********************************************************************/
     $scope.currentLearner = "error";
+
+    function learnerIsSelected () {
+      return typeof $scope.currentLearner === 'object';
+    };
+
     
     $scope.$watch('learnerDropdown', function(learnerJSONString) {
     	if (!(typeof learnerJSONString === "undefined")) {
@@ -68,10 +73,11 @@ angular.module('mwl.calendar')
     
     $scope.addSessionToLearner = function(session) {
       var sessionWithNewLearner = angular.copy(session);
-    	if(sessionWithNewLearner.assignedLearner == null && $scope.currentLearner != "error") {
+    	if(sessionWithNewLearner.assignedLearner == null && learnerIsSelected()) {
 	    	sessionWithNewLearner.assignedLearner = $scope.currentLearner.email;
 	    	sessionWithNewLearner.type = "invalid";
         sessionWithNewLearner.editable = false;
+        sessionWithNewLearner.deletable = true;
 	      Sessions.update(sessionWithNewLearner).catch(
           function error() {
             notificationModalService.show("Error: Another learner has been signed up for this session already!");
@@ -84,21 +90,38 @@ angular.module('mwl.calendar')
         );
     	}
     };
+
+    $scope.removeSessionFromLearner = function (session) {
+      if (session.assignedLearner == null || !learnerIsSelected()) {
+        return;
+      }
+
+      if (session.assignedLearner !== $scope.currentLearner.email) {
+        return;
+      }
+
+      var sessionWithoutLearner = angular.copy(session);
+      sessionWithoutLearner.assignedLearner = null;
+      sessionWithoutLearner.type = "info";
+      sessionWithoutLearner.editable = true;
+      sessionWithoutLearner.deletable = false;
+      Sessions.update(sessionWithoutLearner);
+    };
     
     function updateEventTypes(events, currentLearner) {
       events.forEach(function (event) {
         //console.log(event);
         if (event.assignedLearner !== null) {
-          //console.log(event.title + " is being flagged as INVALID (1)");
+          console.log(event.title + " is being flagged as INVALID (1)");
           event.type = "invalid";
         } else if (typeof currentLearner !== "object") {
-          //console.log(event.title + " is being flagged as info (2)");
+          console.log(event.title + " is being flagged as info (2)");
           event.type = "info";
         } else if (event.supportedLearnerTypes.indexOf(currentLearner.learnerType) === -1) {
-          //console.log(event.title + " is being flagged as INVALID (3)");
+          console.log(event.title + " is being flagged as INVALID (3)");
           event.type = "invalid";
         } else {
-          //console.log(event.title + " is being flagged as info (4)");
+          console.log(event.title + " is being flagged as info (4)");
           event.type = "info";
         }
       });
@@ -114,10 +137,12 @@ angular.module('mwl.calendar')
         if (typeof $scope.currentLearner === "object") {
           $scope.events.forEach(function (event) {
             event.editable = event.type === "info";
+            event.deletable = event.type === "invalid" && event.assignedLearner === $scope.currentLearner.email;
           });
         } else {
           $scope.events.forEach(function (event) {
             event.editable = false;
+            event.deletable = false;
           });
         }
       });

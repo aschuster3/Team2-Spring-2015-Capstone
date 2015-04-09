@@ -1,5 +1,6 @@
 package controllers;
 
+import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.*;
 import play.data.*;
@@ -9,11 +10,9 @@ import play.libs.mailer.MailerPlugin;
 import play.mvc.*;
 import views.html.*;
 
-import java.util.Date;
+import java.util.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Calendar;
 
 /**
  * The session controller for tasks that involve adding, deleting and editing sessions.
@@ -76,6 +75,11 @@ public class SessionController extends Controller {
 		}
 
 		sessionWithNewData.update();
+
+		/* Model.update() ignores null values */
+		if (sessionWithNewData.assignedLearner == null) {
+			Ebean.update(sessionWithNewData, new HashSet(Arrays.asList("assignedLearner")));
+		}
 		return status(204);
 	}
 

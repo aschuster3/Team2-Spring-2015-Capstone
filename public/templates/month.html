@@ -68,7 +68,7 @@
             <a
               href="javascript:;"
               class="event-item-delete"
-              ng-if="deleteEventHtml && event.deletable !== false"
+              ng-if="deleteEventHtml && (isAdminView || event.deletable)"
               ng-bind-html="$sce.trustAsHtml(deleteEventHtml)"
               ng-click="eventDeleteClick({$event: event})">
             </a>

@@ -233,6 +233,28 @@ public class SessionControllerTest {
     }
 
     @Test
+    public void removeSessionFromLearner() {
+        Session session = new Session("id", "title", new Date(0));
+        session.assignedLearner = LEARNER_EMAIL;
+        Session.create(session);
+
+        Session sessionWithoutLearner = new Session("id", "title", new Date(0));
+        session.assignedLearner = null;
+        JsonNode jsonForUpdatedSession = Json.toJson(sessionWithoutLearner);
+
+        Result result = callAction(
+                routes.ref.SessionController.updateSession("id"),
+                fakeRequest()
+                .withSession("email", COORDINATOR_EMAIL)
+                .withJsonBody(jsonForUpdatedSession)
+        );
+        Session updatedSession = Session.find.byId("id");
+
+        assertThat(status(result)).isEqualTo(NO_CONTENT);
+        assertThat(updatedSession.assignedLearner).isEqualTo(null);
+    }
+
+    @Test
     public void testGetSupportedLearnerTypes() {
         Session session = new Session("session", new Date(0), true);
         session.supportedLearnerTypesAsString = "type1,type2";
