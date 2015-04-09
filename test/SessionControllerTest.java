@@ -148,6 +148,32 @@ public class SessionControllerTest {
     }
 
     @Test
+    public void getSession_validID_ReturnsSession() {
+        Session session = new Session("id", "title", new Date(0));
+        Session.create(session);
+
+        Result result = callAction(
+                routes.ref.SessionController.getSession("id"),
+                fakeRequest().withSession("email", COORDINATOR_EMAIL)
+        );
+
+        assertThat(status(result)).isEqualTo(OK);
+    }
+
+    @Test
+    public void getSession_nonexistantID_ReturnsSession() {
+        Session session = new Session("id", "title", new Date(0));
+        Session.create(session);
+
+        Result result = callAction(
+                routes.ref.SessionController.getSession("wrong_id"),
+                fakeRequest().withSession("email", COORDINATOR_EMAIL)
+        );
+
+        assertThat(status(result)).isEqualTo(BAD_REQUEST);
+    }
+
+    @Test
     public void jsonCreateSession_Succeeds() {
         JsonNode jsonForNewSession = Json.toJson(
                 new Session("1", "new-title", new Date(0)));

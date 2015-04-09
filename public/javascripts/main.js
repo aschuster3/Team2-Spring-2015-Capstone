@@ -81,11 +81,7 @@ angular.module('mwl.calendar')
 	      Sessions.update(sessionWithNewLearner).catch(
           function error() {
             notificationModalService.show("Error: Another learner has been signed up for this session already!");
-
-            /*
-             * TODO this is a good use-case for needing Sessions.get(id)
-             */
-            Sessions.refresh();
+            Sessions.refresh(session);
           }
         );
     	}

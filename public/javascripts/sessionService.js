@@ -7,6 +7,10 @@ angular.module('mwl.calendar')
             return $http.get(urlBase);
         };
 
+        service.getSession = function (id) {
+            return $http.get(urlBase + '/' + id);
+        };
+
         service.updateSession = function (session) {
             return $http.put(urlBase + '/' + session.id, session);
         };

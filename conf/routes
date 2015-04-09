@@ -35,6 +35,7 @@ POST          /completeSignup                     controllers.Application.addNew
 GET           /sessions                           controllers.SessionController.sessions()
 POST          /sessions                           controllers.SessionController.createSession()
 GET           /sessions-api                       controllers.SessionController.jsonAllSessions()
+GET           /sessions-api/:id                   controllers.SessionController.getSession(id: String)
 PUT           /sessions-api/:id                   controllers.SessionController.updateSession(id: String)
 DELETE        /sessions-api/:id                   controllers.SessionController.deleteSession(id: String)
 POST          /sessions-api                       controllers.SessionController.jsonCreateSession()

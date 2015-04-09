@@ -2,7 +2,8 @@ angular.module('mwl.calendar')
   .factory('Sessions', ['sessionService', '$log', function(sessionService, $log) {
     var Sessions = {
       sessions: [],
-      refresh: getAll,
+      refreshAll: getAll,
+      refresh: get,
       create: create,
       createRecurringGroup: createRecurringGroup,
       update: update,
@@ -35,6 +36,18 @@ angular.module('mwl.calendar')
           $log.error('sessionService.getSessions failed: ', errorResponse);
           throw errorResponse;
         });
+    }
+
+    function get(session) {
+      return sessionService.getSession(session.id)
+        .then(function success(response) {
+          var data = response.data;
+          var index = findSessionIndexWithId(session.id);
+          Sessions.sessions[index] = data;
+        }, function error(response) {
+          $log.error('sessionService.get failed: ', response);
+          throw response;
+        })
     }
 
     function create(newSession) {

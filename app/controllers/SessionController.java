@@ -45,6 +45,16 @@ public class SessionController extends Controller {
 		return ok(Json.toJson(Session.getAll()));
 	}
 
+	public static Result getSession(String id) {
+		Session session = Session.find.byId(id);
+
+		if (session == null) {
+			return badRequest("No session with id <" + id + ">" + " exists");
+		} else {
+			return ok(Json.toJson(session));
+		}
+	}
+
 	@BodyParser.Of(BodyParser.Json.class)
 	public static Result updateSession(String id) {
 		JsonNode json = request().body().asJson();
