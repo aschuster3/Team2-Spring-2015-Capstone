@@ -51,7 +51,9 @@ angular.module('mwl.calendar')
            * This code is not originally here!
            *
            * We don't want the box to collapse if an event is edited.
-           * So, reassign all isOpened properties to their original state to achieve this.
+           * So, reassign all isOpened properties to their original state to achieve this,
+           * because calendarHelper.getMonthView results in all isOpened properties
+           * to be undefined.
            *
            */
           if (oldView) {
@@ -87,7 +89,6 @@ angular.module('mwl.calendar')
             scope.view.forEach(function(week, rowIndex) {
               week.forEach(function(day, cellIndex) {
                 if (day.inMonth && moment(scope.currentDay).startOf('day').isSame(day.date.startOf('day'))) {
-                  console.log("I am a moron who is clicking... " + rowIndex + "|" + cellIndex);
                   scope.dayClicked(rowIndex, cellIndex);
                   $timeout(function() {
                     firstRun = false;
