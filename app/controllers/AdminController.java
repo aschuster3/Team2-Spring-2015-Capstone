@@ -8,9 +8,12 @@ import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import models.Learner;
+import models.Session;
 import models.UnapprovedUser;
 import models.User;
 import play.libs.mailer.Email;
@@ -23,6 +26,16 @@ import views.html.coordinatorsPage;
 
 @With(SecuredAdminAction.class)
 public class AdminController extends Controller {
+    
+    public static Result viewLearners() {
+        List<Learner> learners = Learner.getAll();
+        HashMap<String, List<Session>> learnerSchedules = new HashMap<String, List<Session>>();
+        for(Learner l: learners) {
+            learnerSchedules.put(l.email, Session.getLearnerSchedule(l.email));
+        }
+        
+        return ok(views.html.studentsAdminView.render(learners, learnerSchedules, Learner.LEARNER_TYPES));
+    }
 
     public static Result viewAllCoordinators() {
         return ok(views.html.coordinatorsPage.render(

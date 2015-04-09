@@ -55,6 +55,7 @@ GET           /calendar                           controllers.CoordinatorControl
 # Admin View: Coordinators List
 GET           /coordinators                       controllers.AdminController.viewAllCoordinators()
 POST          /forgotPassword/:userEmail          controllers.Application.sendNewPasswordToUser(userEmail: String)
+GET           /viewlearner                        controllers.AdminController.viewLearners()
 
 # Admin View: Calendar Page
 GET           /admincalendar                      controllers.AdminController.viewCalendar()
