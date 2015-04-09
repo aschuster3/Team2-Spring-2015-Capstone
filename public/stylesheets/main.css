@@ -23,6 +23,9 @@ b{
 .editButton{
 	margin-top: 20px;
 }
+.emailBtn{
+	padding-right: 10px;
+}
 .btn .btn-default{
 	padding-top: 2px;
 	font-family: 'Open Sans', sans-serif;

@@ -1,0 +1,87 @@
+@(learners: java.util.List[models.Learner],
+		learnerTypeOptions: List[String],
+		learnerForm: play.data.Form[CoordinatorController.PreLearner])
+
+@import helper._
+@import java.math.BigInteger; var panelNum = 1
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Administrator: Students</title>
+
+	<meta charset="UTF-8">
+
+	<link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap3/css/bootstrap.min.css")">
+    <!--<link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap3/css/bootstrap-theme.min.css")">-->
+    <link rel="stylesheet" href="@routes.Assets.at("stylesheets/flat-ui.css")">
+    <link rel="stylesheet" href="@routes.Assets.at("stylesheets/main.css")">
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+	<!--<script type="text/javascript" src="components/bootstrap3/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="components/jquery/jquery.min.js"></script>-->
+	<link rel="shortcut icon" href="@routes.Assets.at("images/favicon.gif")" />
+
+</head>
+<body>
+<div class="container">
+	<div class="jumbotron">
+		<h1>Students</h1>	
+	</div>
+	<nav class="navbar navbar-default navbar-static-top">
+		<div class="container">
+			<ul class="nav navbar-nav pull-left">
+				<li class="active"><a href="@routes.Application.index()">Home</a></li>
+                <li class="active"><a href="@routes.AdminController.viewAllCoordinators()">Coordinators</a></li>
+                <li class="active"><a href="#">Students</a></li>
+                <li class="active"><a href="@routes.AdminController.viewCalendar()">Schedule</a></li>
+                <li class="active"><a href="@routes.TemplateController.templates()">Manage Templates</a></li>
+         	</ul>
+         	<div class="pull-right">
+		  		<button onclick="location.href='@routes.Application.logout()';" type="button" class="btn btn-block btn-sm btn-danger btn-logout">Log Out</button>
+			</div>
+ 		</div>
+	</nav>
+</div>
+
+<div class="studentsSection container">
+	<h4>All Students</h4>
+	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+		
+		@for(learner <- learners) {
+		  <div class="panel panel-default">
+		  	<div class="panel-heading" role="tab" id="heading@panelNum">
+		  		<h4 class="panel-title">
+		  			<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse@panelNum" aria-expanded="false" aria-controls="collapse@panelNum">
+		  				@learner.firstName @learner.lastName
+		  			</a>
+		  		</h4>
+		    </div>
+		    <div id="collapse@panelNum" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading@panelNum">
+		    	<div class="panel-body">
+		    		<div class = "col-md-3">
+						<h6 class="student">Name:</h6>@learner.firstName @learner.lastName
+						<h6 class="student">E-mail:</h6>@learner.email
+						<h6 class="type">Type:</h6>@learner.learnerType
+						<h6 class="coordinator">Coordinator:</h6>@learner.ownerEmail
+					</div>
+					<div class = "col-md-7">
+						<h6>Schedule:</h6>
+					</div>
+					<div class = "col-md-2">
+						<button type="button" class="btn btn-sm btn-inverse emailBtn">E-mail Schedule to Student</button>
+					</div>
+		    	</div>
+		    </div>
+		</div>
+		@(panelNum += 1)
+		}
+	</div>
+	<a class="btn btn-inverse" data-toggle="collapse" href="#">
+		Export and Delete Students
+	</a>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+</body>
+</html>
