@@ -81,6 +81,12 @@ angular.module('mwl.calendar')
              */
             if (openWeekIndex !== -1 && openDayIndex !== -1) {
               scope.openEvents = scope.view[openWeekIndex][openDayIndex].events;
+
+              // close the pull-down if there aren't any events anymore
+              if (scope.openEvents.length === 0) {
+                scope.view[openWeekIndex][openDayIndex].isOpened = false;
+                scope.view[openWeekIndex].isOpened = false;
+              }
             }
           }
 
