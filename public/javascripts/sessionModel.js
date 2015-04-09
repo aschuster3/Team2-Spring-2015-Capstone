@@ -2,6 +2,7 @@ angular.module('mwl.calendar')
   .factory('Sessions', ['sessionService', '$log', function(sessionService, $log) {
     var Sessions = {
       sessions: [],
+      refresh: getAll,
       create: create,
       createRecurringGroup: createRecurringGroup,
       update: update,
@@ -23,69 +24,72 @@ angular.module('mwl.calendar')
     }
 
     function getAll() {
-      sessionService.getSessions()
-        .success(function (data) {
+      return sessionService.getSessions()
+        .then(function success(response) {
+          var data = response.data;
           Sessions.sessions.splice(0, Sessions.sessions.length);
           angular.forEach(data, function (session) {
             Sessions.sessions.push(session);
           });
-        })
-        .error(function (data, status) {
-          $log.error('sessionService.getSessions failed with code ' + status);
+        }, function error(errorResponse) {
+          $log.error('sessionService.getSessions failed: ', errorResponse);
+          throw errorResponse;
         });
     }
 
     function create(newSession) {
-      sessionService.createSession(newSession)
-        .success(function (data) {
+      return sessionService.createSession(newSession)
+        .then(function success(response) {
+          var data = response.data;
           Sessions.sessions.push(data);
-        })
-        .error(function (data, status) {
-          $log.error('sessionService.createSession failed with code ' + status);
+        }, function error(response) {
+          $log.error('sessionService.createSession failed: ', response);
+          throw response;
         });
     }
 
     function createRecurringGroup(newSession, recurringType) {
-      sessionService.createRecurringSessions(newSession, recurringType)
-        .success(function (data) {
+      return sessionService.createRecurringSessions(newSession, recurringType)
+        .then(function success(response) {
+          var data = response.data;
           angular.forEach(data, function (session) {
             Sessions.sessions.push(session);
           });
-        })
-        .error(function (data, status) {
-          $log.error('sessionService.createRecurringSessions failed with code ' + status);
-        })
+        }, function error(response) {
+          $log.error('sessionService.createRecurringSessions failed: ', response);
+          throw response;
+        });
     }
 
     function update(updatedSession) {
-      sessionService.updateSession(updatedSession)
-        .success(function () {
+      return sessionService.updateSession(updatedSession)
+        .then(function success() {
           var index = findSessionIndexWithId(updatedSession.id);
           Sessions.sessions[index] = updatedSession;
-        })
-        .error(function (data, status) {
-          $log.error('sessionService.updateSession failed with code ' + status);
-        })
+        }, function error(response) {
+          $log.error('sessionService.updateSession failed: ', response);
+          throw response;
+        });
     }
 
     function remove(session) {
-      sessionService.deleteSession(session.id)
-        .success(function () {
+      return sessionService.deleteSession(session.id)
+        .then(function success() {
           var index = findSessionIndexWithId(session.id);
           Sessions.sessions.splice(index, 1);
-        })
-        .error(function (data, status) {
-          $log.error('sessionService.deleteSession failed with code ' + status);
-        })
+        }, function error(response) {
+          $log.error('sessionService.deleteSession failed: ', response);
+          throw response;
+        });
     }
 
     function removeRecurringGroup(session) {
-      sessionService.removeRecurringSessions(session)
-        .success(function () {
+      return sessionService.removeRecurringSessions(session)
+        .then(function success() {
           getAll();
-        })
-        .error(function (data, status) {
-          $log.error('sessionService.deleteSession failed with code ' + status);
-        })
+        }, function error(response) {
+          $log.error('sessionService.deleteSession failed with: ', response);
+          throw response;
+        });
     }
   }]);

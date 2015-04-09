@@ -8,7 +8,7 @@
  * Controller of the angularBootstrapCalendarApp
  */
 angular.module('mwl.calendar')
-  .controller('MainCtrl', function ($scope, $modal, moment, Sessions, learnerService) {
+  .controller('MainCtrl', function ($scope, $modal, moment, Sessions, learnerService, notificationModalService) {
 
     /***********************************************************************
      * CALENDAR CODE
@@ -72,7 +72,16 @@ angular.module('mwl.calendar')
 	    	sessionWithNewLearner.assignedLearner = $scope.currentLearner.email;
 	    	sessionWithNewLearner.type = "invalid";
         sessionWithNewLearner.editable = false;
-	      Sessions.update(sessionWithNewLearner);
+	      Sessions.update(sessionWithNewLearner).catch(
+          function error() {
+            notificationModalService.show("Error: Another learner has been signed up for this session already!");
+
+            /*
+             * TODO this is a good use-case for needing Sessions.get(id)
+             */
+            Sessions.refresh();
+          }
+        );
     	}
     };
     
@@ -135,7 +144,13 @@ angular.module('mwl.calendar')
     function deleteEvent(event) {
       // TODO provide option to user
       if (event.recurringGroupId === null) {
-        Sessions.delete(event);
+        Sessions.delete(event).then(
+          function success() {
+            if (event.assignedLearner !== null) {
+              notificationModalService.show("An email has been sent to notify the assigned learner and their coordinator that this clinic was cancelled.", "Filled Clinic Was Deleted")
+            }
+          }
+        );
       } else {
         Sessions.deleteRecurringGroup(event);
       }
@@ -193,6 +208,10 @@ angular.module('mwl.calendar')
      * Session Creation/Editing via Modal
      ***********************************************************************/
 
+    $scope.showMessageModal = showMessageModal;
+    function showMessageModal(message, title) {
+      notificationModalService.show(message, title);
+    }
 
     function showModal(event) {
       $modal.open({
