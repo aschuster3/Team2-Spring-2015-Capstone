@@ -20,6 +20,9 @@ p.session
 b{
 	font-weight: 600;
 }
+.editButton{
+	margin-top: 20px;
+}
 .btn .btn-default{
 	padding-top: 2px;
 	font-family: 'Open Sans', sans-serif;
