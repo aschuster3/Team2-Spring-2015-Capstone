@@ -43,7 +43,41 @@ angular.module('mwl.calendar')
           return $filter('date')(currentDay, 'MMMM yyyy');
         };
 
-        function updateView() {
+        function keepPulldownFromCollapsing(oldView) {
+          var openWeekIndex = -1;
+          var openDayIndex = -1;
+          scope.view.forEach(function (week, weekIndex) {
+            week.isOpened = !!oldView[weekIndex].isOpened;
+            if (week.isOpened) {
+              openWeekIndex = weekIndex;
+            }
+
+            week.forEach(function (day, dayIndex) {
+              day.isOpened = !!oldView[weekIndex][dayIndex].isOpened;
+              if (day.isOpened) {
+                openDayIndex = dayIndex;
+              }
+            });
+          });
+
+          /*
+           * openEvents does not appear to pickup changes immediately from
+           * the main events array (prototype issue? child scope issue?)
+           *
+           * So, reset it here to pickup the changes.
+           */
+          if (openWeekIndex !== -1 && openDayIndex !== -1) {
+            scope.openEvents = scope.view[openWeekIndex][openDayIndex].events;
+
+            // close the pull-down if there aren't any events anymore
+            if (scope.openEvents.length === 0) {
+              scope.view[openWeekIndex][openDayIndex].isOpened = false;
+              scope.view[openWeekIndex].isOpened = false;
+            }
+          }
+        }
+
+        function updateView(oldValue, newValue) {
           var oldView = scope.view;  // scope.view may not be initialized yet!
           scope.view = calendarHelper.getMonthView(scope.events, scope.currentDay, scope.useIsoWeek);
 
@@ -51,43 +85,14 @@ angular.module('mwl.calendar')
            * This code is not originally here!
            *
            * We don't want the box to collapse if an event is edited.
+           * 
            * So, reassign all isOpened properties to their original state to achieve this,
            * because calendarHelper.getMonthView results in all isOpened properties
            * to be undefined.
            *
            */
-          if (oldView) {
-            var openWeekIndex = -1;
-            var openDayIndex = -1;
-            scope.view.forEach(function (week, weekIndex) {
-              week.isOpened = !!oldView[weekIndex].isOpened;
-              if (week.isOpened) {
-                openWeekIndex = weekIndex;
-              }
-
-              week.forEach(function (day, dayIndex) {
-                day.isOpened = !!oldView[weekIndex][dayIndex].isOpened;
-                if (day.isOpened) {
-                  openDayIndex = dayIndex;
-                }
-              });
-            });
-
-            /*
-             * openEvents does not appear to pickup changes immediately from
-             * the main events array (prototype issue? child scope issue?)
-             *
-             * So, reset it here to pickup the changes.
-             */
-            if (openWeekIndex !== -1 && openDayIndex !== -1) {
-              scope.openEvents = scope.view[openWeekIndex][openDayIndex].events;
-
-              // close the pull-down if there aren't any events anymore
-              if (scope.openEvents.length === 0) {
-                scope.view[openWeekIndex][openDayIndex].isOpened = false;
-                scope.view[openWeekIndex].isOpened = false;
-              }
-            }
+          if (oldView && !(oldValue instanceof Date)) {
+            keepPulldownFromCollapsing(oldView);
           }
 
           //Auto open the calendar to the current day if set
