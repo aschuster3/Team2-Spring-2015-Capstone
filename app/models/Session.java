@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import play.data.validation.Constraints.*;
 
 import javax.persistence.*;
 
@@ -35,13 +34,10 @@ public class Session extends Model {
     @Id
     public String id;
 
-    @Required
     public String title;
 
-	@Required
 	public boolean isAM;
 
-	@Required
 	public Date date;  // only used for day-month-year
 
 	public String physician;
@@ -50,7 +46,7 @@ public class Session extends Model {
     public String assignedLearner;
 
 	public Long recurringGroupId;
-	
+
 	public String scheduleTitle;
 
 	/**
@@ -58,6 +54,7 @@ public class Session extends Model {
 	 *
 	 * Becaues eBean does not support @ElementCollection!
 	 */
+	@Column(length=500)
 	public String supportedLearnerTypesAsString;
 
 

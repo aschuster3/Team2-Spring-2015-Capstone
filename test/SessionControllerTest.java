@@ -13,6 +13,7 @@ import models.User;
 import org.junit.*;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.base.Joiner;
 
 import play.libs.Json;
 import play.mvc.Result;
@@ -241,6 +242,21 @@ public class SessionControllerTest {
         assertThat(typesSet.size()).isEqualTo(2);
         assertThat(typesSet.contains("type1")).isTrue();
         assertThat(typesSet.contains("type2")).isTrue();
+    }
+
+    @Test
+    public void sessionCanHoldAllSupportedLearnerTypes() {
+        Session sessionForAllTypes = new Session("session", "title", new Date(0));
+
+        Joiner joiner = Joiner.on(',').skipNulls();
+        sessionForAllTypes.supportedLearnerTypesAsString = joiner.join(Learner.LEARNER_TYPES);
+        int expectedLength = sessionForAllTypes.supportedLearnerTypesAsString.length();
+        Session.create(sessionForAllTypes);
+
+        Session resultSession = Session.find.byId("session");
+        int actualLength = resultSession.supportedLearnerTypesAsString.length();
+
+        assertThat(actualLength).isEqualTo(actualLength);
     }
 
     @Test

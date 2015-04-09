@@ -32,7 +32,7 @@ create table session (
   assigned_learner          varchar(255),
   recurring_group_id        bigint,
   schedule_title            varchar(255),
-  supported_learner_types_as_string varchar(255),
+  supported_learner_types_as_string varchar(500),
   constraint pk_session primary key (id))
 ;
 
