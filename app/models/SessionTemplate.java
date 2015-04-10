@@ -48,9 +48,20 @@ public class SessionTemplate extends Model{
 		st.save();
 	}
 	
-	public static void create(String title, int week, int day, boolean isAM){
+	public static SessionTemplate create(String title, int week, int day, boolean isAM){
 		SessionTemplate st = new SessionTemplate(title, week, day, isAM);
 		st.save();
+		return st;
+	}
+	
+	public static SessionTemplate create(String title, int week, int day, boolean isAM, String schedule){
+		ScheduleTemplate st = ScheduleTemplate.find.byId(schedule);
+		if (st == null){
+			return null;
+		}
+		SessionTemplate session = new SessionTemplate(title, week, day, isAM);
+		session.save();
+		return session;
 	}
 	
 	public static Boolean delete(SessionTemplate st){

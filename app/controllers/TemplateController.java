@@ -14,6 +14,7 @@ import play.data.validation.Constraints.Required;
 public class TemplateController extends Controller {
 	
 	static Form<PreTemplate> templateForm = Form.form(PreTemplate.class);
+	static Form<PreSession> sessionForm = Form.form(PreSession.class);
 	
 	public static class PreTemplate {
 		
@@ -33,12 +34,49 @@ public class TemplateController extends Controller {
         }
     }
 
+	public static class PreSession {
+		
+        @Required
+        public String title;
+        
+        @Required
+        public int week;
+        
+        @Required
+        public int day;
+        
+        @Required
+        public boolean isAM;
+        
+        public String schedule;
+       
+        public String validate() {
+            
+            if((title == null || title.equals(""))) {
+                return "Must have a title for the template";
+            }
+            if(week <= 0){
+            	return "Must have a positive integer value for week.";
+            }
+            if(day <= 0 || day > 7){
+            	return "Must have a positive integer value between 1 and 7 for day.";
+            }
+            if(SessionTemplate.find.where().eq("title", title).eq("week", week).eq("day", day)
+            		.eq("isAM", isAM).findUnique()!=null){
+            	return "Session with title " + title + ", on week " + week + 
+					" day " + day + "in the " + isAM + " already exists in this schedule";
+            } //MIGHT BE AN ISSUE WITH MULTIPLE SESSIONS WITH SAME INFO BUT DIFFERENT SCHEDULES!!
+            
+            return null;
+        }
+    }
+
 	public static Result createScheduleTemplate(){
 
 	Form<PreTemplate> filledForm = templateForm.bindFromRequest();
         
         if (filledForm.hasGlobalErrors() || filledForm.hasErrors()) {
-            return badRequest(manageTemplates.render(ScheduleTemplate.find.all(), filledForm));
+            return badRequest(manageTemplates.render(ScheduleTemplate.find.all(), filledForm, sessionForm));
         } else {
             PreTemplate template = filledForm.get();
             ScheduleTemplate.create(template.title);
@@ -46,17 +84,22 @@ public class TemplateController extends Controller {
         }
 	}
 	
-	public static Result createSessionTemplate(String title, int week, int day, boolean isAM){
-		if(SessionTemplate.find.where().eq("title", title).eq("week", week).eq("day", day).eq("isAM", isAM).findUnique()!=null){
-			return badRequest("session with title " + title + ", on week " + week + 
-					" day " + day + "in the " + isAM + " already exists in this schedule");
-		}
-		SessionTemplate.create(title, week, day, isAM);
-		return status(204);	
+	public static Result createSessionTemplate(){
+		Form<PreSession> filledForm = sessionForm.bindFromRequest();
+
+		if (filledForm.hasGlobalErrors() || filledForm.hasErrors()) {
+            return badRequest(manageTemplates.render(ScheduleTemplate.find.all(), templateForm, filledForm));
+        } else {
+            PreSession template = filledForm.get();
+            SessionTemplate st = SessionTemplate.create(template.title, template.week, template.day, template.isAM);
+            //addSessionToSchedule(template.schedule, st.id);
+            //System.out.println(st.schedule.title);
+            return status(204);
+        }
 	}
 	
 	public static Result templates(){
-		return ok(manageTemplates.render(ScheduleTemplate.find.all(), templateForm));
+		return ok(manageTemplates.render(ScheduleTemplate.find.all(), templateForm, sessionForm));
 	}
 	
 	public static Result addSessionToSchedule(String scheduleTitle, String sessionID){

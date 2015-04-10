@@ -36,13 +36,30 @@ public class TemplateControllerTest {
     
 	@Test
     public void createSessionTemplate(){
-    	Result result = TemplateController.createSessionTemplate("Clinic", 2, 3, true);
-    	assertThat(status(result)).isEqualTo(204);
-    	assertThat(SessionTemplate.find.where().eq("title", "Clinic").eq("week", 2)
-				.eq("day", 3).eq("isAM", true)).isNotNull();
+		
+		User.create(new User("Admin", "User", "admin@gmail.com", "adminpassword", true));
+		
+		Result result = callAction(
+	                controllers.routes.ref.TemplateController.createSessionTemplate(),
+	                fakeRequest().withSession("email", "admin@gmail.com")
+	                			.withFormUrlEncodedBody(ImmutableMap.of("title", "Clinic with Dr. Bob",
+	                					"week", "1",
+	                					"day", "2",
+	                					"isAM", "true"))
+	            );
+		assertThat(204).isEqualTo(status(result));
+		assertThat(SessionTemplate.find.where().eq("title", "Clinic with Dr. Bob").eq("week", 1)
+				.eq("day", 2).eq("isAM", true)).isNotNull();
     	assertThat(SessionTemplate.find.all().size()).isEqualTo(1);
-    	
-    	result = TemplateController.createSessionTemplate("Clinic", 2, 3, true);
+	        
+    	result = callAction(
+                controllers.routes.ref.TemplateController.createSessionTemplate(),
+                fakeRequest().withSession("email", "admin@gmail.com")
+                			.withFormUrlEncodedBody(ImmutableMap.of("title", "Clinic with Dr. Bob",
+                					"week", "1",
+                					"day", "2",
+                					"isAM", "true"))
+            );
     	assertThat(status(result)).isEqualTo(400);
     }
 	
@@ -50,7 +67,7 @@ public class TemplateControllerTest {
     public void createScheduleTemplate(){
 		User.create(new User("Admin", "User", "admin@gmail.com", "adminpassword", true));
 		
-		 Result result = callAction(
+		Result result = callAction(
 	                controllers.routes.ref.TemplateController.createScheduleTemplate(),
 	                fakeRequest().withSession("email", "admin@gmail.com")
 	                			.withFormUrlEncodedBody(ImmutableMap.of("title", "subi1"))
@@ -161,5 +178,4 @@ public class TemplateControllerTest {
     	
     	assertThat(SessionTemplate.find.all().size()).isEqualTo(1);
     }
-    //STILL NEED TO ADD TEST FOR REMOVING SESSIONS FROM A SCHEDULE
 }
