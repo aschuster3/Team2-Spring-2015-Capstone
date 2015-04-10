@@ -33,7 +33,7 @@
 			<ul class="nav navbar-nav pull-left">
 				<li class="active"><a href="@routes.Application.index()">Home</a></li>
                 <li class="active"><a href="@routes.AdminController.viewAllCoordinators()">Coordinators</a></li>
-                <li class="active"><a href="#">Students</a></li>
+                <li class="active"><a href="@routes.AdminController.viewLearners()">Students</a></li>
                 <li class="active"><a href="@routes.AdminController.viewCalendar()">Schedule</a></li>
                 <li class="active"><a href="@routes.TemplateController.templates()">Manage Templates</a></li>
          	</ul>
@@ -60,13 +60,16 @@
 		    <div id="collapse@panelNum" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading@panelNum">
 		    	<div class="panel-body">
 		    		<div class = "col-md-3">
-						<h6 class="student">Name:</h6>@learner.firstName @learner.lastName
-						<h6 class="student">E-mail:</h6>@learner.email
-						<h6 class="type">Type:</h6>@learner.learnerType
-						<h6 class="coordinator">Coordinator:</h6>@learner.ownerEmail
+						<h6 class="student">Name:</h6> <p class = "session">@learner.firstName @learner.lastName</p>
+						<h6 class="student">E-mail:</h6> <p class = "session">@learner.email</p>
+						<h6 class="type">Type:</h6> <p class = "session">@learner.learnerType</p>
+						<h6 class="coordinator">Coordinator:</h6> <p class = "session">@learner.ownerEmail</p>
 					</div>
 					<div class = "col-md-7">
 						<h6>Schedule:</h6>
+                        @for(sesh <- schedules.get(learner.email)) {
+                            <p class = "session">@sesh.title | @sesh.date | @sesh.physician</p>
+                        }
 					</div>
 					<div class = "col-md-2">
 						<button type="button" class="btn btn-sm btn-inverse emailBtn">E-mail Schedule to Student</button>
