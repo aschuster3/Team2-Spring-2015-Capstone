@@ -9,6 +9,10 @@ import static play.test.Helpers.fakeRequest;
 import static play.test.Helpers.inMemoryDatabase;
 import static play.test.Helpers.start;
 import static play.test.Helpers.status;
+
+import controllers.routes;
+import models.Learner;
+import models.Session;
 import models.UnapprovedUser;
 import models.User;
 
@@ -17,6 +21,8 @@ import org.junit.Test;
 
 import play.Logger;
 import play.mvc.Result;
+
+import java.util.Date;
 
 
 public class AdminControllerTest {
@@ -151,5 +157,46 @@ public class AdminControllerTest {
 
         user = UnapprovedUser.find.byId(user.email);
         assertThat(user).isNotNull();
+    }
+
+    @Test
+    public void removeAllLearnersAndTheirSessions_RemovesLearnersFromDatabase() {
+        Learner.create("email", "first", "last", "type", "owner");
+        Learner.create("email2", "first2", "last2", "type", "owner2");
+
+        Result result = callAction(
+                routes.ref.AdminController.removeAllLearnersAndTheirSessions(),
+                fakeRequest().withSession("email", ADMIN_EMAIL)
+        );
+        int resultingLearnerCount = Learner.find.all().size();
+
+        assertThat(status(result)).isEqualTo(NO_CONTENT);
+        assertThat(resultingLearnerCount).isEqualTo(0);
+    }
+
+    @Test
+    public void removeAllLearnersAndTheirSessions_RemovesFilledSessionsFromDatabase() {
+        Learner.create("email", "first", "last", "type", "owner");
+
+        Session filledSession1 = new Session(null, "title", new Date(0));
+        filledSession1.assignedLearner = "email";
+
+        Session filledSession2 = new Session(null, "title", new Date(0));
+        filledSession2.assignedLearner = "email";
+
+        Session freeSession = new Session(null, "title", new Date(0));
+
+        Session.create(filledSession1);
+        Session.create(filledSession2);
+        Session.create(freeSession);
+
+        Result result = callAction(
+                routes.ref.AdminController.removeAllLearnersAndTheirSessions(),
+                fakeRequest().withSession("email", ADMIN_EMAIL)
+        );
+        int resultingSessionCount = Session.find.all().size();
+
+        assertThat(resultingSessionCount).isEqualTo(1);
+        assertThat(Session.find.byId(freeSession.id)).isNotNull();
     }
 }

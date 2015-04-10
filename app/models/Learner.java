@@ -69,6 +69,17 @@ public class Learner extends Model {
         Learner newLearner = new Learner(email, firstName, lastName, ownerEmail, learnerType);
         newLearner.save();
     }
+
+    /**
+     * Delete cascades to registered Sessions.
+     */
+    public static void deleteLearnerAndTheirSchedule(Learner learner) {
+        List<Session> schedule = Session.getLearnerSchedule(learner.email);
+        for (Session session: schedule) {
+            session.delete();
+        }
+        learner.delete();
+    }
     
     public static List<Learner> getAll() {
         return Learner.find.orderBy("lastName, firstName").findList();

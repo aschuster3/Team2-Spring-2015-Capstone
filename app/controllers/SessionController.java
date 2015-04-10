@@ -88,7 +88,7 @@ public class SessionController extends Controller {
 
 		/* Model.update() ignores null values */
 		if (sessionWithNewData.assignedLearner == null) {
-			Ebean.update(sessionWithNewData, new HashSet(Arrays.asList("assignedLearner")));
+			Ebean.update(sessionWithNewData, new HashSet<String>(Arrays.asList("assignedLearner")));
 		}
 		return status(204);
 	}

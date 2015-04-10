@@ -131,4 +131,15 @@ public class AdminController extends Controller {
         return ok(csvResponseStream);
     }
 
+    /**
+     * Deletes all learners.  Deletes will cascade to assigned sessions.
+     */
+    public static Result removeAllLearnersAndTheirSessions() {
+        List<Learner> learners = Learner.find.all();
+        for (Learner learner: learners) {
+            Learner.deleteLearnerAndTheirSchedule(learner);
+        }
+        return status(NO_CONTENT);
+    }
+
 }
