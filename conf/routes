@@ -44,6 +44,7 @@ DELETE        /sessions-api/rec/:sessionId        controllers.SessionController.
 
 # Learner Actions
 GET           /learners-api                       controllers.LearnerController.getLearners()
+PUT           /learners-api/:learnerOriginalEmail controllers.LearnerController.updateLearner(learnerOriginalEmail: String)
 
 # Coordinator Learner Page
 GET           /students                           controllers.CoordinatorController.students()

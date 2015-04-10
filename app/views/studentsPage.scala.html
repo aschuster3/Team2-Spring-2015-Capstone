@@ -1,7 +1,8 @@
 @(learners: java.util.List[models.Learner],
         schedules: Map[String, List[Session]],
 		learnerTypeOptions: List[String],
-		learnerForm: play.data.Form[CoordinatorController.PreLearner])
+		learnerForm: play.data.Form[Learner.PreLearner])
+@import models.Learner.PreLearner
 
 @import helper._
 @import java.math.BigInteger; var panelNum = 1
@@ -47,7 +48,7 @@
 	<h4>Your Students</h4>
 	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 		
-		@for(learner <- learners) {
+		@for((learner, index) <- learners.zipWithIndex) {
 		  <div class="panel panel-default">
 		  	<div class="panel-heading" role="tab" id="heading@panelNum">
 		  		<h4 class="panel-title">
@@ -58,13 +59,37 @@
 		    </div>
 		    <div id="collapse@panelNum" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading@panelNum">
 		    	<div class="panel-body">
-		    		<div class = "col-md-3">
-						<h6 class="student">Name:</h6> <p class = "session">@learner.firstName @learner.lastName</p>
-						<h6 class="student">E-mail:</h6> <p class = "session">@learner.email</p>
-						<h6 class="type">Type:</h6> <p class = "session">@learner.learnerType</p>
+		    		<div class="col-md-3 learnerInfo">
+						<h6 class="student">Name:</h6><p class = "session"><span class="learnerFirstName">@learner.firstName</span> <span class="learnerLastName">@learner.lastName</span></p>
+						<h6 class="student">E-mail:</h6><p class = "session learnerEmail">@learner.email</p>
+						<h6 class="type">Type:</h6><p class = "session learnerLearnerType">@learner.learnerType</p>
 						<br>
 						<button type="button" class="btn btn-sm btn-warning editButton">Edit</button>
 					</div>
+
+					<div class="col-md-3 editForm" style="display: none">
+						<h6 class="student">Name:</h6>
+						<div class="learnerInputField">
+							<span><input type="text" class="form-control" name="firstName" placeholder="First"></span>
+							<span><input type="text" class="form-control" name="lastName" placeholder="Last"></span>
+						</div>
+
+						<h6 class="student">E-mail:</h6>
+						<div class="learnerInputField"><input type="text" class="form-control" name="email"></div>
+
+						<h6 class="type">Type:</h6>
+						<div class="learnerInputField">
+							<select type="text" class="form-control" name="learnerType">
+								@for(learnerType <- learnerTypeOptions) {
+								<option value="@learnerType">@learnerType</option>
+								}
+							</select>
+						</div>
+						<br>
+						<button type="button" class="btn btn-sm btn-warning saveButton">Save</button>
+						<span class="pull-right editFormErrorMessage"></span>
+					</div>
+
 					<div class = "col-md-7">
 						<h6>Schedule:</h6>
                         @for(sesh <- schedules.get(learner.email)) {
@@ -124,5 +149,143 @@
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+@*
+	This javascript is inline so that we can take advantage
+	of templating to figure out the PUT route.
+
+	Alternative: use javascript routes
+	see (http://stackoverflow.com/questions/11133059/play-2-x-how-to-make-an-ajax-request-with-a-common-button)
+*@
+<script>
+(function() {
+
+	$('.editButton').each(function (index, button) {
+		$(button).click(function () {
+			populateEditFormWithCurrentValues(index);
+			hideLearnerInfo(index);
+			showEditForm(index);
+		});
+	});
+
+	$('.saveButton' ).each(function (index, button) {
+		$(button ).click(function () {
+			sendUpdateLearnerRequest(index);
+		});
+	});
+
+	function sendUpdateLearnerRequest(index) {
+		learnerJson = extractLearnerValuesFromForm(index);
+		originalLearnerEmail = extractLearnerValuesFromInfo(index ).email;
+		jQuery.ajax({
+			type: 'PUT',
+			contentType: 'application/json',
+			processData: false,
+			data: JSON.stringify(learnerJson),
+			dataType: 'json',
+			url: learnerRouteForUpdate(originalLearnerEmail || ''),
+			success: function (data) {
+				updateLearnerInfoWithValues(index, data);
+				updateLearnerHeaderWith(index, data.firstName + ' ' + data.lastName);
+				displayFormError(null);
+				hideEditForm(index);
+				showLearnerInfo(index);
+			},
+			error: function (jqXHR, textStatus, errorThrown) {
+				displayFormError(index, jqXHR.responseText);
+			}
+		});
+	}
+
+	function updateLearnerInfoWithValues(index, learnerValues) {
+		var infoElem = $('.learnerInfo' ).get(index);
+
+		$('.learnerFirstName', infoElem ).text(learnerValues.firstName);
+		$('.learnerLastName', infoElem ).text(learnerValues.lastName);
+		$('.learnerEmail', infoElem ).text(learnerValues.email);
+		$('.learnerLearnerType', infoElem ).val(learnerValues.learnerType);
+	}
+
+	function updateLearnerHeaderWith(index, newName) {
+		var panelHeaderElem = $('.panel-heading' ).get(index);
+		$('a', panelHeaderElem ).text(newName);
+	}
+
+	function populateEditFormWithCurrentValues(index) {
+		var formElem = $('.editForm' ).get(index);
+		var currentValues = extractLearnerValuesFromInfo(index);
+
+		var inputElems = $('input', formElem );
+
+		$(inputElems[0] ).val(currentValues['firstName']);
+		$(inputElems[1] ).val(currentValues['lastName']);
+		$(inputElems[2] ).val(currentValues['email']);
+
+		$('select', formElem ).val(currentValues['learnerType']);
+
+		console.log(inputElems);
+	}
+
+	// returns an object, where keys are learner property names
+	function extractLearnerValuesFromInfo(index) {
+		var infoElem = $('.learnerInfo' ).get(index);
+		var learnerValues = {};
+
+		learnerValues.firstName = $('.learnerFirstName', infoElem ).text();
+		learnerValues.lastName = $('.learnerLastName', infoElem ).text();
+		learnerValues.email = $('.learnerEmail', infoElem ).text();
+		learnerValues.learnerType = $('.learnerLearnerType', infoElem ).text();
+
+		return learnerValues;
+	}
+
+	function extractLearnerValuesFromForm(index) {
+		var formElem = $('.editForm' ).get(index);
+		var learnerValues = { };
+		var inputElems = $('input', formElem );
+
+		learnerValues.firstName = $(inputElems[0] ).val();
+		learnerValues.lastName = $(inputElems[1] ).val();
+		learnerValues.email = $(inputElems[2] ).val();
+		learnerValues.learnerType = $('select', formElem ).val();
+
+		return learnerValues;
+	}
+
+	function showLearnerInfo(index) {
+		var elem = $('.learnerInfo' ).get(index);
+		$(elem ).show();
+	}
+
+	function hideLearnerInfo(index) {
+		var elem = $('.learnerInfo' ).get(index );
+		$(elem ).hide();
+	}
+
+	function showEditForm(index) {
+		var elem = $('.editForm' ).get(index);
+		$(elem ).show();
+	}
+
+	function hideEditForm(index) {
+		var elem = $('.editForm' ).get(index);
+		$(elem ).hide();
+	}
+
+	function learnerRouteForUpdate(learnerEmail) {
+		return @routes.LearnerController.updateLearner("") + learnerEmail;
+	}
+
+	function displayFormError(index, message) {
+		var elem = $('.editFormErrorMessage' ).get(index);
+		console.log(message);
+		console.log(index);
+		console.log("Hello");
+		console.log(elem);
+		$(elem ).text(message);
+	}
+
+})();
+</script>
 </body>
 </html>

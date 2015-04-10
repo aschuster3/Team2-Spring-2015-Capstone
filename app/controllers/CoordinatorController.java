@@ -7,8 +7,6 @@ import models.Learner;
 import models.Session;
 import models.User;
 import play.data.Form;
-import play.data.validation.Constraints.EmailValidator;
-import play.data.validation.Constraints.Required;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
@@ -18,7 +16,7 @@ import views.html.studentsPage;
 @Security.Authenticated(Secured.class)
 public class CoordinatorController extends Controller {
     
-    static Form<PreLearner> learnerForm = Form.form(PreLearner.class);
+    static Form<Learner.PreLearner> learnerForm = Form.form(Learner.PreLearner.class);
     
     public static Result students() {
         String email = session().get("email");
@@ -36,37 +34,9 @@ public class CoordinatorController extends Controller {
             return ok(studentsPage.render(learners, learnerSchedules, Learner.LEARNER_TYPES, learnerForm));
         }
     }
-    
-    public static class PreLearner {
-        @Required
-        public String email;
-        
-        @Required
-        public String firstName;
-        
-        @Required
-        public String lastName;
 
-        @Required
-        public String learnerType;
-        
-        public String validate() {
-            
-            if((firstName == null && !firstName.equals("")) || (lastName == null && !lastName.equals(""))) {
-                return "Must have a name for the student";
-            }
-            
-            EmailValidator val = new EmailValidator();
-            if(!val.isValid(email)) {
-                return "The email address is not valid.";
-            }
-            
-            return null;
-        }
-    }
-    
     public static Result createLearner() {
-        Form<PreLearner> filledForm = learnerForm.bindFromRequest();
+        Form<Learner.PreLearner> filledForm = learnerForm.bindFromRequest();
         String ownerEmail = session().get("email");
         
         // Fix need for Owner info
@@ -80,10 +50,14 @@ public class CoordinatorController extends Controller {
             
             return badRequest(studentsPage.render(learners, learnerSchedules, Learner.LEARNER_TYPES, filledForm));
         } else {
-            PreLearner learner = filledForm.get();
+            Learner.PreLearner learner = filledForm.get();
             Learner.create(learner.email, learner.firstName, learner.lastName, learner.learnerType, ownerEmail);
             return redirect(routes.CoordinatorController.students());
         }
+    }
+
+    public static Result updateLearner(String learnerEmail) {
+        return ok(play.libs.Json.toJson(Learner.find.byId(learnerEmail)));
     }
 
     public static Result viewCoordinatorCalendar() {

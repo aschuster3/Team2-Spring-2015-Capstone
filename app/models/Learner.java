@@ -8,8 +8,12 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import play.data.Form;
+import play.data.validation.Constraints;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
+import play.libs.Json;
 
 @Entity
 @SuppressWarnings("serial")
@@ -39,12 +43,11 @@ public class Learner extends Model {
 
     @Required
     public String firstName;
-    
+
     @Required
     public String lastName;
-    
+
     @Required
-    @ManyToOne
     public String ownerEmail;
 
     @Required
@@ -87,5 +90,65 @@ public class Learner extends Model {
     
     public static List<Learner> getAllOwnedBy(String ownerEmail) {
         return Learner.find.where().eq("ownerEmail", ownerEmail).orderBy("lastName, firstName").findList();
+    }
+
+    /**
+     * This is Learner validation for Learner updates
+     * which are not passed through any kind of
+     * form constraints or validation.
+     *
+     * @return null on success, or an error message.
+     */
+    public String validate() {
+        JsonNode json = Json.toJson(this);
+        Form<PreLearner> preLearnerForm = new Form<>(PreLearner.class);
+        preLearnerForm = preLearnerForm.bind(json);
+
+        if (preLearnerForm.hasGlobalErrors()) {
+            return preLearnerForm.globalError().message();
+        }
+
+        if (preLearnerForm.hasErrors()) {
+            return "Missing required field.";
+        }
+
+        return null;
+    }
+
+    public PreLearner toPreLearner() {
+        PreLearner preLearner = new PreLearner();
+        preLearner.email = this.email;
+        preLearner.firstName = this.firstName;
+        preLearner.lastName = this.lastName;
+        preLearner.learnerType = this.learnerType;
+        return preLearner;
+    }
+
+    public static class PreLearner {
+        @Required
+        public String email;
+
+        @Required
+        public String firstName;
+
+        @Required
+        public String lastName;
+
+        @Required
+        public String learnerType;
+
+        public String validate() {
+
+            if((firstName == null && !firstName.equals("")) || (lastName == null && !lastName.equals(""))) {
+                return "Must have a name for the student";
+            }
+
+            Constraints.EmailValidator val = new Constraints.EmailValidator();
+            if(!val.isValid(email)) {
+                return "The email address is not valid.";
+            }
+
+            return null;
+        }
     }
 }
