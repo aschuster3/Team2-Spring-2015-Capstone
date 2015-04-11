@@ -87,6 +87,10 @@ public class Learner extends Model {
     public static List<Learner> getAll() {
         return Learner.find.orderBy("lastName, firstName").findList();
     }
+
+    public static List<Learner> getAllOrderByType() {
+        return Learner.find.orderBy("learnerType, lastName, firstName").findList();
+    }
     
     public static List<Learner> getAllOwnedBy(String ownerEmail) {
         return Learner.find.where().eq("ownerEmail", ownerEmail).orderBy("lastName, firstName").findList();

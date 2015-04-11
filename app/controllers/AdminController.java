@@ -22,7 +22,6 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.With;
 import util.CSVUtil;
-import views.html.coordinatorsPage;
 
 @With(SecuredAdminAction.class)
 public class AdminController extends Controller {
@@ -105,14 +104,14 @@ public class AdminController extends Controller {
         StringWriter csvStringWriter = new StringWriter();
 
         try {
-            CSVUtil.writeLearnerCSV(Learner.getAll(), csvStringWriter);
+            CSVUtil.writeLearnerCSV(Learner.getAllOrderByType(), csvStringWriter);
         } catch (IOException e) {
             return internalServerError("server error: unable to write CSV learner data");
         }
 
         InputStream csvResponseStream = new ByteArrayInputStream(
                 csvStringWriter.toString().getBytes(StandardCharsets.UTF_8));
-        response().setContentType("text/csv");
+        //response().setContentType("text/csv");
         return ok(csvResponseStream);
     }
 
@@ -142,4 +141,14 @@ public class AdminController extends Controller {
         return status(NO_CONTENT);
     }
 
+    /**
+     * Deletes all learners, their sessions, then returns the CSV of learners.
+     *
+     * Temporary controller action:  We should not make this one operation in final product.
+     */
+    public static Result removeLearnersAndGiveCSV() {
+        Result r = generateLearnersCSV();
+        removeAllLearnersAndTheirSessions();
+        return r;
+    }
 }
