@@ -16,6 +16,20 @@ p.session
 	font-family: 'Open Sans', sans-serif;
 	font-size: 11pt;
 	margin-bottom: 4px;
+
+}
+p.modalBody
+{
+	font-family: 'Open Sans', sans-serif;
+	font-size: 12pt;
+}
+p.tablehead
+{
+	font-family: 'Open Sans', sans-serif;
+	font-size: 13pt;
+	font-weight: bold;
+	margin-top: 15px;
+	margin-bottom: 0px;
 }
 b{
 	font-weight: 600;
@@ -108,10 +122,24 @@ dl{
 dl{
 	line-height: 0px;
 }
+.session-modal-footer{
+	padding-top: 620px;
+}
 .student{
 	margin-bottom: 0px;
 	margin-top: 10px;
 }
+<<<<<<< Updated upstream
 .pendingapproval .pull-right{
 	width: 10%;
 }
+=======
+
+.session-left{
+	margin-right: 60px;
+}
+
+.session-footer{
+	margin-top: 600px;
+}
+>>>>>>> Stashed changes

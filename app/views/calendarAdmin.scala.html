@@ -93,96 +93,99 @@
             </div>
             <form name="eventForm" novalidate>
               <div class="modal-body">
-                <table class="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th>Location</th>
-                      <th>Physician on Duty</th>
-                      <th>Learner Types</th>
-                      <th>Date</th>
-                      <th>Time</th>
-                      <th ng-if="isCreateModal">Repeat</th>
-                    </tr>
-                  </thead>
+                <div class="col-md-6 pull-left session-left">
+                    
+                    
+                    <p class="tablehead">Location</p>
+                    <div class="form-horizontal">
+                      <fieldset>
+                          <select
+                            class="form-control"
+                            ng-model="event.title"
+                            ng-options="clinic as clinic for clinic in clinicOptions"
+                            required>
+                          </select>
+                      </fieldset>
+                    </div>
+             
+                    
+                    <p class="tablehead">Physician on Duty</p>
+                    <td style="max-width: 85px">
+                      <input type="text" class="form-control" ng-model="event.physician">
+                    </td>
+                 
+                    
+                    <p class="tablehead">Date</p>
+                    <p class="input-group">
+                      <input type="text" class="form-control" readonly datepicker-popup="EEE MMMM d, yyyy"
+                             ng-model="event.date" is-open="showDatePicker" close-text="Close"
+                             ng-change="updateStartsAtEndsAt(event);" required />
+                      <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="toggleDatePicker($event)"><i class="glyphicon glyphicon-search"></i></button>
+                      </span>
+                    </p>
 
-                  <tbody>
-                    <tr>
-
-                      <td style="max-width: 120px">
-                        <div class="form-horizontal">
-                          <fieldset>
-                              <select
-                                class="form-control"
-                                ng-model="event.title"
-                                ng-options="clinic as clinic for clinic in clinicOptions"
-                                required>
-                              </select>
-                          </fieldset>
+                    
+                    <p class="tablehead">Time</p>
+                    <div class="radio-inline">
+                      <label>
+                        <input type="radio" ng-model="event.isAM" ng-value="{{true}}"
+                               ng-change="updateStartsAtEndsAt(event);" ng-required="!angular.isDefined(event.isAM)">
+                        AM
+                      </label>
+                    </div>
+                    <div class="radio-inline">
+                      <label>
+                        <input type="radio" ng-model="event.isAM" ng-value="{{false}}"
+                               ng-change="updateStartsAtEndsAt(event);" ng-required="!angular.isDefined(event.isAM)">
+                        PM
+                      </label>
+                    </div>
+                    <br>
+                
+                     
+                    <p class="tablehead">Repeat</p>
+                    <div class="radio-inline">
+                      <label>
+                        <input type="radio" ng-model="event.recurringType" ng-value="REC_TYPE_NONE">
+                        None
+                        </label>
                       </div>
-                      </td>
+                    <div class="radio-inline">
+                      <label>
+                        <input type="radio" ng-model="event.recurringType" ng-value="REC_TYPE_WEEKLY">
+                        Weekly
+                      </label>
+                    </div>
+                    <br>
+              
+                    
+                    <p class="tablehead">End Date (Optional)</p>
+                    <p class="input-group">
+                      <input type="text" class="form-control" readonly datepicker-popup="EEE MMMM d, yyyy"
+                             ng-model="event.date" is-open="showDatePicker" close-text="Close"
+                             ng-change="updateStartsAtEndsAt(event);" required />
+                      <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="toggleDatePicker($event)"><i class="glyphicon glyphicon-search"></i></button>
+                      </span>
+                    </p>
 
-                      <td style="max-width: 85px">
-                          <input type="text" class="form-control" ng-model="event.physician">
-                      </td>
+                </div>
+                
 
-                      <td style="max-width: 140px">
-                        <div class="checkbox" ng-repeat="learnerType in allLearnerTypes">
-                          <label><input type="checkbox"
-                                        value="{{learnerType}}"
-                                        ng-checked="learnerTypeIsChecked(event, learnerType)"
-                                        ng-click="toggleLearnerTypeChecked(event, learnerType)">{{ learnerType }}</label>
-                        </div>
-                      </td>
+                <div class="col-md-6 pull-left session-right">
+                    <p class="tablehead">Learner Types</p>
+           
+                    <div class="checkbox" ng-repeat="learnerType in allLearnerTypes">
+                      <label><input type="checkbox"
+                                    value="{{learnerType}}"
+                                    ng-checked="learnerTypeIsChecked(event, learnerType)"
+                                    ng-click="toggleLearnerTypeChecked(event, learnerType)">{{ learnerType }}</label>
+                    </div>
+                </div>
+                
 
-                      <td style="max-width: 140px">
-                        <p class="input-group">
-                          <input type="text" class="form-control" readonly datepicker-popup="EEE MMMM d, yyyy"
-                                 ng-model="event.date" is-open="showDatePicker" close-text="Close"
-                                 ng-change="updateStartsAtEndsAt(event);" required />
-                          <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="toggleDatePicker($event)"><i class="glyphicon glyphicon-search"></i></button>
-                          </span>
-                        </p>
-                      </td>
-
-                      <td style="width: 80px">
-                        <div class="radio">
-                          <label>
-                            <input type="radio" ng-model="event.isAM" ng-value="{{true}}"
-                                   ng-change="updateStartsAtEndsAt(event);" ng-required="!angular.isDefined(event.isAM)">
-                            AM
-                          </label>
-                        </div>
-                        <div class="radio">
-                          <label>
-                            <input type="radio" ng-model="event.isAM" ng-value="{{false}}"
-                                   ng-change="updateStartsAtEndsAt(event);" ng-required="!angular.isDefined(event.isAM)">
-                            PM
-                          </label>
-                        </div>
-                      </td>
-
-                      <td ng-if="isCreateModal" style="width: 40px">
-                        <div class="radio">
-                          <label>
-                            <input type="radio" ng-model="event.recurringType" ng-value="REC_TYPE_NONE">
-                            None
-                            </label>
-                          </div>
-                        <div class="radio">
-                          <label>
-                            <input type="radio" ng-model="event.recurringType" ng-value="REC_TYPE_WEEKLY">
-                            Weekly
-                          </label>
-                        </div>
-                      </td>
-
-                    </tr>
-                  </tbody>
-
-                </table>
-
-              <div class="modal-footer">
+              <div class="modal-footer session-modal-footer">
                 <button ng-show="!isCreateModal" class="btn btn-danger pull-left" ng-click="clickDelete()">Delete Event</button>
                 <button class="btn btn-inverse pull-right" ng-click="clickCancel()">Cancel</button>
                 <button ng-show="isCreateModal" ng-disabled="eventForm.$invalid" class="btn btn-inverse pull-right" ng-click="clickCreate()">Submit</button>
