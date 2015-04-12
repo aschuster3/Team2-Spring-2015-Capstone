@@ -112,3 +112,6 @@ dl{
 	margin-bottom: 0px;
 	margin-top: 10px;
 }
+.pendingapproval .pull-right{
+	width: 10%;
+}

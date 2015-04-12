@@ -53,14 +53,16 @@
 					<p>E-mail: @unapproved.email</p>
 					<p>Phone number: @unapproved.phoneNumber</p>
 					<p>Department: @unapproved.department</p>
-                        
-                        @if(unapproved.token != null && unapproved.token != "") {
-                            <p>Status: Emailed password (@unapproved.token)</p>
-                        }
                 </div>
                 <div class="pull-right">
                 @form(routes.AdminController.approveUnapprovedUser(unapproved.email)) {
-                    <button class="btn btn-lg btn-primary btn-block btn-sm btn-inverse" type="submit" data-toggle="modal" data-target="#approvedModal">Approve</button>
+                    <button class="btn btn-lg btn-primary btn-block btn-sm btn-inverse approvalButton" type="submit" data-toggle="modal" data-target="#approvedModal" data-unapproved-index="@index">
+						@if(unapproved.token == null || unapproved.token == "") {
+							Approve
+						} else {
+							Re-approve
+						}
+					</button>
                 }
                 
                 @form(routes.AdminController.removeUnapprovedUser(unapproved.email)) {
@@ -91,7 +93,7 @@
 					<h6>Name:
 						<span class="pull-right">
 						@form(routes.Application.sendNewPasswordToUser(coord.email)) {
-							<button class="btn btn-lg btn-primary btn-block btn-sm btn-inverse" type="submit" data-toggle="modal" data-target="#passwordResetModal">Reset Password</button>
+							<button class="btn btn-lg btn-primary btn-block btn-sm btn-inverse approveButton" type="submit" data-toggle="modal" data-target="#passwordResetModal">Reset Password</button>
 						}
 						</span></h6>  @coord.firstName @coord.lastName
 					<h6>E-mail:</h6> @coord.email
@@ -140,5 +142,32 @@
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+<script>
+(function () {
+	updatePendingApprovalButtonWidths();
+
+	$('#approvedModal' ).on('show.bs.modal', function (evt) {
+		var index = $(evt.relatedTarget ).data('unapproved-index');
+		$('.pendingapproval .approvalButton' ).get(index ).innerText = 'Re-approve';
+		updatePendingApprovalButtonWidths();
+	});
+
+	/* we don't need this function if we use a set width for pendingapproval buttons */
+	function updatePendingApprovalButtonWidths() {
+		var maxWidth = -1;
+		var approveAndDenyButtons = $('.pendingapproval button');
+		approveAndDenyButtons.each(function () {
+			var width = $(this ).width();
+			if (width >= maxWidth) {
+				maxWidth = width;
+			}
+		});
+		approveAndDenyButtons.each(function () {
+			$(this ).width(maxWidth);
+		})
+	}
+})();
+</script>
 </body>
 </html>

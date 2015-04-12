@@ -150,6 +150,19 @@ public class ApplicationTest {
         assertThat(UnapprovedUser.find.byId(userEmail)).isNotNull();
         assertThat(User.find.byId(userEmail)).isNull();
     }
+
+    @Test
+    public void accountCreation_NoExistingUnapprovedUser_RedirectsToLogin() {
+        Result result = callAction(
+                routes.ref.Application.addNewUser("non-unapproved-user-email@gmail.com"),
+                fakeRequest().withFormUrlEncodedBody(ImmutableMap.of(
+                        "password", "ThePassword",
+                        "passwordConfirm", "ThePassword"
+                ))
+        );
+
+        assertThat(status(result)).isEqualTo(303);
+    }
     
     @Test
     public void authenticated() {

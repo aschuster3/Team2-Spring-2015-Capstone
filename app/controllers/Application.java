@@ -162,6 +162,11 @@ public class Application extends Controller {
     public static Result addNewUser(String email) {
         Form<Password> filledForm = passwordForm.bindFromRequest();
         UnapprovedUser user = UnapprovedUser.find.byId(email);
+
+        if (user == null) {
+            return redirect(controllers.routes.Application.login());
+        }
+
         if (filledForm.hasGlobalErrors() || filledForm.hasErrors()) {
             return badRequest(passwordPage.render(filledForm, user));
         } else {

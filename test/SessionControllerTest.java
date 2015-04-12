@@ -161,7 +161,7 @@ public class SessionControllerTest {
     }
 
     @Test
-    public void getSession_nonexistantID_ReturnsSession() {
+    public void getSession_nonexistantID_ReturnsBadRequest() {
         Session session = new Session("id", "title", new Date(0));
         Session.create(session);
 
