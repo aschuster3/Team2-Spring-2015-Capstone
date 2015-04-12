@@ -38,22 +38,24 @@ public class TemplateControllerTest {
     public void createSessionTemplate(){
 		
 		User.create(new User("Admin", "User", "admin@gmail.com", "adminpassword", true));
+		ScheduleTemplate st = new ScheduleTemplate("test");
+		st.save();
 		
 		Result result = callAction(
-	                controllers.routes.ref.TemplateController.createSessionTemplate(),
+	                controllers.routes.ref.TemplateController.createSessionTemplate(st.title),
 	                fakeRequest().withSession("email", "admin@gmail.com")
 	                			.withFormUrlEncodedBody(ImmutableMap.of("title", "Clinic with Dr. Bob",
 	                					"week", "1",
 	                					"day", "2",
 	                					"isAM", "true"))
 	            );
-		assertThat(204).isEqualTo(status(result));
+		assertThat(status(result)).isEqualTo(303);
 		assertThat(SessionTemplate.find.where().eq("title", "Clinic with Dr. Bob").eq("week", 1)
 				.eq("day", 2).eq("isAM", true)).isNotNull();
     	assertThat(SessionTemplate.find.all().size()).isEqualTo(1);
 	        
     	result = callAction(
-                controllers.routes.ref.TemplateController.createSessionTemplate(),
+                controllers.routes.ref.TemplateController.createSessionTemplate(st.title),
                 fakeRequest().withSession("email", "admin@gmail.com")
                 			.withFormUrlEncodedBody(ImmutableMap.of("title", "Clinic with Dr. Bob",
                 					"week", "1",

@@ -64,7 +64,7 @@ GET           /admincalendar                             controllers.AdminContro
 #Template View
 GET           /templates                                 controllers.TemplateController.templates()
 POST          /templates                                 controllers.TemplateController.createScheduleTemplate()
-POST          /templates                                 controllers.TemplateController.createSessionTemplate()
+POST          /templates/:scheduleID                     controllers.TemplateController.createSessionTemplate(scheduleID: String)
 
 # End-of-rotation actions
 GET           /csv                                       controllers.AdminController.testViewCSVStuff()

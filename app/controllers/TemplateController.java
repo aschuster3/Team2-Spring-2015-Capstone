@@ -1,14 +1,17 @@
 package controllers;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import models.ScheduleTemplate;
 import models.Session;
 import models.SessionTemplate;
 import play.data.Form;
+import play.libs.Json;
 import play.mvc.*;
 import views.html.*;
 import play.data.validation.Constraints.Required;
+import play.data.validation.ValidationError;
 
 @With(SecuredAdminAction.class)
 public class TemplateController extends Controller {
@@ -46,12 +49,11 @@ public class TemplateController extends Controller {
         public int day;
         
         @Required
-        public boolean isAM;
+        public String isAM;
         
         public String schedule;
-       
+                       
         public String validate() {
-            
             if((title == null || title.equals(""))) {
                 return "Must have a title for the template";
             }
@@ -62,10 +64,9 @@ public class TemplateController extends Controller {
             	return "Must have a positive integer value between 1 and 7 for day.";
             }
             if(SessionTemplate.find.where().eq("title", title).eq("week", week).eq("day", day)
-            		.eq("isAM", isAM).findUnique()!=null){
-            	return "Session with title " + title + ", on week " + week + 
-					" day " + day + "in the " + isAM + " already exists in this schedule";
-            } //MIGHT BE AN ISSUE WITH MULTIPLE SESSIONS WITH SAME INFO BUT DIFFERENT SCHEDULES!!
+            		.eq("isAM", isAM).eq("schedule.title", schedule).findUnique()!=null){
+            	return "This session already exists in this schedule.";
+            } 
             
             return null;
         }
@@ -76,7 +77,7 @@ public class TemplateController extends Controller {
 	Form<PreTemplate> filledForm = templateForm.bindFromRequest();
         
         if (filledForm.hasGlobalErrors() || filledForm.hasErrors()) {
-            return badRequest(manageTemplates.render(ScheduleTemplate.find.all(), filledForm, sessionForm));
+            return badRequest(manageTemplates.render(ScheduleTemplate.find.all(), filledForm, sessionForm, ""));
         } else {
             PreTemplate template = filledForm.get();
             ScheduleTemplate.create(template.title);
@@ -84,29 +85,36 @@ public class TemplateController extends Controller {
         }
 	}
 	
-	public static Result createSessionTemplate(){
+	public static Result createSessionTemplate(String scheduleID){
 		Form<PreSession> filledForm = sessionForm.bindFromRequest();
-
+		/*adding schedule to form, converting a JSON and then rebinding so that it goes back through the
+		validator*/
+		PreSession template = filledForm.get();
+		template.schedule = scheduleID;
+		filledForm = sessionForm.bind(Json.toJson(template));
+        boolean AMtime = true;
+        if(template.isAM.equalsIgnoreCase("false")){
+        	AMtime = false;
+        }
+		
 		if (filledForm.hasGlobalErrors() || filledForm.hasErrors()) {
-            return badRequest(manageTemplates.render(ScheduleTemplate.find.all(), templateForm, filledForm));
-        } else {
-            PreSession template = filledForm.get();
-            SessionTemplate st = SessionTemplate.create(template.title, template.week, template.day, template.isAM);
-            //addSessionToSchedule(template.schedule, st.id);
-            //System.out.println(st.schedule.title);
-            return status(204);
+            return badRequest(manageTemplates.render(ScheduleTemplate.find.all(), templateForm, filledForm, scheduleID));
+        }
+		else {
+            SessionTemplate st = new SessionTemplate(template.title, template.week, template.day, AMtime);
+            return addSessionToSchedule(scheduleID, st);
         }
 	}
 	
 	public static Result templates(){
-		return ok(manageTemplates.render(ScheduleTemplate.find.all(), templateForm, sessionForm));
+		return ok(manageTemplates.render(ScheduleTemplate.find.all(), templateForm, sessionForm, ""));
 	}
 	
-	public static Result addSessionToSchedule(String scheduleTitle, String sessionID){
-		SessionTemplate session = SessionTemplate.find.byId(sessionID);
+	public static Result addSessionToSchedule(String scheduleTitle, SessionTemplate session){
+		//SessionTemplate session = SessionTemplate.find.byId(sessionID);
 		ScheduleTemplate schedule = ScheduleTemplate.find.byId(scheduleTitle);
 		if (session == null) {
-			return badRequest("add failed: session with id " + sessionID + " does not exist");
+			return badRequest("add failed: session with id " + session.id + " does not exist");
 		}
 		if (schedule == null) {
 			return badRequest("add failed: schedule with title " + scheduleTitle + " does not exist");
@@ -115,7 +123,8 @@ public class TemplateController extends Controller {
 			return badRequest("session with title " + session.title + ", on week "
 					+ session.week + " day " + session.day + "in the " + session.isAM + " already exists in this schedule");
 		}
-		return status(200);
+		schedule.save();
+		return redirect(routes.TemplateController.templates());
 		
 	}
 	

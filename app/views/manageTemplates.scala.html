@@ -1,4 +1,4 @@
-@(templates: java.util.List[models.ScheduleTemplate], templateForm: play.data.Form[TemplateController.PreTemplate], sessionForm: play.data.Form[TemplateController.PreSession])
+@(templates: java.util.List[models.ScheduleTemplate], templateForm: play.data.Form[TemplateController.PreTemplate], sessionForm: play.data.Form[TemplateController.PreSession], scheduleTitle: String = "")
 
 @import helper._
 @import java.math.BigInteger; var panelNum = 1
@@ -22,13 +22,6 @@
   
 </head>
 <body>
-  <script type="text/javascript">
-  var schedule = null;
-  function setSchedule(title){
-    schedule = title;
-  }
-  </script>
-
 
 <!-- Jumbotron and nav bar -->
 <div class="container">
@@ -77,7 +70,7 @@
 		    			}
 					</div>
 					<div class="pull-right">
-				  		<button type="button" class="btn btn-block btn-sm btn-warning" data-toggle="modal" data-target="#addSessionModal" onclick = "setSchedule(@template.title)">Add Session</button>
+				  		<button type="button" class="btn btn-block btn-sm btn-warning" data-toggle="modal" data-target="#addSessionModal" onclick = "setPath('@template.title')">Add Session</button>
 					</div>
 		    	</div>
 		    </div>
@@ -274,7 +267,10 @@
           <h4 class="modal-title">Create New Session</h4>
         </div>
         <div class="modal-body">
-          @form(routes.TemplateController.createSessionTemplate) {
+          @if(sessionForm.hasGlobalErrors()){
+            <p class="text-center"><font color = "red">@sessionForm.globalError.message</font></p>
+          }
+          @form(routes.TemplateController.createSessionTemplate("")) {
             @inputText(sessionForm("title"), 
             'type -> "text",
             'class -> "form-control", 
@@ -283,14 +279,14 @@
             '_label -> null,
             '_showConstraints -> false)
             @inputText(sessionForm("week"), 
-            'type -> "text",
+            'type -> "number",
             'class -> "form-control", 
             'id -> "inputSessionWeek",
             'placeholder -> "Week",
             '_label -> null,
             '_showConstraints -> false)
             @inputText(sessionForm("day"), 
-            'type -> "text",
+            'type -> "number",
             'class -> "form-control", 
             'id -> "inputSessionDay",
             'placeholder -> "Day",
@@ -301,16 +297,8 @@
             '_label -> "Time of Day",
             'id -> "inputSessionAM",
             '_showConstraints -> false)
-            @inputText(sessionForm("schedule"), 
-            'type -> "text",
-            'class -> "form-control", 
-            'id -> "inputSessionSchedule",
-            '_label -> null,
-            '_showConstraints -> false,
-            'style -> "display: none")
-          <button class="btn btn-inverse pull-right" data-dismiss="modal">Cancel</button>
+          <button id="cancelButton" class="btn btn-inverse pull-right" data-dismiss="modal">Cancel</button>
           <input role="button" class="btn btn-inverse pull-right" type="submit" value="Submit"></input> 
-          //need to figure out how to add the schedule variable to the sessionForm!
           }
         </div>
         <div class="modal-footer">
@@ -319,7 +307,45 @@
     </div>
   </div>
 
+
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+  <script type="text/javascript">
+    /*$("#cancelButton").click(clearForm);
+
+    function clearForm(){
+      console.log("roarrrr");
+      var form = $($("#addSessionModal form").get(0));
+      $(':input', form).each(function() {
+        var type = this.type;
+        var tag = this.tagName.toLowerCase(); // normalize case
+        // it's ok to reset the value attr of text inputs,
+        // password inputs, and textareas
+        if (type == 'text' || type == 'password' || tag == 'textarea')
+          this.value = "";
+        // checkboxes and radios need to have their checked state cleared
+        // but should *not* have their 'value' changed
+        else if (type == 'checkbox' || type == 'radio')
+          this.checked = false;
+        // select elements need to have their 'selectedIndex' property set to -1
+        // (this works for both single and multiple select elements)
+        else if (tag == 'select')
+          this.selectedIndex = -1;
+      });
+      $('#addSessionModal').modal('toggle');
+    }*/
+
+    function setPath(scheduleID){
+      console.log("this is a pain in my assssss");
+      $("#addSessionModal form").attr('action', @routes.TemplateController.createSessionTemplate("") + scheduleID)
+    }
+
+    @if(sessionForm.hasErrors || sessionForm.hasGlobalErrors){
+      console.log("I should not be here");
+
+      setPath('@scheduleTitle');
+      $('#addSessionModal').modal('show');
+    }
+  </script>
 </body>
 </html>
