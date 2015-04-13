@@ -44,7 +44,7 @@ DELETE        /sessions-api/rec/:sessionId               controllers.SessionCont
 
 # Learner Actions
 GET           /learners-api                              controllers.LearnerController.getLearners()
-PUT           /learners-api/:learnerOriginalEmail        controllers.LearnerController.updateLearner(learnerOriginalEmail: String)
+PUT           /learners-api/:learnerUUID                 controllers.LearnerController.updateLearner(learnerUUID: String)
 
 # Coordinator Learner Page
 GET           /students                                  controllers.CoordinatorController.students()
@@ -55,7 +55,7 @@ GET           /calendar                                  controllers.Coordinator
 
 # Admin View: Coordinators List
 GET           /coordinators                              controllers.AdminController.viewAllCoordinators()
-POST          /forgotPassword/:userEmail                 controllers.Application.sendNewPasswordToUser(userEmail: String)
+POST          /forgotPassword/:userUUID                  controllers.Application.sendNewPasswordToUser(userUUID: String)
 GET           /viewlearner                               controllers.AdminController.viewLearners()
 
 # Admin View: Calendar Page

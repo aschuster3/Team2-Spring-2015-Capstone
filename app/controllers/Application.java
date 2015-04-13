@@ -237,8 +237,8 @@ public class Application extends Controller {
     }
 
     @With(SecuredAdminAction.class)
-    public static Result sendNewPasswordToUser(String userEmail) {
-        User coordinator = User.find.byId(userEmail);
+    public static Result sendNewPasswordToUser(String userUUID) {
+        User coordinator = User.find.where().eq("uuid", userUUID).findUnique();
         if (coordinator == null) {
             return badRequest(views.html.coordinatorsPage.render(
                     UnapprovedUser.getAll(),
@@ -248,8 +248,8 @@ public class Application extends Controller {
 
         try {
             String token = UUID.randomUUID().toString();
-            sendResetPasswordEmail(userEmail, token);
-            UserReset.create(userEmail, token);
+            sendResetPasswordEmail(coordinator.email, token);
+            UserReset.create(coordinator.email, token);
             return status(NO_CONTENT);
         } catch (MalformedURLException e) {
             return internalServerError("Server error: unable to generate valid URL for password reset page.");

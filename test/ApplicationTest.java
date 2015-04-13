@@ -234,10 +234,11 @@ public class ApplicationTest {
 
     @Test
     public void adminInitiatedPasswordResetSuccess() {
-        User.create(new User("first", "last", "email@gmail.com", "password", false));
+        User user = new User("first", "last", "email@gmail.com", "password", false);
+        User.create(user);
 
         Result result = callAction(
-                controllers.routes.ref.Application.sendNewPasswordToUser("email@gmail.com"),
+                controllers.routes.ref.Application.sendNewPasswordToUser(user.uuid),
                 fakeRequest().withSession("email", ADMIN_EMAIL)
         );
 
@@ -248,7 +249,7 @@ public class ApplicationTest {
     @Test
     public void adminInitiatedPasswordResetFail() {
         Result result = callAction(
-                controllers.routes.ref.Application.sendNewPasswordToUser("unregisteredUser@gmail.com"),
+                controllers.routes.ref.Application.sendNewPasswordToUser("unused_uuid"),
                 fakeRequest().withSession("email", ADMIN_EMAIL)
         );
 

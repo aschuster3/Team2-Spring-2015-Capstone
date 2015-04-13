@@ -36,24 +36,29 @@ public class LearnerController extends Controller {
      * On success, returns the entire Learner entity as JSON.
      */
     @BodyParser.Of(BodyParser.Json.class)
-    public static Result updateLearner(String learnerOriginalEmail) {
+    public static Result updateLearner(String learnerUUID) {
         JsonNode learnerJson = request().body().asJson();
         Learner updatedLearnerData = Json.fromJson(learnerJson, Learner.class);
-        Learner existingLearner = Learner.find.byId(learnerOriginalEmail);
+        Learner existingLearner = Learner.find.where().eq("uuid", learnerUUID).findUnique();
 
         if (existingLearner == null) {
             return badRequest("Learner ID does not exist");
         }
 
         // we don't allow changing ownership of a learner
-        // (also, we don't currently pass this value as JSON)
+        //
+        // we don't allow changing uuid of a learner
+        //
+        // (also, we don't currently pass these as JSON)
         updatedLearnerData.ownerEmail = existingLearner.ownerEmail;
+        updatedLearnerData.uuid = learnerUUID;
 
         String errorMessage = updatedLearnerData.validate();
         if (errorMessage != null) {
             return badRequest(errorMessage);
         }
 
+        String learnerOriginalEmail = existingLearner.email;
         if (updatedLearnerData.email.equals(learnerOriginalEmail)) {
             updatedLearnerData.update();
             return ok(Json.toJson(Learner.find.byId(updatedLearnerData.email)));

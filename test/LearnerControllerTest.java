@@ -106,7 +106,7 @@ public class LearnerControllerTest {
         learnerA.learnerType = "Some New Type";
 
         Result result = callAction(
-                routes.ref.LearnerController.updateLearner(LEARNER_A_EMAIL),
+                routes.ref.LearnerController.updateLearner(learnerA.uuid),
                 fakeRequest()
                         .withSession("email", COORDINATOR_A_EMAIL)
                         .withJsonBody(Json.toJson(learnerA))
@@ -131,7 +131,7 @@ public class LearnerControllerTest {
         String newEmail = "new_email@gmail.com";
         learner.email = newEmail;
         Result result = callAction(
-                routes.ref.LearnerController.updateLearner(oldEmail),
+                routes.ref.LearnerController.updateLearner(learner.uuid),
                 fakeRequest()
                         .withSession("email", COORDINATOR_A_EMAIL)
                         .withJsonBody(Json.toJson(learner))

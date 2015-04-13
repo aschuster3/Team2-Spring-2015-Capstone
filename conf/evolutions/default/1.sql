@@ -5,10 +5,12 @@
 
 create table learner (
   email                     varchar(255) not null,
+  uuid                      varchar(255),
   first_name                varchar(255),
   last_name                 varchar(255),
   owner_email               varchar(255),
   learner_type              varchar(255),
+  constraint uq_learner_uuid unique (uuid),
   constraint pk_learner primary key (email))
 ;
 
@@ -58,12 +60,14 @@ create table unapproved_user (
 
 create table user (
   email                     varchar(255) not null,
+  uuid                      varchar(255),
   password                  varchar(255),
   is_admin                  boolean,
   first_name                varchar(255),
   last_name                 varchar(255),
   phone_number              varchar(255),
   department                varchar(255),
+  constraint uq_user_uuid unique (uuid),
   constraint pk_user primary key (email))
 ;
 

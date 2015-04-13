@@ -2,6 +2,7 @@ package models;
 
 import java.util.*;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -26,6 +27,9 @@ public class User extends Model {
     @Email
     @Id
     public String email;
+
+    @Column(unique=true)
+    public String uuid;
 
     /**
      * Once user is created (via User.create),
@@ -100,6 +104,7 @@ public class User extends Model {
     public static void create(User user) {
         user.phoneNumber = PhoneNumberFormatter.safeTransformToCommonFormat(user.phoneNumber);
         user.password = PasswordUtil.encrypt(user.password);
+        user.uuid = UUID.randomUUID().toString();
         user.save();
     }
     

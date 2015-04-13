@@ -3,7 +3,9 @@ package models;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -41,16 +43,15 @@ public class Learner extends Model {
     @Id
     public String email;
 
-    @Required
+    @Column(unique=true)
+    public String uuid;
+
     public String firstName;
 
-    @Required
     public String lastName;
 
-    @Required
     public String ownerEmail;
 
-    @Required
     public String learnerType;
 
     public static Finder<String, Learner> find = new Finder<String, Learner>(
@@ -62,6 +63,7 @@ public class Learner extends Model {
         this.lastName = last;
         this.ownerEmail = ownerEmail;
         this.learnerType = learnerType;
+        this.uuid = UUID.randomUUID().toString();
     }
 
     public Learner(String email, String first, String last, String ownerEmail) {
