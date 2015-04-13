@@ -302,7 +302,6 @@ angular.module('mwl.calendar')
 
           // currently:  from Learner.LEARNER_TYPES
           $scope.allLearnerTypes = [
-            "Sub-I",
             "Sub-I Medical Student",
             "Ambulatory Medical Student",
             "Dermatology Resident",
@@ -317,7 +316,7 @@ angular.module('mwl.calendar')
             "Physician Assistant Student",
             "Pediatrics Allergy Fellow",
             "International Student",
-            "Pre-Med Student"
+            "Pre-Med Student",
           ];
 
           $scope.toggleLearnerTypeChecked = toggleLearnerTypeChecked;

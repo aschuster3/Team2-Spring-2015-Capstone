@@ -42,7 +42,7 @@
 </div>
 
 <div class="container">
-	<h4>Coordinators Pending Approval</h4>
+	<h4>External Residency Coordinators Requesting Access</h4>
 	
     <div class="panel panel-default">
 	@for((unapproved, index) <- unapprovedCoordinators.zipWithIndex) {
@@ -76,7 +76,7 @@
 </div>
 
 <div class="container">
-	<h4>Current Coordinators</h4>
+	<h4>Residency Coordinators with Access to Schedule</h4>
 	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 	
 	@for((coord, index) <- approvedCoordinators.zipWithIndex) {

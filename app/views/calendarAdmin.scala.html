@@ -56,12 +56,9 @@
                 <button class="btn btn-inverse" ng-click="calendarControl.next()">Next</button>
               </div>
 
-              <div class="btn-group">
-                <label class="btn btn-inverse" ng-model="calendarView" btn-radio="'month'">Month</label>
-                <label class="btn btn-inverse" ng-model="calendarView" btn-radio="'week'">Week</label>
-              </div>
+              <div class="btn btn-info btn-space" id="event-editor" ng-click="showModalForCreate()">New Half-Day Session</div>
+              <div class="btn btn-inverse" id="event-editor" ng-click="showModalForCreate()">Add Template to Schedule</div>
 
-              <div class="btn btn-info" id="event-editor" ng-click="showModalForCreate()">New Event</div>
               <div class="clearfix"></div>
 
             </div>
@@ -93,7 +90,7 @@
             </div>
             <form name="eventForm" novalidate>
               <div class="modal-body">
-                <div class="col-md-6 pull-left session-left">
+                <div class="col-md-5 pull-left session-left">
                     
                     
                     <p class="tablehead">Location</p>
@@ -157,6 +154,12 @@
                         Weekly
                       </label>
                     </div>
+                    <div class="radio-inline">
+                      <label>
+                        <input type="radio" ng-model="event.recurringType" ng-value="REC_TYPE_MONTHLY">
+                        Monthly
+                        </label>
+                      </div>
                     <br>
               
                     
@@ -173,7 +176,7 @@
                 </div>
                 
 
-                <div class="col-md-6 pull-left session-right">
+                <div class="col-md-5 pull-left session-right">
                     <p class="tablehead">Learner Types</p>
            
                     <div class="checkbox" ng-repeat="learnerType in allLearnerTypes">
