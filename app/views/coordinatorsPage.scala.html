@@ -92,7 +92,7 @@
 				<div class="panel-body">
 					<h6>Name:
 						<span class="pull-right">
-						@form(routes.Application.sendNewPasswordToUser(coord.email)) {
+						@form(routes.Application.sendNewPasswordToUser(coord.uuid)) {
 							<button class="btn btn-lg btn-primary btn-block btn-sm btn-inverse approveButton" type="submit" data-toggle="modal" data-target="#passwordResetModal">Reset Password</button>
 						}
 						</span></h6>  @coord.firstName @coord.lastName
