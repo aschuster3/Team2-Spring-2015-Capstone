@@ -129,11 +129,9 @@ dl{
 	margin-bottom: 0px;
 	margin-top: 10px;
 }
-<<<<<<< Updated upstream
 .pendingapproval .pull-right{
 	width: 10%;
 }
-=======
 
 .session-left{
 	margin-right: 60px;
@@ -142,4 +140,8 @@ dl{
 .session-footer{
 	margin-top: 600px;
 }
->>>>>>> Stashed changes
+
+#createLearnerPanel span{
+	padding-left: 10px;
+	color: red;
+}

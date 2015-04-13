@@ -144,7 +144,7 @@ public class Learner extends Model {
         public String validate() {
 
             if((firstName == null && !firstName.equals("")) || (lastName == null && !lastName.equals(""))) {
-                return "Must have a name for the student";
+                return "Must have a name for the student.";
             }
 
             Constraints.EmailValidator val = new Constraints.EmailValidator();

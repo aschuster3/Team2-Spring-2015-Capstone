@@ -10,6 +10,7 @@ import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
+import play.twirl.api.Html;
 import views.html.calendarCoordinator;
 import views.html.studentsPage;
 
@@ -25,13 +26,7 @@ public class CoordinatorController extends Controller {
         if(user.isAdmin) {
             return redirect(routes.Application.index());
         } else {
-            List<Learner> learners = Learner.getAllOwnedBy(email);
-            HashMap<String, List<Session>> learnerSchedules = new HashMap<String, List<Session>>();
-            for(Learner l: learners) {
-                learnerSchedules.put(l.email, Session.getLearnerSchedule(l.email));
-            }
-            
-            return ok(studentsPage.render(learners, learnerSchedules, Learner.LEARNER_TYPES, learnerForm));
+            return ok(studentsPageRenderWithForm(email, learnerForm));
         }
     }
 
@@ -40,20 +35,24 @@ public class CoordinatorController extends Controller {
         String ownerEmail = session().get("email");
         
         // Fix need for Owner info
-        
+
         if (filledForm.hasGlobalErrors() || filledForm.hasErrors()) {
-            List<Learner> learners = Learner.getAllOwnedBy(ownerEmail);
-            HashMap<String, List<Session>> learnerSchedules = new HashMap<String, List<Session>>();
-            for(Learner l: learners) {
-                learnerSchedules.put(l.email, Session.getLearnerSchedule(l.email));
-            }
-            
-            return badRequest(studentsPage.render(learners, learnerSchedules, Learner.LEARNER_TYPES, filledForm));
-        } else {
-            Learner.PreLearner learner = filledForm.get();
-            Learner.create(learner.email, learner.firstName, learner.lastName, learner.learnerType, ownerEmail);
-            return redirect(routes.CoordinatorController.students());
+            return badRequest(studentsPageRenderWithForm(ownerEmail, filledForm));
         }
+
+        Learner.PreLearner learner = filledForm.get();
+
+        /*
+         * Leaving this out of PreLearner.validate so that validate can
+         * be used for updating Learners, too.
+         */
+        if (Learner.find.byId(learner.email) != null) {
+            filledForm.reject("This email is already in use for a student");
+            return badRequest(studentsPageRenderWithForm(ownerEmail, filledForm));
+        }
+
+        Learner.create(learner.email, learner.firstName, learner.lastName, learner.learnerType, ownerEmail);
+        return redirect(routes.CoordinatorController.students());
     }
 
     public static Result updateLearner(String learnerEmail) {
@@ -62,6 +61,15 @@ public class CoordinatorController extends Controller {
 
     public static Result viewCoordinatorCalendar() {
         return ok(calendarCoordinator.render(Learner.getAllOwnedBy(session().get("email"))));
+    }
+
+    private static Html studentsPageRenderWithForm(String ownerEmail, Form<Learner.PreLearner> form) {
+        List<Learner> learners = Learner.getAllOwnedBy(ownerEmail);
+        HashMap<String, List<Session>> learnerSchedules = new HashMap<String, List<Session>>();
+        for(Learner l: learners) {
+            learnerSchedules.put(l.email, Session.getLearnerSchedule(l.email));
+        }
+        return studentsPage.render(learners, learnerSchedules, Learner.LEARNER_TYPES, form);
     }
 
 }

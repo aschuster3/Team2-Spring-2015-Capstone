@@ -10,6 +10,7 @@ import static play.test.Helpers.status;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import controllers.routes;
 import models.Learner;
 import models.UnapprovedUser;
 import models.User;
@@ -72,5 +73,26 @@ public class CoordinatorControllerTest {
         assertThat(400).isEqualTo(status(result));
         Learner stu = Learner.find.byId("student@college.edu");
         assertThat(stu).isNull();
+    }
+
+    @Test
+    public void createrLearner_FailsIfLearnerExists() {
+        new Learner("email@gmail.com", "first", "last", "fullhouse@gmail.com", "type").save();
+
+        Result result = callAction(
+                routes.ref.CoordinatorController.createLearner(),
+                fakeRequest()
+                        .withSession("email", "fullhouse@gmail.com")
+                        .withFormUrlEncodedBody(ImmutableMap.of(
+                                "email", "email@gmail.com",
+                                "firstName", "some name",
+                                "lastName", "some last name",
+                                "learnerType", "type"
+                        ))
+        );
+
+        assertThat(status(result)).isEqualTo(400);
+        Learner existingLearner = Learner.find.byId("email@gmail.com");
+        assertThat(existingLearner.firstName).isEqualTo("first");
     }
 }

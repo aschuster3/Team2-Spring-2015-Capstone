@@ -59,18 +59,10 @@
 		    </div>
 		    <div id="collapse@panelNum" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading@panelNum">
 		    	<div class="panel-body">
-<<<<<<< Updated upstream
 		    		<div class="col-md-3 learnerInfo">
 						<h6 class="student">Name:</h6><p class = "session"><span class="learnerFirstName">@learner.firstName</span> <span class="learnerLastName">@learner.lastName</span></p>
 						<h6 class="student">E-mail:</h6><p class = "session learnerEmail">@learner.email</p>
 						<h6 class="type">Type:</h6><p class = "session learnerLearnerType">@learner.learnerType</p>
-=======
-		    		<div class = "col-md-4">
-						<h6 class="student">Name:</h6>@learner.firstName @learner.lastName
-						<h6 class="student">E-mail:</h6>@learner.email
-						<h6 class="student">Type:</h6>@learner.learnerType
-						<br>
->>>>>>> Stashed changes
 						<br>
 						<button type="button" class="btn btn-sm btn-warning editButton">Edit</button>
 					</div>
@@ -113,7 +105,7 @@
 		@(panelNum += 1)
 		}
 	</div>
-	<a class="btn btn-inverse" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+	<a class="btn btn-inverse" data-toggle="collapse" href="#createLearnerPanel" aria-expanded="false" aria-controls="createLearnerPanel">
 		Add Student
 	</a>
 
@@ -121,7 +113,7 @@
 		If the user submitted an invalid form, we want them to see this form immediately.
 		So, don't set the class to 'collapse' for the above scenario!
 	 *@
-	<div class="@(if (learnerForm.hasErrors() || learnerForm.hasGlobalErrors()) "" else "collapse") submitform" id="collapseExample">
+	<div class="@(if (learnerForm.hasErrors() || learnerForm.hasGlobalErrors()) "" else "collapse") submitform" id="createLearnerPanel">
 		@form(routes.CoordinatorController.createLearner) {
 		  @inputText(learnerForm("firstName"),
 		      'type -> "text",
@@ -152,6 +144,9 @@
 		  	  '_default -> "Learner Type",
 		      '_showConstraints -> false)
           <input role="button" class="btn btn-inverse" type="submit" value="Submit"></input>
+		  @if(learnerForm.hasGlobalErrors()) {
+			  <span class="learnerFormError">@learnerForm.globalError().message()</span>
+		  }
 		}
 	</div>
 </div>
@@ -167,6 +162,22 @@
 *@
 <script>
 (function() {
+
+	/* So that the user doesn't have to scroll to view the create form */
+	$('.submitform' ).on('shown.bs.collapse', function (evt) {
+		scrollTo(this);
+		setCursorAtFirstInputOf(this);
+	});
+
+	function scrollTo(elem) {
+		$('html,body' ).animate({
+			scrollTop: $(elem ).offset( ).top
+		}, 500);
+	}
+
+	function setCursorAtFirstInputOf(elem) {
+		$('input', elem ).get(0 ).focus();
+	}
 
 	$('.editButton').each(function (index, button) {
 		$(button).click(function () {
