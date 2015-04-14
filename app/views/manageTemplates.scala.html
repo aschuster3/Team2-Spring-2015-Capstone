@@ -187,11 +187,11 @@
     });
 
     function clearForm() {
-      console.log("roarrrr");
 
       $('.formGlobalError', addSessionModalElement ).remove();
 
       var form = $("form", addSessionModalElement).get(0);
+
       $(':input', form).each(function() {
         var type = this.type;
         var tag = this.tagName.toLowerCase();
@@ -205,13 +205,10 @@
     }
 
     function setPath(scheduleID){
-      console.log("this is a pain in my assssss");
       $("form", addSessionModalElement).attr('action', @routes.TemplateController.createSessionTemplate("") + scheduleID)
     }
 
     @if(sessionForm.hasErrors || sessionForm.hasGlobalErrors){
-      console.log("I should not be here");
-
       setPath('@scheduleTitle');
       addSessionModalElement.modal('show');
     }
