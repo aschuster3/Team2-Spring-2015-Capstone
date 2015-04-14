@@ -165,3 +165,10 @@ dl{
 .btn-space{
 	margin-right: 15px;
 }
+
+a.edit-remove{
+	color: #34495e;
+}
+.modal-footer{
+	border-top: 0px;
+}
