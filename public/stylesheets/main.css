@@ -11,18 +11,25 @@ h6{
 a.faqs:hover,
 a.faqs:active,
 a.faqs{
-	color: #555555;
-	line-height: .6;
+	color: #2323B0;
+	line-height: 1.6;
 	font-size: 16px;
 }
 
 p.faqs{
 	margin-bottom: 0px;
+	line-height: 1;
 }
 h4.faqs,
 h5.faqs,
 h6.faqs {
 	color: rgb(0,40,120);
+}
+h6.faqs{
+	margin-top: 15px;
+	margin-bottom: 5px;
+	padding-top: 0px;
+	padding-bottom: 0px;
 }
 p{
 	font-family: 'Lora', serif;
@@ -171,4 +178,11 @@ a.edit-remove{
 }
 .modal-footer{
 	border-top: 0px;
+}
+.welcome{
+	margin-top: 0px;
+	margin-bottom: 15px;
+}
+.new-user{
+	margin-left: 35%;
 }
