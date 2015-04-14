@@ -77,4 +77,16 @@ public class LearnerController extends Controller {
     private static boolean learnerEmailUnchanged(String updatedEmail, String originalEmail) {
         return updatedEmail == null || updatedEmail.equals(originalEmail);
     }
+
+    /**
+     * This does not perform a cascading delete on sessions.
+     * Instead, it frees the learner's sessions.
+     */
+    public static Result ajaxDeleteLearner(String learnerUUID) {
+        Learner learnerToDelete = Learner.find.where().eq("uuid", learnerUUID).findUnique();
+        if (learnerToDelete != null) {
+            Learner.deleteLearnerButFreeTheirSessions(learnerToDelete);
+        }
+        return status(NO_CONTENT);
+    }
 }

@@ -1,5 +1,6 @@
 import static org.fest.assertions.Assertions.assertThat;
 import static play.mvc.Http.Status.OK;
+import static play.mvc.Http.Status.SEE_OTHER;
 import static play.test.Helpers.callAction;
 import static play.test.Helpers.fakeApplication;
 import static play.test.Helpers.fakeGlobal;
@@ -94,5 +95,25 @@ public class CoordinatorControllerTest {
         assertThat(status(result)).isEqualTo(400);
         Learner existingLearner = Learner.find.byId("email@gmail.com");
         assertThat(existingLearner.firstName).isEqualTo("first");
+    }
+
+    @Test
+    public void createLearner_SupportsOtherLearnerType() {
+        Result result = callAction(
+                routes.ref.CoordinatorController.createLearner(),
+                fakeRequest()
+                        .withSession("email", "fullhouse@gmail.com")
+                        .withFormUrlEncodedBody(ImmutableMap.of(
+                                "email", "new_email@gmail.com",
+                                "firstName", "First",
+                                "lastName", "Last",
+                                "learnerType", "Other",
+                                "otherLearnerType", "Another Learner Type"
+                        ))
+        );
+
+        Learner createdLearner = Learner.find.byId("new_email@gmail.com");
+        assertThat(status(result)).isEqualTo(SEE_OTHER);
+        assertThat(createdLearner.learnerType).isEqualTo("Another Learner Type");
     }
 }

@@ -51,8 +51,20 @@ public class CoordinatorController extends Controller {
             return badRequest(studentsPageRenderWithForm(ownerEmail, filledForm));
         }
 
+        if (learnerFormUsesOtherLearnerType(filledForm)) {
+            learner.learnerType = filledForm.data().get("otherLearnerType");
+        }
+
         Learner.create(learner.email, learner.firstName, learner.lastName, learner.learnerType, ownerEmail);
         return redirect(routes.CoordinatorController.students());
+    }
+
+    private static boolean learnerFormUsesOtherLearnerType(Form<Learner.PreLearner> validFilledForm) {
+        String learnerType = validFilledForm.data().get("learnerType");
+        String otherLearnerType = validFilledForm.data().get("otherLearnerType");
+        return learnerType.toLowerCase().startsWith("other")
+                && otherLearnerType != null
+                && !otherLearnerType.isEmpty();
     }
 
     public static Result updateLearner(String learnerEmail) {

@@ -74,7 +74,7 @@
 					</div>
 					<div class = "col-md-2">
 						<button type="button" class="btn btn-sm btn-inverse emailBtn pull-right">E-mail Schedule to Student</button>
-						<button type="button" class="btn btn-sm btn-danger editButton pull-right">Delete Student</button>
+						<button type="button" class="btn btn-sm btn-danger editButton learnerDeleteButton pull-right" data-learner-uuid="@learner.uuid">Delete Student</button>
 					</div>
 		    	</div>
 		    </div>
@@ -91,5 +91,29 @@
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script>
+	$('.learnerDeleteButton' ).on('click', function () {
+		var learnerUUID = $(this ).data('learner-uuid');
+		var panelToRemove = $(this ).closest('.panel');
+		makeAjaxDeleteCall(learnerUUID, panelToRemove);
+	});
+
+	function makeAjaxDeleteCall(learnerUUID, panelToRemove) {
+		$.ajax({
+			type: 'DELETE',
+			url: routeForDelete(learnerUUID),
+			success: function () {
+				console.log(panelToRemove);
+				$(panelToRemove ).remove();
+			}
+		});
+	}
+
+	function routeForDelete(learnerUUID) {
+		return '@routes.LearnerController.ajaxDeleteLearner("")' + encodeURIComponent(learnerUUID);
+	}
+
+</script>
+
 </body>
 </html>

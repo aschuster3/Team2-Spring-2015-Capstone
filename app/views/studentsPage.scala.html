@@ -83,7 +83,9 @@
 								@for(learnerType <- learnerTypeOptions) {
 								<option value="@learnerType">@learnerType</option>
 								}
+								<option value="other">Other - Please specify below</option>
 							</select>
+							<div class="learnerInputField"><input type="text" class="form-control editOtherLearnerTypeInput" placeholder="Other Learner Type"></div>
 						</div>
 						<br>
 						<button type="button" class="btn btn-sm btn-warning saveButton">Save</button>
@@ -137,13 +139,19 @@
               '_label -> null,
               '_showConstraints -> false)
 		  @select(learnerForm("learnerType"),
-		      options(learnerTypeOptions),
+		      options(learnerTypeOptions :+ "Other - Please specify below"),
 		      'class -> "form-control",
 		      'placeholder -> "Learner Type",
 		      '_label -> null,
 		  	  '_default -> "Learner Type",
 		      '_showConstraints -> false)
-          <input role="button" class="btn btn-inverse" type="submit" value="Submit"></input>
+		  @inputText(learnerForm("otherLearnerType"),
+			  'type -> "text",
+			  'class -> "form-control",
+			  'placeholder -> "Other Learner Type",
+			  '_label -> null,
+			  '_showConstraints -> false)
+          <input role="button" class="btn btn-inverse" type="submit" value="Submit">
 		  @if(learnerForm.hasGlobalErrors()) {
 			  <span class="learnerFormError">@learnerForm.globalError().message()</span>
 		  }
@@ -161,6 +169,48 @@
 	see (http://stackoverflow.com/questions/11133059/play-2-x-how-to-make-an-ajax-request-with-a-common-button)
 *@
 <script>
+
+	var learnerTypeSelector = $('#learnerType');
+	var otherLearnerTypeContainer = $('#otherLearnerType_field');
+	var otherLearnerTypeInput = $('input', otherLearnerTypeContainer);
+	configureOtherToggling(
+			learnerTypeSelector,
+			otherLearnerTypeInput,
+			otherLearnerTypeContainer
+	);
+
+	$('.editForm' ).each(function () {
+		var editLearnerTypeSelector = $('select', this);
+		var editOtherLearnerTypeInput = $('.editOtherLearnerTypeInput', this);
+		var editOtherLearnerTypeContainer = $('select + div', this);
+		configureOtherToggling(
+				editLearnerTypeSelector,
+				editOtherLearnerTypeInput,
+				editOtherLearnerTypeContainer
+		);
+	});
+
+
+	function configureOtherToggling(selector, otherInput, otherContainer) {
+		selector.on('change', function () {
+			otherInput.val('');
+			updateVisibilityOfOtherContainer(selector, otherContainer);
+		});
+
+		function updateVisibilityOfOtherContainer(selector, otherContainer) {
+			if (otherIsSelected(selector)) {
+				otherContainer.show();
+			} else {
+				otherContainer.hide();
+			}
+		}
+
+		updateVisibilityOfOtherContainer(selector, otherContainer);
+	}
+
+	function otherIsSelected(selector) {
+		return selector.val( ).toLowerCase( ).indexOf('other') === 0;
+	}
 
 	/* So that the user doesn't have to scroll to view the create form */
 	$('.submitform' ).on('shown.bs.collapse', function (evt) {
@@ -221,7 +271,7 @@
 		$('.learnerFirstName', infoElem ).text(learnerValues.firstName);
 		$('.learnerLastName', infoElem ).text(learnerValues.lastName);
 		$('.learnerEmail', infoElem ).text(learnerValues.email);
-		$('.learnerLearnerType', infoElem ).val(learnerValues.learnerType);
+		$('.learnerLearnerType', infoElem ).text(learnerValues.learnerType);
 	}
 
 	function updateLearnerHeaderWith(index, newName) {
@@ -239,7 +289,23 @@
 		$(inputElems[1] ).val(currentValues['lastName']);
 		$(inputElems[2] ).val(currentValues['email']);
 
-		$('select', formElem ).val(currentValues['learnerType']);
+		if (learnerTypeOptionsContains(currentValues['learnerType'])) {
+			$('select', formElem ).val(currentValues['learnerType']);
+		} else {
+			$('select', formElem ).val('other' ).change();
+			$(inputElems[3] ).val(currentValues['learnerType']);
+		}
+	}
+
+	function learnerTypeOptionsContains(learnerType) {
+		var contains = false;
+
+		$('select' ).first( ).children( ).each(function () {
+			if ($(this ).val() === learnerType) {
+				contains = true;
+			}
+		});
+		return contains;
 	}
 
 	// returns an object, where keys are learner property names
@@ -263,7 +329,13 @@
 		learnerValues.firstName = $(inputElems[0] ).val();
 		learnerValues.lastName = $(inputElems[1] ).val();
 		learnerValues.email = $(inputElems[2] ).val();
-		learnerValues.learnerType = $('select', formElem ).val();
+
+		var learnerTypeSelector = $('select', formElem);
+		if (otherIsSelected(learnerTypeSelector)) {
+			learnerValues.learnerType = $('.editOtherLearnerTypeInput', formElem ).val();
+		} else {
+			learnerValues.learnerType = learnerTypeSelector.val();
+		}
 
 		return learnerValues;
 	}
