@@ -21,9 +21,11 @@ create table recurring_session_group (
 ;
 
 create table schedule_template (
-  title                     varchar(255) not null,
+  uuid                      varchar(255) not null,
+  title                     varchar(255),
   learner_type              varchar(255),
-  constraint pk_schedule_template primary key (title))
+  constraint uq_schedule_template_title unique (title),
+  constraint pk_schedule_template primary key (uuid))
 ;
 
 create table session (
@@ -46,7 +48,7 @@ create table session_template (
   week                      integer,
   day                       integer,
   is_am                     boolean,
-  schedule_title            varchar(255),
+  schedule_uuid             varchar(255),
   constraint pk_session_template primary key (id))
 ;
 
@@ -95,8 +97,8 @@ create sequence user_seq;
 
 create sequence user_reset_seq;
 
-alter table session_template add constraint fk_session_template_schedule_1 foreign key (schedule_title) references schedule_template (title) on delete restrict on update restrict;
-create index ix_session_template_schedule_1 on session_template (schedule_title);
+alter table session_template add constraint fk_session_template_schedule_1 foreign key (schedule_uuid) references schedule_template (uuid) on delete restrict on update restrict;
+create index ix_session_template_schedule_1 on session_template (schedule_uuid);
 
 
 

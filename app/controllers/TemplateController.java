@@ -77,15 +77,15 @@ public class TemplateController extends Controller {
             	return "Must have a positive integer value between 1 and 7 for day.";
             }
             if(SessionTemplate.find.where().eq("location", location).eq("physician", physician).eq("week", week).eq("day", day)
-            		.eq("isAM", isAM).eq("schedule.title", schedule).findUnique()!=null){
+            		.eq("isAM", isAM).eq("schedule.uuid", schedule).findUnique()!=null){
             	return "This session already exists in this schedule.";
             } 
             if(SessionTemplate.find.where().eq("physician", physician).eq("week", week).eq("day", day)
-            		.eq("isAM", isAM).eq("schedule.title", schedule).findUnique()!=null){
+            		.eq("isAM", isAM).eq("schedule.uuid", schedule).findUnique()!=null){
             	return physician + " is already booked at this time.";
             } 
             if(SessionTemplate.find.where().eq("week", week).eq("day", day)
-            		.eq("isAM", isAM).eq("schedule.title", schedule).findUnique()!=null){
+            		.eq("isAM", isAM).eq("schedule.uuid", schedule).findUnique()!=null){
             	return "Session already exists at this time on this day in this schedule.";
             } 
             return null;
@@ -109,6 +109,10 @@ public class TemplateController extends Controller {
 		Form<PreSession> filledForm = sessionForm.bindFromRequest();
 		/*adding schedule to form, converting a JSON and then rebinding so that it goes back through the
 		validator*/
+		if(filledForm.errors().size()>1){
+			return badRequest(manageTemplates.render(ScheduleTemplate.find.all(), templateForm, filledForm, scheduleID, Learner.LEARNER_TYPES));
+		}
+		
 		PreSession template = filledForm.get();
 		template.schedule = scheduleID;
 		filledForm = sessionForm.bind(Json.toJson(template));
@@ -130,14 +134,14 @@ public class TemplateController extends Controller {
 		return ok(manageTemplates.render(ScheduleTemplate.find.all(), templateForm, sessionForm, "", Learner.LEARNER_TYPES));
 	}
 	
-	public static Result addSessionToSchedule(String scheduleTitle, SessionTemplate session){
+	public static Result addSessionToSchedule(String scheduleID, SessionTemplate session){
 		//SessionTemplate session = SessionTemplate.find.byId(sessionID);
-		ScheduleTemplate schedule = ScheduleTemplate.find.byId(scheduleTitle);
+		ScheduleTemplate schedule = ScheduleTemplate.find.where().eq("uuid", scheduleID).findUnique();
 		if (session == null) {
 			return badRequest("add failed: session with id " + session.id + " does not exist");
 		}
 		if (schedule == null) {
-			return badRequest("add failed: schedule with title " + scheduleTitle + " does not exist");
+			return badRequest("add failed: schedule with id " + scheduleID + " does not exist");
 		}
 		if(!schedule.addSession(session)){
 			return badRequest("session with physician " + session.physician + ", on week "

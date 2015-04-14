@@ -6,15 +6,20 @@ import javax.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 public class ScheduleTemplate extends Model {
 
-	@Id
+	@Column(unique=true)
+	@Required
 	public String title;
 	
 	@Required
 	public String learnerType;
+	
+	@Id
+    public String uuid;
 	
 	@Required
 	@OneToMany(mappedBy="schedule", cascade=CascadeType.ALL)
@@ -24,6 +29,7 @@ public class ScheduleTemplate extends Model {
 		this.title = title;
 		this.learnerType = learnerType;
 		this.sessions = new ArrayList<SessionTemplate>();
+        this.uuid = UUID.randomUUID().toString();
 	}
 	
 	public boolean addSession(SessionTemplate session){
