@@ -230,7 +230,7 @@ public class SessionController extends Controller {
     			Calendar cal = Calendar.getInstance();
     	        cal.setTime(startDate);
     	        cal.add(Calendar.DATE, days); 
-    			Session.create(new Session(session.title, cal.getTime(), session.isAM, scheduleID));
+    			Session.create(new Session(null, session.location, cal.getTime(), session.physician, session.isAM, scheduleID));
     		}
     	}
     	catch(Exception e){

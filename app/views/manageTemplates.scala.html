@@ -1,4 +1,4 @@
-@(templates: java.util.List[models.ScheduleTemplate], templateForm: play.data.Form[TemplateController.PreTemplate], sessionForm: play.data.Form[TemplateController.PreSession], scheduleTitle: String = "")
+@(templates: java.util.List[models.ScheduleTemplate], templateForm: play.data.Form[TemplateController.PreTemplate], sessionForm: play.data.Form[TemplateController.PreSession], scheduleTitle: String = "", learnerTypeOptions: List[String])
 
 @import helper._
 @import java.math.BigInteger; var panelNum = 1
@@ -67,7 +67,7 @@
 		    			<!-- CREATE LIST OF SESSIONS HERE -->
 		    			<h6>Sessions:</h6>
 		    			@for(s <- template.sessions) {
-		    				<p class="session">@s.title, @s.week, @s.day, @s.isAM</p>
+		    				<p class="session">@s.location, @s.physician, @s.week, @s.day, @s.isAM</p>
 		    			}
 					</div>
 					<div class="pull-right">
@@ -97,13 +97,19 @@
 
 	<div class="collapse submitform" id="collapseExample">
 		@form(routes.TemplateController.createScheduleTemplate) {
-		  @inputText(templateForm("title"), 
-		      'type -> "text",
-		      'class -> "form-control", 
-		      'id -> "inputTemplateName",
-		      'placeholder -> "Template Name",
-		      '_label -> null,
-		      '_showConstraints -> false)
+  		  @inputText(templateForm("title"), 
+	      'type -> "text",
+	      'class -> "form-control", 
+	      'id -> "inputTemplateName",
+	      '_label -> "Title",
+	      '_showConstraints -> false)
+        @select(templateForm("learnerType"),
+        options(learnerTypeOptions), 
+        'type -> "text",
+        'class -> "form-control", 
+        'id -> "inputTemplateLearner",
+        '_label -> "Learner Type",
+        '_showConstraints -> false)
           <input role="button" class="btn btn-inverse" type="submit" value="Submit"></input>
           
 		}
@@ -113,7 +119,75 @@
 
   <div id="addSessionModal" class="modal fade">
     <div class="modal-dialog">
-      <div class="modal-content">
+       <!-- <div class="modal-content">
+      <div class="modal-header">
+          <h4 class="modal-title">Create New Session</h4>
+        </div>
+        <form name="eventForm" novalidate>
+          <div class="modal-body">
+             <div class="col-md-5 pull-left session-left">
+               <p class="tablehead">Location</p>
+                    <div class="form-horizontal">
+                      <fieldset>
+                          <select
+                            class="form-control"
+                            ng-model="event.title"
+                            ng-options="clinic as clinic for clinic in clinicOptions"
+                            required>
+                          </select>
+                      </fieldset>
+                    </div>
+             
+                    
+                    <p class="tablehead">Physician on Duty</p>
+                    <td style="max-width: 85px">
+                      <input type="text" class="form-control" ng-model="event.physician">
+                    </td>
+                 
+                    <p class="tablehead">Time</p>
+                    <div class="radio-inline">
+                      <label>
+                        <input type="radio" ng-model="event.isAM" ng-value="{{true}}"
+                               ng-change="updateStartsAtEndsAt(event);" ng-required="!angular.isDefined(event.isAM)">
+                        AM
+                      </label>
+                    </div>
+                    <div class="radio-inline">
+                      <label>
+                        <input type="radio" ng-model="event.isAM" ng-value="{{false}}"
+                               ng-change="updateStartsAtEndsAt(event);" ng-required="!angular.isDefined(event.isAM)">
+                        PM
+                      </label>
+                    </div>
+                    <br>
+              
+                </div>
+                
+
+                <div class="col-md-5 pull-left session-right">
+                    <p class="tablehead">Learner Types</p>
+           
+                    <div class="checkbox" ng-repeat="learnerType in allLearnerTypes">
+                      <label><input type="checkbox"
+                                    value="{{learnerType}}"
+                                    ng-checked="learnerTypeIsChecked(event, learnerType)"
+                                    ng-click="toggleLearnerTypeChecked(event, learnerType)">{{ learnerType }}</label>
+                    </div>
+                </div>
+                
+
+              <div class="modal-footer session-modal-footer">
+                <button ng-show="!isCreateModal" class="btn btn-danger pull-left" ng-click="clickDelete()">Delete Event</button>
+                <button class="btn btn-inverse pull-right" ng-click="clickCancel()">Cancel</button>
+                <button ng-show="isCreateModal" ng-disabled="eventForm.$invalid" class="btn btn-inverse pull-right" ng-click="clickCreate()">Submit</button>
+                <button ng-show="!isCreateModal" ng-disabled="eventForm.$invalid" class="btn btn-inverse pull-right" ng-click="clickUpdate()">Save</button>
+              </div>
+            </form>
+          </div>
+      </div>-->
+
+
+     <div class="modal-content">
         <div class="modal-header">
           <h4 class="modal-title">Create New Session</h4>
         </div>
@@ -122,26 +196,30 @@
             <p class="text-center formGlobalError"><font color = "red">@sessionForm.globalError.message</font></p>
           }
           @form(routes.TemplateController.createSessionTemplate("")) {
-            @inputText(sessionForm("title"), 
+            @select(sessionForm("location"),
+            options = Seq("emory"->"Emory Clinic", "grady"->"Grady Clinic", "va" -> "VA Clinic", "telederm" -> "VA Telederm", "dermpath" -> "Emory Dermpath"), 
+            'type -> "text", 
+            'id -> "inputSessionLocation",
+            'class -> "form-control", 
+            '_label -> "Location",
+            '_showConstraints -> false)
+            @inputText(sessionForm("physician"), 
             'type -> "text",
             'class -> "form-control", 
-            'id -> "inputSessionName",
-            'placeholder -> "Session Name",
-            '_label -> null,
+            'id -> "inputSessionPhysician",
+            '_label -> "Physician on Duty",
             '_showConstraints -> false)
             @inputText(sessionForm("week"), 
             'type -> "number",
             'class -> "form-control", 
             'id -> "inputSessionWeek",
-            'placeholder -> "Week",
-            '_label -> null,
+            '_label -> "Week of Rotation",
             '_showConstraints -> false)
             @inputText(sessionForm("day"), 
             'type -> "number",
             'class -> "form-control", 
             'id -> "inputSessionDay",
-            'placeholder -> "Day",
-            '_label -> null,
+            '_label -> "Day of the Week (1 = Monday, 2 = Tuesday, etc.)",
             '_showConstraints -> false)
             @inputRadioGroup(sessionForm("isAM"), 
             options = Seq("True"->"AM", "False"->"PM"),
@@ -152,8 +230,7 @@
           <input role="button" class="btn btn-inverse pull-right" type="submit" value="Submit"></input> 
           }
         </div>
-        <div class="modal-footer">
-        </div>
+        <div class="modal-footer"></div>
       </div>
     </div>
   </div>

@@ -14,11 +14,15 @@ public class ScheduleTemplate extends Model {
 	public String title;
 	
 	@Required
+	public String learnerType;
+	
+	@Required
 	@OneToMany(mappedBy="schedule", cascade=CascadeType.ALL)
 	public List<SessionTemplate> sessions;
 	
-	public ScheduleTemplate(String title){
+	public ScheduleTemplate(String title, String learnerType){
 		this.title = title;
+		this.learnerType = learnerType;
 		this.sessions = new ArrayList<SessionTemplate>();
 	}
 	
@@ -37,12 +41,24 @@ public class ScheduleTemplate extends Model {
 		return result;
 	}
 	
-	public static void create(String title){
-		ScheduleTemplate st = new ScheduleTemplate(title);
+	public static void create(String title, String learnerType){
+		ScheduleTemplate st = new ScheduleTemplate(title, learnerType);
 		st.save();
 	}
 	
-	//NEED TO ADD AN UPDATE FOR SCHEDULE
+	public boolean updateTitle(String title){
+		if(ScheduleTemplate.find.byId(title) == null){
+			this.title = title;
+			this.save();
+			return true;
+		}
+		return false;
+	}
+	
+	public void updateLearnerType(String learnerType){
+		this.learnerType = learnerType;
+		this.save();
+	}
 	
 	 public static Finder<String, ScheduleTemplate> find = new Finder<String, ScheduleTemplate>(
 	            String.class, ScheduleTemplate.class);

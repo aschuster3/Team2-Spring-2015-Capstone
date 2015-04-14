@@ -84,13 +84,13 @@ public class Global extends GlobalSettings {
             Ebean.save(new Session("9", "Emory Clinic", date.getTime(), "Dr. Dorian", true, LEARNER_TYPES_A));
             Ebean.save(new Session("10", "Grady Clinic", date.getTime(), "Dr. House", false, LEARNER_TYPES_AB));
             
-            ScheduleTemplate scheduleTemp = new ScheduleTemplate("subi1");
+            ScheduleTemplate scheduleTemp = new ScheduleTemplate("subi1", "subi");
             
             for (int week = 1; week<4; week++){
                 for(int day = 0; day<5; day++){
                     String name = "Week" + week + "Day" + day;
-                    SessionTemplate sessionTempAM = new SessionTemplate(name + "AM", week, day, true);
-                    SessionTemplate sessionTempPM = new SessionTemplate(name + "PM", week, day, false);
+                    SessionTemplate sessionTempAM = new SessionTemplate("Emory", name + "AM", week, day, true);
+                    SessionTemplate sessionTempPM = new SessionTemplate("VA", name + "PM", week, day, false);
                     scheduleTemp.addSession(sessionTempAM);
                     scheduleTemp.addSession(sessionTempPM);
                 }

@@ -22,6 +22,7 @@ create table recurring_session_group (
 
 create table schedule_template (
   title                     varchar(255) not null,
+  learner_type              varchar(255),
   constraint pk_schedule_template primary key (title))
 ;
 
@@ -40,7 +41,8 @@ create table session (
 
 create table session_template (
   id                        varchar(255) not null,
-  title                     varchar(255),
+  location                  varchar(255),
+  physician                 varchar(255),
   week                      integer,
   day                       integer,
   is_am                     boolean,

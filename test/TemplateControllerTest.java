@@ -38,26 +38,28 @@ public class TemplateControllerTest {
     public void createSessionTemplate(){
 		
 		User.create(new User("Admin", "User", "admin@gmail.com", "adminpassword", true));
-		ScheduleTemplate st = new ScheduleTemplate("test");
+		ScheduleTemplate st = new ScheduleTemplate("test", "subi");
 		st.save();
 		
 		Result result = callAction(
 	                controllers.routes.ref.TemplateController.createSessionTemplate(st.title),
 	                fakeRequest().withSession("email", "admin@gmail.com")
-	                			.withFormUrlEncodedBody(ImmutableMap.of("title", "Clinic with Dr. Bob",
+	                			.withFormUrlEncodedBody(ImmutableMap.of("location", "emory",
+	                					"physician", "Bob",
 	                					"week", "1",
 	                					"day", "2",
 	                					"isAM", "true"))
 	            );
 		assertThat(status(result)).isEqualTo(303);
-		assertThat(SessionTemplate.find.where().eq("title", "Clinic with Dr. Bob").eq("week", 1)
+		assertThat(SessionTemplate.find.where().eq("physician", "Bob").eq("week", 1)
 				.eq("day", 2).eq("isAM", true)).isNotNull();
     	assertThat(SessionTemplate.find.all().size()).isEqualTo(1);
 	        
     	result = callAction(
                 controllers.routes.ref.TemplateController.createSessionTemplate(st.title),
                 fakeRequest().withSession("email", "admin@gmail.com")
-                			.withFormUrlEncodedBody(ImmutableMap.of("title", "Clinic with Dr. Bob",
+                			.withFormUrlEncodedBody(ImmutableMap.of("location", "emory",
+                					"physician", "Dr. Bob",
                 					"week", "1",
                 					"day", "2",
                 					"isAM", "true"))
@@ -72,19 +74,22 @@ public class TemplateControllerTest {
 		Result result = callAction(
 	                controllers.routes.ref.TemplateController.createScheduleTemplate(),
 	                fakeRequest().withSession("email", "admin@gmail.com")
-	                			.withFormUrlEncodedBody(ImmutableMap.of("title", "subi1"))
+	                			.withFormUrlEncodedBody(ImmutableMap.of("title", "subi1", 
+	                					"learnerType", "subi"))
 	            );
 	        
 	        assertThat(303).isEqualTo(status(result));
 	        ScheduleTemplate st = ScheduleTemplate.find.byId("subi1");
 	        assertThat(st).isNotNull();
 	        assertThat(st.title).isEqualTo("subi1");
+	        assertThat(st.learnerType).isEqualTo("subi");
 	        assertThat(ScheduleTemplate.find.all().size()).isEqualTo(1);
 	        
 	     result = callAction(
 	                controllers.routes.ref.TemplateController.createScheduleTemplate(),
 	                fakeRequest().withSession("email", "admin@gmail.com")
-	                			.withFormUrlEncodedBody(ImmutableMap.of("title", "subi1"))
+	                			.withFormUrlEncodedBody(ImmutableMap.of("title", "subi1",
+	                					"learnerType", "subi"))
 	            );
 	        
 	        assertThat(400).isEqualTo(status(result));
@@ -93,9 +98,9 @@ public class TemplateControllerTest {
     
     @Test
     public void addSessionsToScheduleTemplate(){
-    	ScheduleTemplate scheduleTemp = new ScheduleTemplate("subi2");
-    	SessionTemplate clinic1 = new SessionTemplate("Clinic1", 1, 1, true);
-    	SessionTemplate clinic2 = new SessionTemplate("Clinic2", 1, 2, true);
+    	ScheduleTemplate scheduleTemp = new ScheduleTemplate("subi2", "subi");
+    	SessionTemplate clinic1 = new SessionTemplate("Emory", "Bob", 1, 1, true);
+    	SessionTemplate clinic2 = new SessionTemplate("Emory", "Bill", 1, 2, true);
  
     	scheduleTemp.save();
     	scheduleTemp.addSession(clinic1);
@@ -115,9 +120,9 @@ public class TemplateControllerTest {
     
     @Test
 	public void removeSession(){
-    	SessionTemplate st1 = new SessionTemplate("clinic", 1, 1, true);
+    	SessionTemplate st1 = new SessionTemplate("VA", "Mary", 1, 1, true);
     	st1.save();
-    	SessionTemplate st2 = new SessionTemplate("clinic", 1, 2, true);
+    	SessionTemplate st2 = new SessionTemplate("Emory", "Liz", 1, 2, true);
     	st2.save();
     	
     	assertThat(SessionTemplate.find.all().size()).isEqualTo(2);
@@ -126,21 +131,23 @@ public class TemplateControllerTest {
     	
     	assertThat(SessionTemplate.find.all().size()).isEqualTo(1);
     	
-    	assertThat(SessionTemplate.delete(new SessionTemplate("clinic", 2, 1, false))).isEqualTo(false);
+    	assertThat(SessionTemplate.delete(new SessionTemplate("Emory", "Bob", 2, 1, false))).isEqualTo(false);
     }
     
     @Test
     public void updateSession(){
-    	SessionTemplate st1 = new SessionTemplate("clinic", 1, 2, true);
+    	SessionTemplate st1 = new SessionTemplate("Emory Derm", "Joe", 1, 2, true);
     	st1.save();
     	
-    	assertThat(SessionTemplate.find.byId(st1.id).title).isEqualTo("clinic");
+    	assertThat(SessionTemplate.find.byId(st1.id).location).isEqualTo("Emory Derm");
+    	assertThat(SessionTemplate.find.byId(st1.id).physician).isEqualTo("Joe");
     	assertThat(SessionTemplate.find.byId(st1.id).week).isEqualTo(1);
     	assertThat(SessionTemplate.find.byId(st1.id).day).isEqualTo(2);
     	assertThat(SessionTemplate.find.byId(st1.id).isAM).isEqualTo(true);
     	
-    	st1.updateTitle("Appointment");
-    	assertThat(SessionTemplate.find.byId(st1.id).title).isEqualTo("Appointment");
+    	st1.updatePhysician("Mary");
+    	assertThat(SessionTemplate.find.byId(st1.id).location).isEqualTo("Emory Derm");
+    	assertThat(SessionTemplate.find.byId(st1.id).physician).isEqualTo("Mary");
     	assertThat(SessionTemplate.find.byId(st1.id).week).isEqualTo(1);
     	assertThat(SessionTemplate.find.byId(st1.id).day).isEqualTo(2);
     	assertThat(SessionTemplate.find.byId(st1.id).isAM).isEqualTo(true);
@@ -149,7 +156,8 @@ public class TemplateControllerTest {
     	st1.updateDay(4);
     	st1.updateAM(false);
     	
-    	assertThat(SessionTemplate.find.byId(st1.id).title).isEqualTo("Appointment");
+    	assertThat(SessionTemplate.find.byId(st1.id).location).isEqualTo("Emory Derm");
+    	assertThat(SessionTemplate.find.byId(st1.id).physician).isEqualTo("Mary");
     	assertThat(SessionTemplate.find.byId(st1.id).week).isEqualTo(3);
     	assertThat(SessionTemplate.find.byId(st1.id).day).isEqualTo(4);
     	assertThat(SessionTemplate.find.byId(st1.id).isAM).isEqualTo(false);
@@ -158,9 +166,9 @@ public class TemplateControllerTest {
     
     @Test
 	public void removeSessionFromSchedule(){
-    	ScheduleTemplate scheduleTemp = new ScheduleTemplate("subi2");
-    	SessionTemplate clinic1 = new SessionTemplate("Clinic1", 1, 1, true);
-    	SessionTemplate clinic2 = new SessionTemplate("Clinic2", 1, 2, true);
+    	ScheduleTemplate scheduleTemp = new ScheduleTemplate("subi2", "subi");
+    	SessionTemplate clinic1 = new SessionTemplate("Emory", "Bob", 1, 1, true);
+    	SessionTemplate clinic2 = new SessionTemplate("Emory", "Bill", 1, 2, true);
 
     	scheduleTemp.addSession(clinic1);
     	scheduleTemp.addSession(clinic2);

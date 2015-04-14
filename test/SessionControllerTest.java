@@ -210,7 +210,7 @@ public class SessionControllerTest {
     
     @Test 
     public void createScheduleTemplate(){
-    	ScheduleTemplate scheduleTemp = new ScheduleTemplate("subi1");
+    	ScheduleTemplate scheduleTemp = new ScheduleTemplate("subi1", "subi");
     	scheduleTemp.save();
     	assertThat(ScheduleTemplate.find.byId(scheduleTemp.title)).isNotNull();
     }
@@ -309,9 +309,9 @@ public class SessionControllerTest {
 
     @Test
     public void addSessionToScheduleTemplate(){
-    	ScheduleTemplate scheduleTemp = new ScheduleTemplate("subi1");
+    	ScheduleTemplate scheduleTemp = new ScheduleTemplate("subi1", "subi");
     	scheduleTemp.save();
-    	SessionTemplate sessionTemp = new SessionTemplate("Clinic", 1, 1, true);
+    	SessionTemplate sessionTemp = new SessionTemplate("Emory", "Bob", 1, 1, true);
     	sessionTemp.save();
  
     	assertThat(scheduleTemp.addSession(sessionTemp)).isTrue();
@@ -319,13 +319,13 @@ public class SessionControllerTest {
     
     @Test
     public void createSessionsFromScheduleTemplate(){
-    	ScheduleTemplate scheduleTemp = new ScheduleTemplate("subi1");
+    	ScheduleTemplate scheduleTemp = new ScheduleTemplate("subi1", "subi");
     	scheduleTemp.save();
     	for (int week = 0; week<3; week++){
     		for(int day = 0; day<5; day++){
     			String name = "Week" + week + "Day" + day;
-    			SessionTemplate sessionTempAM = new SessionTemplate(name + "AM", week, day, true);
-    			SessionTemplate sessionTempPM = new SessionTemplate(name + "PM", week, day, false);
+    			SessionTemplate sessionTempAM = new SessionTemplate("Emory", name + "AM", week, day, true);
+    			SessionTemplate sessionTempPM = new SessionTemplate("VA", name + "PM", week, day, false);
     			scheduleTemp.addSession(sessionTempAM);
     			scheduleTemp.addSession(sessionTempPM);
     		}
