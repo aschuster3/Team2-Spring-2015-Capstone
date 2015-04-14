@@ -20,6 +20,7 @@ import play.mvc.*;
 import util.PasswordUtil;
 import views.html.adminIndex;
 import views.html.coordinatorIndex;
+import views.html.coordinatorsPage;
 import views.html.forgotPasswordForm;
 import views.html.loginPage;
 import views.html.passwordPage;
@@ -46,7 +47,7 @@ public class Application extends Controller {
         User user = User.find.where().eq("email", email).findUnique();
         
         if(user.isAdmin) {
-            return ok(adminIndex.render());
+            return redirect(routes.AdminController.viewAllCoordinators());
         } else {
             return ok(coordinatorIndex.render());
         }
