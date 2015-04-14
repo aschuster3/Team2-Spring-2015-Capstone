@@ -250,7 +250,7 @@ angular.module('mwl.calendar')
           $scope.$modalInstance = $modalInstance;
           $scope.event = event;
           $scope.isCreateModal = !angular.isDefined(event.id);
-          $scope.modalTitle = $scope.isCreateModal ? 'Create Event' : 'Edit Event';
+          $scope.modalTitle = $scope.isCreateModal ? 'Create Half Day Session' : 'Edit Half Day Session';
 
           $scope.updateStartsAtEndsAt = updateStartsAtEndsAt;
 

@@ -94,9 +94,25 @@
 
 					<div class = "col-md-7">
 						<h6>Schedule:</h6>
-                        @for(sesh <- schedules.get(learner.email)) {
-                            <p class = "session">@sesh.title | @sesh.date | @sesh.physician</p>
-                        }
+						<table class="table table-bordered">
+							  <tr>
+							    <th>Location</th>
+							    <th>Physician on Duty</th> 
+							    <th>Date</th>
+							    <th>Time</th>
+							  </tr>
+							
+                        	@for(sesh <- schedules.get(learner.email)) {
+                            
+							  <tr>
+							    <td>@sesh.title</td>
+							    <td>@sesh.physician</td> 
+							    <td>@sesh.date</td>
+							    <td></td>
+							  </tr>
+							  }
+							</table>
+                        
 					</div>
 					<div class = "col-md-2">
 						<button type="button" class="btn btn-sm btn-inverse emailBtn">E-mail Schedule to Student</button>

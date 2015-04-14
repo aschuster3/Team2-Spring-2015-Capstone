@@ -29,6 +29,7 @@ import views.html.resetPasswordPage;
 import views.html.studentsPage;
 import views.html.registrationFormConfirmation;
 import views.html.support;
+import views.html.coordinatorSupport;
 
 /**
  * The application controller for general purpose tasks such as logging in and out.
@@ -323,5 +324,9 @@ public class Application extends Controller {
 
     public static Result viewSupportPage() {
         return ok(support.render());
+    }
+
+    public static Result viewCoordinatorSupport() {
+        return ok(coordinatorSupport.render());
     }
 }

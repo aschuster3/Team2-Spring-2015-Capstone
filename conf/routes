@@ -58,7 +58,8 @@ GET           /calendar                                  controllers.Coordinator
 GET           /coordinators                              controllers.AdminController.viewAllCoordinators()
 POST          /forgotPassword/:userUUID                  controllers.Application.sendNewPasswordToUser(userUUID: String)
 GET           /viewlearner                               controllers.AdminController.viewLearners()
-GET 		  /viewSupport								 controllers.Application.viewSupportPage()
+GET 		  /admin-support						     controllers.Application.viewSupportPage()
+GET 		  /coordinator-support						 controllers.Application.viewCoordinatorSupport()
 
 # Admin View: Calendar Page
 GET           /admincalendar                             controllers.AdminController.viewCalendar()

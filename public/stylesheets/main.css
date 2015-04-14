@@ -9,11 +9,17 @@ h6{
 	padding-bottom: 5px;
 }
 a.faqs:hover,
-a.faqs:active{
-	color: #333F7F;
+a.faqs:active,
+a.faqs{
+	color: #555555;
 	line-height: .6;
-	font-family: 'Open Sans', sans-serif;
 	font-size: 16px;
+}
+a{
+	color: #555555;
+}
+p.faqs{
+	margin-bottom: 0px;
 }
 h4.faqs,
 h5.faqs,
