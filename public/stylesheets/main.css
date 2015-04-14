@@ -8,6 +8,18 @@ h6{
 	padding-top: 8px;
 	padding-bottom: 5px;
 }
+a.faqs:hover,
+a.faqs:active{
+	color: #333F7F;
+	line-height: .6;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 16px;
+}
+h4.faqs,
+h5.faqs,
+h6.faqs {
+	color: rgb(0,40,120);
+}
 p{
 	font-family: 'Lora', serif;
 }
@@ -148,16 +160,4 @@ dl{
 
 .btn-space{
 	margin-right: 15px;
-}
-
-a.faqs{
-	color: #333F7F;
-	line-height: .6;
-	font-family: 'Open Sans', sans-serif;
-	font-size: 16px;
-}
-h4.faqs,
-h5.faqs,
-h6.faqs {
-	color: rgb(0,40,120);
 }
