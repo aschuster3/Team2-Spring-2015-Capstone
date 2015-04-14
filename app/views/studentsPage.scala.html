@@ -107,8 +107,12 @@
 							  <tr>
 							    <td>@sesh.title</td>
 							    <td>@sesh.physician</td> 
-							    <td>@sesh.date</td>
-							    <td></td>
+							    <td>@sesh.date.format("dd MMM")</td>
+							    @if(sesh.isAM) {
+							     <td>AM</td>
+							    } else {
+							     <td>PM</td>
+							    }
 							  </tr>
 							  }
 							</table>
