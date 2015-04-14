@@ -182,6 +182,7 @@ public class SessionController extends Controller {
 
 		List<Session> createdSessions = recGroup.generateNewOccurrences(52);
 		createdSessions.add(baseSession);
+
 		return status(CREATED, Json.toJson(createdSessions));
 	}
 

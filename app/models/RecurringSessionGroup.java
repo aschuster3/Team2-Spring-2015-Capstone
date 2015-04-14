@@ -13,6 +13,7 @@ import java.util.List;
 public class RecurringSessionGroup extends Model {
 
     public static final int REC_TYPE_WEEKLY = 1;
+    public static final int REC_TYPE_MONTHLY = 2;
 
     @Id
     public Long id;
@@ -73,13 +74,29 @@ public class RecurringSessionGroup extends Model {
     }
 
     private Date nextOccurrenceDate(Date baseDate) {
-        if (this.recurringType == REC_TYPE_WEEKLY) {
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(baseDate);
-            cal.add(Calendar.WEEK_OF_YEAR, 1);
-            return cal.getTime();
+        if (invalidRecurringType(this.recurringType)) {
+            return null;
         }
-        return null;
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(baseDate);
+        if (recurringType == REC_TYPE_WEEKLY) {
+
+        }
+        int calendarFieldToIncrement = calendarFieldFromRecurringType();
+        cal.add(calendarFieldToIncrement, 1);
+        return cal.getTime();
+    }
+
+    private boolean invalidRecurringType(int recurringType) {
+        return recurringType != REC_TYPE_WEEKLY
+                && recurringType != REC_TYPE_MONTHLY;
+    }
+
+    private int calendarFieldFromRecurringType() {
+        return this.recurringType == REC_TYPE_MONTHLY
+                ? Calendar.MONTH
+                : Calendar.WEEK_OF_YEAR;
     }
 
     public List<Session> allSessions() {

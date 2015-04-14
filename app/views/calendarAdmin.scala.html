@@ -164,13 +164,13 @@
                     <br>
               
                     
-                    <p class="tablehead">End Date (Optional)</p>
-                    <p class="input-group">
+                    <p class="tablehead" ng-show="isRecurringEvent(event)">Repeat End Date</p>
+                    <p class="input-group" ng-show="isRecurringEvent(event)">
                       <input type="text" class="form-control" readonly datepicker-popup="EEE MMMM d, yyyy"
-                             ng-model="event.date" is-open="showDatePicker" close-text="Close"
-                             ng-change="updateStartsAtEndsAt(event);" required />
+                             ng-model="event.recurringEndDate" is-open="showRecurringEndDatePicker" close-text="Close"
+                             ng-required="isRecurringEvent(event)">
                       <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="toggleDatePicker($event)"><i class="glyphicon glyphicon-search"></i></button>
+                        <button type="button" class="btn btn-default" ng-click="toggleRecurringEndDatePicker($event)"><i class="glyphicon glyphicon-search"></i></button>
                       </span>
                     </p>
 

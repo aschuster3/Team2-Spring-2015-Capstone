@@ -22,6 +22,7 @@ angular.module('mwl.calendar')
     /* from RecurringSessionGroup.java */
     var REC_TYPE_NONE = 0;
     var REC_TYPE_WEEKLY = 1;
+    var REC_TYPE_MONTHLY = 2;
 
     $scope.calendarView = 'month';
     $scope.calendarDay = new Date();
@@ -61,7 +62,7 @@ angular.module('mwl.calendar')
 
     function learnerIsSelected () {
       return typeof $scope.currentLearner === 'object';
-    };
+    }
 
     
     $scope.$watch('learnerDropdown', function(learnerJSONString) {
@@ -258,15 +259,27 @@ angular.module('mwl.calendar')
 
           $scope.REC_TYPE_NONE = REC_TYPE_NONE;
           $scope.REC_TYPE_WEEKLY = REC_TYPE_WEEKLY;
+          $scope.REC_TYPE_MONTHLY = REC_TYPE_MONTHLY;
           $scope.event.recurringType = REC_TYPE_NONE;
 
-          $scope.toggleDatePicker = function($event) {
+          $scope.toggleDatePicker = function ($event) {
+            stopEventAndToggleProperty($event, 'showDatePicker');
+          };
+
+          $scope.toggleRecurringEndDatePicker = function($event) {
+            stopEventAndToggleProperty($event, 'showRecurringEndDatePicker');
+          };
+
+          $scope.isRecurringEvent = function (event) {
+            return event.recurringType !== REC_TYPE_NONE;
+          };
+
+          function stopEventAndToggleProperty($event, scopePropertyName) {
             $event.preventDefault();
             $event.stopPropagation();
 
-            $scope.showDatePicker = !$scope.showDatePicker;
-          };
-
+            $scope[scopePropertyName] = !$scope[scopePropertyName];
+          }
 
           $scope.clickDelete = function () {
             // TODO provide option to delete recurring session group
