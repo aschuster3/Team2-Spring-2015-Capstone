@@ -185,6 +185,10 @@
                                     ng-checked="learnerTypeIsChecked(event, learnerType)"
                                     ng-click="toggleLearnerTypeChecked(event, learnerType)">{{ learnerType }}</label>
                     </div>
+
+                    <button ng-show="!showOtherLearnerInput" ng-click="clickShowOtherLearnerInput();" class="btn btn-default btn-info">Add Other Learner Type</button>
+                    <input ng-show="showOtherLearnerInput" type="text" class="form-control" ng-model="newOtherLearnerType">
+                    <button ng-show="showOtherLearnerInput" ng-click="clickAddOtherLearnerType();" class="btn btn-default btn-info">Add Learner Type</button>
                 </div>
                 
 

@@ -334,6 +334,10 @@ angular.module('mwl.calendar')
 
           $scope.toggleLearnerTypeChecked = toggleLearnerTypeChecked;
           $scope.learnerTypeIsChecked = learnerTypeIsChecked;
+          $scope.clickShowOtherLearnerInput = showOtherLearnerInput;
+          $scope.clickAddOtherLearnerType = addOtherLearnerType;
+          $scope.newOtherLearnerInput = ""
+          $scope.showOtherLearnerInput = false;
 
           function toggleLearnerTypeChecked(event, learnerType) {
             var index = event.supportedLearnerTypes.indexOf(learnerType);
@@ -350,6 +354,18 @@ angular.module('mwl.calendar')
           function learnerTypeIsChecked(event, learnerType) {
             return event.supportedLearnerTypes.indexOf(learnerType) !== -1;
           }
+
+          function showOtherLearnerInput() {
+            $scope.newOtherLearnerInput = "";
+            $scope.showOtherLearnerInput = true;
+          }
+
+          function addOtherLearnerType() {
+            $scope.allLearnerTypes.push(angular.copy($scope.newOtherLearnerType));
+            $scope.newOtherLearnerInput = "";
+            $scope.showOtherLearnerInput = false;
+          }
+
         }
       });
     }
