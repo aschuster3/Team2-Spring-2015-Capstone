@@ -22,7 +22,6 @@ import play.libs.Json;
 public class Learner extends Model {
 
     public static final List<String> LEARNER_TYPES = Arrays.asList(
-            "Sub-I",
             "Sub-I Medical Student",
             "Ambulatory Medical Student",
             "Dermatology Resident",
