@@ -144,4 +144,30 @@ public class LearnerControllerTest {
         assertThat(updatedLearner).isNotNull();
         assertThat(updatedSession.assignedLearner).isEqualTo(newEmail);
     }
+
+    @Test
+    public void deletingLearner_validUUID_Succeeds() {
+        Learner tempLearner = new Learner("templearner@gmail.com", "first", "last", COORDINATOR_A_EMAIL);
+        tempLearner.save();
+        String uuid = tempLearner.uuid;
+        String email = tempLearner.email;
+
+        Result result = callAction(
+                routes.ref.LearnerController.ajaxDeleteLearner(uuid),
+                fakeRequest().withSession("email", COORDINATOR_A_EMAIL)
+        );
+
+        assertThat(status(result)).isEqualTo(NO_CONTENT);
+        assertThat(Learner.find.byId(email)).isNull();
+    }
+
+    @Test
+    public void deletingLearner_nonexistantUUID_Succeeds() {
+        Result result = callAction(
+                routes.ref.LearnerController.ajaxDeleteLearner("fake_uuid"),
+                fakeRequest().withSession("email", COORDINATOR_A_EMAIL)
+        );
+
+        assertThat(status(result)).isEqualTo(NO_CONTENT);
+    }
 }

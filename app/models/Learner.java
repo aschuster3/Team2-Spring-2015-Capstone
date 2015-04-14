@@ -85,6 +85,14 @@ public class Learner extends Model {
         }
         learner.delete();
     }
+
+    public static void deleteLearnerButFreeTheirSessions(Learner learner) {
+        List<Session> schedule = Session.getLearnerSchedule(learner.email);
+        for (Session session: schedule) {
+            session.assignedLearner = null;
+        }
+        learner.delete();
+    }
     
     public static List<Learner> getAll() {
         return Learner.find.orderBy("lastName, firstName").findList();

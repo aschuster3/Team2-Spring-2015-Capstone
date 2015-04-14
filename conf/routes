@@ -45,6 +45,7 @@ DELETE        /sessions-api/rec/:sessionId               controllers.SessionCont
 # Learner Actions
 GET           /learners-api                              controllers.LearnerController.getLearners()
 PUT           /learners-api/:learnerUUID                 controllers.LearnerController.updateLearner(learnerUUID: String)
+DELETE        /learners-api/:learnerUUID                 controllers.LearnerController.ajaxDeleteLearner(learnerUUID: String)
 
 # Coordinator Learner Page
 GET           /students                                  controllers.CoordinatorController.students()
