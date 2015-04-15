@@ -42,7 +42,7 @@ public class TemplateControllerTest {
 		st.save();
 		
 		Result result = callAction(
-	                controllers.routes.ref.TemplateController.createSessionTemplate(st.title),
+	                controllers.routes.ref.TemplateController.createSessionTemplate(st.uuid),
 	                fakeRequest().withSession("email", "admin@gmail.com")
 	                			.withFormUrlEncodedBody(ImmutableMap.of("location", "emory",
 	                					"physician", "Bob",
@@ -56,7 +56,7 @@ public class TemplateControllerTest {
     	assertThat(SessionTemplate.find.all().size()).isEqualTo(1);
 	        
     	result = callAction(
-                controllers.routes.ref.TemplateController.createSessionTemplate(st.title),
+                controllers.routes.ref.TemplateController.createSessionTemplate(st.uuid),
                 fakeRequest().withSession("email", "admin@gmail.com")
                 			.withFormUrlEncodedBody(ImmutableMap.of("location", "emory",
                 					"physician", "Dr. Bob",
@@ -79,7 +79,7 @@ public class TemplateControllerTest {
 	            );
 	        
 	        assertThat(303).isEqualTo(status(result));
-	        ScheduleTemplate st = ScheduleTemplate.find.byId("subi1");
+	        ScheduleTemplate st = ScheduleTemplate.find.where().eq("title", "subi1").findUnique();
 	        assertThat(st).isNotNull();
 	        assertThat(st.title).isEqualTo("subi1");
 	        assertThat(st.learnerType).isEqualTo("subi");
@@ -108,11 +108,11 @@ public class TemplateControllerTest {
     	scheduleTemp.addSession(clinic2);
     	scheduleTemp.save();
     	
-    	assertThat(ScheduleTemplate.find.byId(scheduleTemp.title)).isNotNull();
+    	assertThat(ScheduleTemplate.find.byId(scheduleTemp.uuid)).isNotNull();
     	assertThat(SessionTemplate.find.byId(clinic1.id)).isNotNull();
     	assertThat(SessionTemplate.find.byId(clinic2.id)).isNotNull();
     	
-    	List<SessionTemplate> sessions = ScheduleTemplate.find.byId(scheduleTemp.title).sessions;
+    	List<SessionTemplate> sessions = ScheduleTemplate.find.byId(scheduleTemp.uuid).sessions;
 
     	assertThat(sessions).isNotNull();
     	assertThat(sessions.size()).isEqualTo(new Integer(2));
@@ -174,17 +174,17 @@ public class TemplateControllerTest {
     	scheduleTemp.addSession(clinic2);
     	scheduleTemp.save();
     	
-    	assertThat(ScheduleTemplate.find.byId(scheduleTemp.title)).isNotNull();
+    	assertThat(ScheduleTemplate.find.byId(scheduleTemp.uuid)).isNotNull();
     	assertThat(SessionTemplate.find.byId(clinic1.id)).isNotNull();
     	assertThat(SessionTemplate.find.byId(clinic2.id)).isNotNull();
     	
-    	List<SessionTemplate> sessions = ScheduleTemplate.find.byId(scheduleTemp.title).sessions;
+    	List<SessionTemplate> sessions = ScheduleTemplate.find.byId(scheduleTemp.uuid).sessions;
 
     	assertThat(sessions).isNotNull();
     	assertThat(sessions.size()).isEqualTo(new Integer(2));
     	
     	assertThat(scheduleTemp.deleteSession(clinic1)).isEqualTo(true);
-    	assertThat(ScheduleTemplate.find.byId(scheduleTemp.title).sessions.size()).isEqualTo(1);
+    	assertThat(ScheduleTemplate.find.byId(scheduleTemp.uuid).sessions.size()).isEqualTo(1);
     	
     	assertThat(SessionTemplate.find.all().size()).isEqualTo(1);
     }

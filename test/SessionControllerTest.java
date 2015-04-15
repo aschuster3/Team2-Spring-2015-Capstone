@@ -212,7 +212,7 @@ public class SessionControllerTest {
     public void createScheduleTemplate(){
     	ScheduleTemplate scheduleTemp = new ScheduleTemplate("subi1", "subi");
     	scheduleTemp.save();
-    	assertThat(ScheduleTemplate.find.byId(scheduleTemp.title)).isNotNull();
+    	assertThat(ScheduleTemplate.find.byId(scheduleTemp.uuid)).isNotNull();
     }
     
     @Test
@@ -332,7 +332,7 @@ public class SessionControllerTest {
     	}
     	scheduleTemp.save();
     	
-    	Result result = SessionController.createScheduleSessions(scheduleTemp.title, "2015/03/30");
+    	Result result = SessionController.createScheduleSessions(scheduleTemp.uuid, "2015/03/30");
     	assertThat(status(result)).isEqualTo(200);
 		assertThat(Session.getAll().size()).isEqualTo(30);
     }

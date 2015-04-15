@@ -83,9 +83,13 @@
                   <td>@s.physician</td> 
                   <td>@s.week</td>
                   <td>@s.day</td>
-                  <td>@s.isAM</td>
-                  <td><a href="" class="edit-remove"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a></td>
-                  <td><a href="" class="edit-remove"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td>
+                  @if(s.isAM) {
+                  <td>AM</td>
+                  }else{
+                  <td>PM</td>
+                  }
+                  <td><a href="" class="edit-remove" data-toggle="modal" data-target="#editSessionModal"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a></td>
+                  <td><a href="" class="edit-remove" onclick="deleteSession('@s.id')"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td>
                 </tr>
                 }
               </table>
@@ -150,7 +154,57 @@
           }
           @form(routes.TemplateController.createSessionTemplate("")) {
             @select(sessionForm("location"),
-            options = Seq("emory"->"Emory Clinic", "grady"->"Grady Clinic", "va" -> "VA Clinic", "telederm" -> "VA Telederm", "dermpath" -> "Emory Dermpath"), 
+            options = Seq("Emory Clinic"->"Emory Clinic", "Grady Clinic"->"Grady Clinic", "VA Clinic" -> "VA Clinic", "VA Telederm" -> "VA Telederm", "Emory Dermpath" -> "Emory Dermpath"), 
+            'type -> "text", 
+            'id -> "inputSessionLocation",
+            'class -> "form-control", 
+            '_label -> "Location",
+            '_showConstraints -> false)
+            @inputText(sessionForm("physician"), 
+            'type -> "text",
+            'class -> "form-control", 
+            'id -> "inputSessionPhysician",
+            '_label -> "Physician on Duty",
+            '_showConstraints -> false)
+            @inputText(sessionForm("week"), 
+            'type -> "number",
+            'class -> "form-control", 
+            'id -> "inputSessionWeek",
+            '_label -> "Week of Rotation",
+            '_showConstraints -> false)
+            @inputText(sessionForm("day"), 
+            'type -> "number",
+            'class -> "form-control", 
+            'id -> "inputSessionDay",
+            '_label -> "Day of the Week (1 = Monday, 2 = Tuesday, etc.)",
+            '_showConstraints -> false)
+            @inputRadioGroup(sessionForm("isAM"), 
+            options = Seq("True"->"AM   ", "False"->"PM"),
+            '_label -> "Time of Day",
+            'id -> "inputSessionAM",
+            '_showConstraints -> false)
+          <button id="cancelButton" class="btn btn-inverse pull-right" data-dismiss="modal">Cancel</button>
+          <input role="button" class="btn btn-inverse pull-right btn-space" type="submit" value="Submit"></input> 
+          }
+        </div>
+        <div class="modal-footer"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="editSessionModal" class="modal fade">
+    <div class="modal-dialog">
+     <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Edit Session</h4>
+        </div>
+        <div class="modal-body">
+          @if(sessionForm.hasGlobalErrors()){
+            <p class="text-center formGlobalError"><font color = "red">@sessionForm.globalError.message</font></p>
+          }
+          @form(routes.TemplateController.updateSessionTemplate()) {
+            @select(sessionForm("location"),
+            options = Seq("Emory Clinic"->"Emory Clinic", "Grady Clinic"->"Grady Clinic", "VA Clinic" -> "VA Clinic", "VA Telederm" -> "VA Telederm", "Emory Dermpath" -> "Emory Dermpath"), 
             'type -> "text", 
             'id -> "inputSessionLocation",
             'class -> "form-control", 
@@ -209,6 +263,7 @@
     }
 
     var addSessionModalElement = $('#addSessionModal');
+    var editSessionModalElement = $('#editSessionModal');
 
     addSessionModalElement.on('hidden.bs.modal', function () {
       /* Don't use form.reset(), because on an error,
@@ -233,6 +288,17 @@
         else if (tag == 'select')
           this.selectedIndex = -1;
       });
+    }
+
+    function deleteSession(sessionID){
+      $.ajax({
+        url: '@routes.TemplateController.deleteSessionFromSchedule("")' + sessionID,
+        type: 'DELETE',
+        success: function(result) {
+          url: '@routes.TemplateController.templates()'
+        }
+      });
+      
     }
 
     function setPath(scheduleID){
