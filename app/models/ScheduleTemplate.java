@@ -1,5 +1,6 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import play.db.ebean.Model;
 import play.data.validation.Constraints.*;
 import javax.persistence.*;
@@ -23,6 +24,7 @@ public class ScheduleTemplate extends Model {
 	
 	@Required
 	@OneToMany(mappedBy="schedule", cascade=CascadeType.ALL)
+	@JsonIgnore
 	public List<SessionTemplate> sessions;
 	
 	public ScheduleTemplate(String title, String learnerType){

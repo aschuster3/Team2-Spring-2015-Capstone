@@ -29,7 +29,13 @@ angular.module('mwl.calendar')
                 recurringSessionGroup: {
                     recurringType: recurringType
                 }
-            })
+            });
+        };
+
+        service.createFromScheduleTemplate = function (scheduleTemplate, startDate) {
+            return $http.post(urlBase + '/template/' + scheduleTemplate.uuid, {
+                startDate: startDate
+            });
         };
 
         service.removeRecurringSessions = function (session) {

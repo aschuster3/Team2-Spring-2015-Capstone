@@ -6,6 +6,7 @@ angular.module('mwl.calendar')
       refresh: get,
       create: create,
       createRecurringGroup: createRecurringGroup,
+      createFromScheduleTemplate: createFromScheduleTemplate,
       update: update,
       delete: remove,
       deleteRecurringGroup: removeRecurringGroup
@@ -71,6 +72,18 @@ angular.module('mwl.calendar')
         }, function error(response) {
           $log.error('sessionService.createRecurringSessions failed: ', response);
           throw response;
+        });
+    }
+
+    function createFromScheduleTemplate(scheduleTemplate, startDate) {
+      return sessionService.createFromScheduleTemplate(scheduleTemplate, startDate)
+        .then(function success(response) {
+          var createdSessions = response.data;
+          angular.forEach(createdSessions, function (session) {
+            Sessions.sessions.push(session);
+          });
+        }, function error(response) {
+          $log.error(response);
         });
     }
 

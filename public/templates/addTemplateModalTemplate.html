@@ -1,0 +1,41 @@
+<div id="addTemplateModal">
+    <div class="modal-header">
+        <h4 class="modal-title'">Add Template to Schedule</h4>
+    </div>
+
+    <form name="addTemplateForm" novalidate>
+        <div class="modal-body">
+            {{ form.selectedScheduleTemplate }}
+            {{ form.startDate }}
+            {{ showDatePicker }}
+                <p class="tablehead">Location</p>
+                <div class="form-horizontal">
+                    <fieldset>
+                        <select
+                                class="form-control"
+                                ng-model="form.selectedScheduleTemplate"
+                                ng-options="template as template.title for template in form.scheduleTemplateOptions"
+                                required>
+                        </select>
+                    </fieldset>
+                </div>
+
+                <p class="tablehead">Start Date</p>
+                <p class="input-group">
+                    <input type="text" class="form-control" readonly datepicker-popup="EEE MMMM d, yyyy"
+                           ng-model="form.startDate" is-open="form.showDatePicker" close-text="Close" required />
+                    <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="toggleDatePicker($event);">
+                        <i class="glyphicon glyphicon-search"></i>
+                    </button>
+                    </span>
+                </p>
+
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-inverse pull-right" ng-click="clickCancel()">Cancel</button>
+            <button ng-disabled="addTemplateForm.$invalid" class="btn btn-inverse pull-right" ng-click="clickSubmit()">Submit</button>
+        </div>
+    </form>
+</div>

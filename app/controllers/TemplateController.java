@@ -147,6 +147,10 @@ public class TemplateController extends Controller {
 				templateForm, sessionForm, "", Learner.LEARNER_TYPES));
 	}
 
+	public static Result jsonTemplates() {
+		return ok(Json.toJson(ScheduleTemplate.find.all()));
+	}
+
 	public static Result addSessionToSchedule(String scheduleID,
 			SessionTemplate session) {
 		ScheduleTemplate schedule = ScheduleTemplate.find.where()
@@ -205,4 +209,5 @@ public class TemplateController extends Controller {
 	public static Result updateSessionTemplate() {
 		return TODO;
 	}
+
 }

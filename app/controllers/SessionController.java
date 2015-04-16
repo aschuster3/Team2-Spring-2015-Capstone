@@ -216,27 +216,32 @@ public class SessionController extends Controller {
 
 		return status(204);
 	}
-	
-	public static Result createScheduleSessions(String scheduleID, String date){
+
+	@BodyParser.Of(BodyParser.Json.class)
+	public static Result createScheduleSessions(String scheduleID){
 		ScheduleTemplate schedule = ScheduleTemplate.find.byId(scheduleID);
 		if(schedule == null){
 			return badRequest("Failed: Schedule with title " + scheduleID + " does not exist");
 		}
-		Date startDate; 
-		DateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-    	try{
-    		startDate = formatter.parse(date);
-    		for (SessionTemplate session: schedule.sessions){
-    			int days = (session.week - 1)*7 + (session.day - 1);
-    			Calendar cal = Calendar.getInstance();
-    	        cal.setTime(startDate);
-    	        cal.add(Calendar.DATE, days); 
-    			Session.create(new Session(null, session.location, cal.getTime(), session.physician, session.isAM, scheduleID));
-    		}
-    	}
-    	catch(Exception e){
-    		return badRequest("Failed: Date not formatted correctly.");
+
+		JsonNode json = request().body().asJson();
+		if (!json.has("startDate")) {
+			return badRequest("JSON must include 'startDate' field in request body");
 		}
-		return status(200);
+
+		Date startDate = Json.fromJson(json.get("startDate"), Date.class);
+		List<Session> createdSessions = new ArrayList<>();
+		String scheduleInstanceId = UUID.randomUUID().toString();
+
+		for (SessionTemplate session: schedule.sessions){
+			int days = (session.week - 1)*7 + (session.day - 1);
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(startDate);
+			cal.add(Calendar.DATE, days);
+			Session newSession = new Session(null, session.location, cal.getTime(), session.physician, session.isAM, schedule.learnerType, scheduleInstanceId);
+			Session.create(newSession);
+			createdSessions.add(newSession);
+		}
+		return status(CREATED, Json.toJson(createdSessions));
 	}
 }

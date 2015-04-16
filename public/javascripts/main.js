@@ -54,7 +54,19 @@ angular.module('mwl.calendar')
     };
 
     $scope.eventDeleted = deleteEvent;
-    
+
+
+    /***********************************************************************
+     * For adding schedule templates to the calendar.
+     ***********************************************************************/
+    $scope.showAddTemplateModal = function () {
+      $modal.open({
+        templateUrl: '/assets/templates/addTemplateModalTemplate.html',
+        controller: 'AddTemplateModalCtrl'
+      });
+    };
+
+
     /***********************************************************************
      * General Functions relevant to adding Sessions to Learners
      ***********************************************************************/

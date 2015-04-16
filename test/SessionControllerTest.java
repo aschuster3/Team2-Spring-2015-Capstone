@@ -331,10 +331,20 @@ public class SessionControllerTest {
     		}
     	}
     	scheduleTemp.save();
+
+        Map<String, Date> bodyMap = ImmutableMap.of("startDate", new Date(0));
+        JsonNode bodyJson = Json.toJson(bodyMap);
     	
-    	Result result = SessionController.createScheduleSessions(scheduleTemp.uuid, "2015/03/30");
-    	assertThat(status(result)).isEqualTo(200);
+    	Result result = callAction(
+                routes.ref.SessionController.createScheduleSessions(scheduleTemp.uuid),
+                fakeRequest()
+                        .withSession("email", COORDINATOR_EMAIL)
+                        .withJsonBody(bodyJson)
+        );
+    	assertThat(status(result)).isEqualTo(CREATED);
 		assertThat(Session.getAll().size()).isEqualTo(30);
+        assertThat(Session.getAll().get(0).scheduleTitle).isEqualTo(Session.getAll().get(1).scheduleTitle);
+        assertThat(Session.getAll().get(0).scheduleTitle).isNotEqualTo(scheduleTemp.uuid);
     }
     
 }
