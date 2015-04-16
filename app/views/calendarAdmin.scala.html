@@ -186,18 +186,22 @@
                                     ng-click="toggleLearnerTypeChecked(event, learnerType)">{{ learnerType }}</label>
                     </div>
 
-                    <button ng-show="!showOtherLearnerInput" ng-click="clickShowOtherLearnerInput();" class="btn btn-default btn-info">Add Other Learner Type</button>
+                    <button ng-show="!showOtherLearnerInput" ng-click="clickShowOtherLearnerInput();" class="btn btn-sm btn-default btn-info">Add Other Learner Type</button>
                     <input ng-show="showOtherLearnerInput" type="text" class="form-control" ng-model="newOtherLearnerType">
-                    <button ng-show="showOtherLearnerInput" ng-click="clickAddOtherLearnerType();" class="btn btn-default btn-info">Add Learner Type</button>
+                    <button ng-show="showOtherLearnerInput" ng-click="clickAddOtherLearnerType();" class="btn btn-sm btn-default btn-info">Add Learner Type</button>
                 </div>
                 
-
-              <div class="modal-footer session-modal-footer">
-                <button ng-show="!isCreateModal" class="btn btn-danger pull-left" ng-click="clickDelete()">Delete Event</button>
-                <button class="btn btn-inverse pull-right" ng-click="clickCancel()">Cancel</button>
-                <button ng-show="isCreateModal" ng-disabled="eventForm.$invalid" class="btn btn-inverse pull-right" ng-click="clickCreate()">Submit</button>
-                <button ng-show="!isCreateModal" ng-disabled="eventForm.$invalid" class="btn btn-inverse pull-right" ng-click="clickUpdate()">Save</button>
+                <hr>
+                <br>
+                </div>
+              
+              <div class="modal-footer">
+                <button ng-show="!isCreateModal" class="btn btn-danger pull-left btn-space-sm" ng-click="clickDelete()">Delete Event</button>
+                <button ng-show="isCreateModal" ng-disabled="eventForm.$invalid" class="btn btn-inverse pull-left btn-space-sm" ng-click="clickCreate()">Submit</button>
+                <button ng-show="!isCreateModal" ng-disabled="eventForm.$invalid" class="btn btn-inverse pull-left btn-space-sm" ng-click="clickUpdate()">Save</button>
+                <button class="btn btn-inverse pull-left btn-space-sm" ng-click="clickCancel()">Cancel</button>
               </div>
+
             </form>
 
           </script>

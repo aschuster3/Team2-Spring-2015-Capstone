@@ -172,12 +172,15 @@ dl{
 .btn-space{
 	margin-right: 15px;
 }
+.btn-space-sm{
+	margin-right: 5px;
+}
 
 a.edit-remove{
 	color: #34495e;
 }
 .modal-footer{
-	border-top: 0px;
+	border-top: 1px;
 }
 .welcome{
 	margin-top: 0px;
