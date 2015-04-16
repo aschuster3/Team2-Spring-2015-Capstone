@@ -39,7 +39,7 @@
                     Non-Emory residents or fellows interested in rotating with the Emory Department of Dermatology need to call 404-727-3669.  (Please note that in general, June to December is our high season for residency applicants, and we may not be able to accommodate outside requests during that time.)
                     </p>
 
-                    <p class="sub-header text-center">Please register for credentials</p>
+                    <p class="sub-header text-center">Please register for credentials.</p>
 
                     <div class="form-signin">
                     @form(routes.Application.createUnapprovedUser) {
@@ -80,7 +80,7 @@
                             'placeholder -> "Other Department",
                             '_label -> null,
                             '_showConstraints -> false)
-                        <p id="HIPPA-message" class="sub-header text-center">Please only register if you have completed HIPPA training and fax a copy of this HIPPA training certificate to 404-727-5874. You will not be approved until we receive your certificate.<br></p>
+                        <p id="HIPPA-message" class="sub-header text-center">Please only register if you have completed HIPPA training and fax a copy of this HIPPA training certificate to 404-727-5874. You will not be approved until we receive your certificate.<br><br></p>
                         <input role="button" class="btn btn-lg btn-primary btn-block" value="Register" type="submit"></input>
                         @if(registrationForm.hasGlobalErrors()) {
                             <p class="text-center"><font color="red">@registrationForm.globalError.message</font></p>
