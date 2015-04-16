@@ -91,6 +91,7 @@
                             </table>
                         
 					</div>
+
 					<div class = "col-md-2">
 					@form(routes.AdminController.emailLearnerSchedule(learner.uuid)) {
                         <button type="submit" class="btn btn-sm btn-inverse pull-right">E-mail Schedule to Student</button>
@@ -98,6 +99,7 @@
                     @form(routes.AdminController.deleteLearner(learner.uuid)) {
 						<button type="submit" class="btn btn-sm btn-danger pull-right">Delete Student</button>
 					}
+
 					</div>
 		    	</div>
 		    </div>
@@ -105,12 +107,18 @@
 		@(panelNum += 1)
 		}
 	</div>
-	<a class="btn btn-inverse" href="@routes.AdminController.removeLearnersAndGiveCSV">
-		Export and Delete Students
-	</a>
-	@form(routes.AdminController.emailAllStudents()) {
-		<button type="submit" class="btn btn-inverse">Email All Students</button>
-	}
+		<div class="inline btn-space-sm">
+			<a class="btn btn-inverse" href="@routes.AdminController.removeLearnersAndGiveCSV">
+
+				Export and Delete Students
+			</a>
+		</div>
+		<div class="inline">
+			@form(routes.AdminController.emailAllStudents()) {
+				<button type="submit" class="btn btn-inverse">Email All Students</button>
+			}
+		</div>
+	</div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>

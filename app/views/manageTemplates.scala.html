@@ -60,8 +60,11 @@
 		    <div id="collapse@panelNum" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading@panelNum">
 		    	<div class="panel-body">
 		    		<div class = "pull-left">
+              <div class="inline"><h6>Learner Type: &nbsp;</h6></div>
+              <div class="inline"><h6>@template.learnerType</h6></div>
+              <br>
+              <br>
 
-		    			<!-- CREATE LIST OF SESSIONS HERE -->
 		    			<h6>Sessions:</h6>
               <table class="table table-bordered">
                 <tr>
@@ -104,7 +107,7 @@
 	<a class="btn btn-inverse" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
 		Add Template
 	</a>
-</div>
+
 
   <!-- Error messages -->
   @if(templateForm.hasGlobalErrors()) {
@@ -136,6 +139,8 @@
           
 		}
 	</div>
+
+</div>
 
   </div>
 
