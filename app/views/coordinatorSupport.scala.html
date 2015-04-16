@@ -15,8 +15,9 @@
 </head>
 <body>
 <div class="container">
+
 	<div class="jumbotron">
-		<h1>Support</h1>	
+		<h2>Support</h2>
 	</div>
 	<nav class="navbar navbar-default navbar-static-top">
 		<div class="container">
@@ -26,35 +27,31 @@
             	<li><a href="@routes.CoordinatorController.viewCoordinatorCalendar()">Schedule</a></li>
                 <li><a href="@routes.Application.viewCoordinatorSupport()">Support</a></li>
          	</ul>
-         	<div class="pull-right">
+         	<div class="btn-group pull-right" role="group" >
 		  		<button onclick="location.href='@routes.Application.logout()';" type="button" class="btn btn-block btn-sm btn-danger btn-logout">Log Out</button>
 			</div>
  		</div>
 	</nav>
-</div>
-
-<div class="container">
+	
 	<h4 class="faqs">Emory Dermatology Rotation Request Form User Manual</h4>
 	
 	<hr>
+
+	<h6 class="faqs">Frequently Asked Questions</h6>
+	<p class="faqs"><a href="#FAQ2" class="faqs">How do I let my student know their schedule?</a></p>
+	<p class="faqs"><a href="#FAQ3" class="faqs">Where do my students report for clinic? Are there any lectures?</a></p>
+	<p class="faqs"><a href="#FAQ4" class="faqs">What if there is not an open or available clinic during a time that I want to register a student?</a></p>
+	<p class="faqs"><a href="#FAQ5" class="faqs">What if I registered a student for a rotation, but he/she can no longer attend?</a></p>
+	<p class="faqs"><a href="#FAQ6" class="faqs">I received an email that a clinic that I registered a student for has been canceled. What does this mean?</a></p>
+	<p class="faqs"><a href="#FAQ7" class="faqs">I still have questions. Is there someone I can call?</a></p>
 
 	<h6 class="faqs">The Login Screen</h6>
 	<p class="faqs"><a href="#1" class="faqs">Currently registered users</a></p>
 	<p class="faqs"><a href="#2" class="faqs">Not currently registered users</a></p>
 
-	<h6 class="faqs">Administrator Functions</h6>
-	<p class="faqs"><a href="#3" class="faqs">Log out</a></p>
-	<p class="faqs"><a href="#4" class="faqs">View pending and current coordinators</a></p>
-	<p class="faqs"><a href="#5" class="faqs">View all students</a></p>
-	<p class="faqs"><a href="#6" class="faqs">Email a student their schedule</a></p>
-	<p class="faqs"><a href="#7" class="faqs">View the calendar of events</a></p>
-	<p class="faqs"><a href="#8" class="faqs">Add a new event to the calendar</a></p>
-	<p class="faqs"><a href="#9" class="faqs">Edit an event</a></p>
-	<p class="faqs"><a href="#10" class="faqs">Delete an event</a></p>
-
 	<h6 class="faqs">External Coordinator Functions</h6>
 	<p class="faqs"><a href="#11" class="faqs">Log out</a></p>
-	<p class="faqs" class="faqs"><a href="#12" class="faqs">View your current students</a></p>
+	<p class="faqs"><a href="#12" class="faqs">View your current students</a></p>
 	<p class="faqs"><a href="#13" class="faqs">Add a new student</a></p>
 	<p class="faqs"><a href="#14" class="faqs">View the calendar of events</a></p>
 	<p class="faqs"><a href="#15" class="faqs">View events on a particular day</a></p>
@@ -63,41 +60,76 @@
 	
 	<hr>
 
+	<h4 class="faqs">Frequently Asked Questions</h4>
+
+	<h6><a name="FAQ2">How do I let my student know their schedule?</a></h6>
+	<p>Before each student’s rotation, you will need to click on the “Email schedule” button. This can be found under the Students tab.</p>
+
+	<h6><a name="FAQ3">Where do my students report for clinic? Are there any lectures?</a></h6>
+	<p>Start times by clinic site:</p>
+
+	<table style="width:900px" class="table table-bordered specialTable">
+	  <tr>
+	    <th>Clinic Site</th>
+	    <th>Floor</th> 
+	    <th>Start Time</th>
+	  </tr>
+	  <tr>
+	    <td>The Emory Clinic (TEC) <br>1525 Clifton Road</td>
+	    <td>3rd Floor</td> 
+	    <td>8:20am* &amp; 1:00pm
+		<br>*Except Thursday mornings start at 10am</td>
+	  </tr>
+	  <tr>
+	    <td>Grady Clinic</td>
+	    <td>1st Floor (A/B Tower)</td> 
+	    <td>8:15am &amp; 1:15pm</td>
+	  </tr>
+	  <tr>
+	    <td>VA Clinic</td>
+	    <td>1st Floor (medicine subspecialties clinic area)</td> 
+	    <td>8:30am* &amp; 1:30pm
+		<br>*Except Tuesday mornings start at 9:30am</td>
+	  </tr>
+	</table>
+	<p>We also welcome rotators to attend Emory Dermatology Grand Rounds, which are held on the 1st, 3rd, and 5th Thursday of the month. It is in the Brown Auditorium at Emory Clinic Building A (1365 Clifton Road) from 7:45am to 10am.</p>
+
+	<h6><a name="FAQ4">What if there is not an open or available clinic during a time that I want to register a student?</a></h6>
+	<p>Unfortunately, due to high volume and pre-existing agreements, we are not able to accommodate all requests. Please check back in the future to see if any pots become available.</p>
+
+	<h6><a name="FAQ5">What if I registered a student for a rotation, but he/she can no longer attend?</a></h6>
+	<p>You can do this through the same calendar that you used to initially register the student. Please see “New user instructions” document for details. If a student has to cancel a rotation, please do so on the calendar as soon as possible so that that spot may be available to other students who are interested.</p>
+
+	<h6><a name="FAQ6">I received an email that a clinic that I registered a student for has been canceled. What does this mean?</a></h6>
+	<p>Unfortunately, the clinic you registered for is no longer in session that day. Please go back to the main calendar you used to register the student to see if there are any alternative options available</p>
+
+	<h6><a name="FAQ7">I still have questions. Is there someone I can call?</a></h6>
+	<p>Please call our dermatology rotation coordinator at 404-727-3669 with any questions.  Please leave a detailed message with how we can reach you.</p>
+
+	<hr>
+
 	<h4 class="faqs">The Login Screen</h4>
 
 	<h6><a name="1">Currently registered users</a></h6>
-	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+	<li><p>If you know your credentials, enter your email and password into the appropriate boxes and click the “Login” button</p></li>
+	<li><p>If you have forgotten your password, click the “Forgot your password?” link towards the bottom of the page</p>
+		<ol>
+			<li><p>On the following page, enter your e-mail address into the box provided and click the “Submit” button</p></li>
+			<li><p>An email will be sent to your email address containing a link</p></li>
+			<li><p>Click this link and you will be directed to a page where you will be prompted to reset your password</p></li>
+			<li><p>Once you’ve reset your password and clicked “Submit”, you will be logged in to the system</p></li>
+		</ol>
+	</li>
 
 	<h6><a name="2">Not currently registered users</a></h6>
-	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-	
-	<hr>
-
-	<h4 class="faqs">Administrator Functions</h4>
-
-	<h6><a name="3">Log out</a></h6>
-	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-	<h6><a name="4">View pending and current coordinators</a></h6>
-	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-	<h6><a name="5">View all students</a></h6>
-	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-	<h6><a name="6">Email a student their schedule</a></h6>
-	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-	<h6><a name="7">View the calendar of events</a></h6>
-	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-	<h6><a name="8">Add a new event to the calendar</a></h6>
-	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-	<h6><a name="9">Edit and event</a></h6>
-	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-	<h6><a name="10">Delete an event</a></h6>
-	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+	<li><p>Request Access through the link, “Don’t have an account? Sign up”, at the bottom of the page</p>
+		<ol>
+			<li><p>On the following page, enter your first name, last name and your e-mail address in the appropriate boxes and select your department from the drop down list. Then, click the “Register” button to submit your information as a request for credentials to be able to login to and use the application.</p></li>
+			<li><p>Once you submit your request, an administrator will have to approve your credentials</p></li>
+			<li><p>If and when you are approved by the administrator, you will receive an e-mail with a link to a screen where you can create your password</p></li>
+			<li><p>Once you enter your password into the correct field and confirm it, click the “Submit” button and you will automatically be logged into the system</p></li>
+		</ol>
+	</li>
 
 	<hr>
 
