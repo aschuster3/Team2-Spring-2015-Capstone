@@ -33,6 +33,15 @@ h6.faqs{
 }
 p{
 	font-family: 'Lora', serif;
+	font-size: 12pt;
+}
+.specialTable td{
+	font-size: 12pt;
+	font-family: 'Lora', serif;
+}
+.specialTable th{
+	font-size: 14pt;
+	font-family: 'Lora', serif;
 }
 p.session
 {
