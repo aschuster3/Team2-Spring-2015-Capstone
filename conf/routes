@@ -75,7 +75,7 @@ GET           /admincalendar                      controllers.AdminController.vi
 GET           /templates                          controllers.TemplateController.templates()
 POST          /templates                          controllers.TemplateController.createScheduleTemplate()
 POST          /templates/:scheduleID              controllers.TemplateController.createSessionTemplate(scheduleID: String)
-POST          /templates                          controllers.TemplateController.updateSessionTemplate()
+PUT          /templates/:sessionId			      controllers.TemplateController.updateSessionTemplate(sessionId: String)
 DELETE        /templates/:sessionId               controllers.TemplateController.deleteSessionFromSchedule(sessionId: String)
 GET           /templates-api                      controllers.TemplateController.jsonTemplates()
 
