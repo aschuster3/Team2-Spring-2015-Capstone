@@ -165,6 +165,30 @@ public class TemplateControllerTest {
     }
     
     @Test
+    public void updateSessionInSchedule(){
+    	SessionTemplate st1 = new SessionTemplate("Emory Derm", "Joe", 1, 2, true);
+    	ScheduleTemplate schedule = new ScheduleTemplate("schedule", "subi");
+    	schedule.addSession(st1);
+    	schedule.save();
+    	
+    	assertThat(SessionTemplate.find.byId(st1.id).location).isEqualTo("Emory Derm");
+    	assertThat(SessionTemplate.find.byId(st1.id).physician).isEqualTo("Joe");
+    	assertThat(SessionTemplate.find.byId(st1.id).week).isEqualTo(1);
+    	assertThat(SessionTemplate.find.byId(st1.id).day).isEqualTo(2);
+    	assertThat(SessionTemplate.find.byId(st1.id).isAM).isEqualTo(true);
+    	
+    	assertThat(schedule.sessions.get(0).physician).isEqualTo("Joe");
+
+    	st1.updatePhysician("Mary");
+    	
+    	assertThat(SessionTemplate.find.byId(st1.id).physician).isEqualTo("Mary");
+    	
+    	assertThat(schedule.sessions.get(0).physician).isEqualTo("Mary");
+    	assertThat(ScheduleTemplate.find.byId(schedule.uuid).sessions.get(0).physician).isEqualTo("Mary");
+    }
+    
+    
+    @Test
 	public void removeSessionFromSchedule(){
     	ScheduleTemplate scheduleTemp = new ScheduleTemplate("subi2", "subi");
     	SessionTemplate clinic1 = new SessionTemplate("Emory", "Bob", 1, 1, true);

@@ -78,22 +78,21 @@
               
                 @for(s <- template.sessions) {
                             
-                <tr>
-                  <td>@s.location</td>
-                  <td>@s.physician</td> 
-                  <td>@s.week</td>
-                  <td>@s.day</td>
-                  @if(s.isAM) {
-                  <td>AM</td>
-                  }else{
-                  <td>PM</td>
+                  <tr class="sessionInfo" data-session-id="@s.id">
+                    <td class="sessionLocation">@s.location</td>
+                    <td class="sessionPhysician">@s.physician</td> 
+                    <td class="sessionWeek">@s.week</td>
+                    <td class="sessionDay">@s.day</td>
+                    @if(s.isAM) {
+                    <td class="sessionAM">AM</td>
+                    }else{
+                    <td class="sessionAM">PM</td>
+                    }
+                    <td><a href="" class="edit-remove editButton" data-toggle="modal" data-target=".editForm"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a></td>
+                    <td><a href="" class="edit-remove" onclick="deleteSession('@s.id')"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td>
+                  </tr>
                   }
-                  <td><a href="" class="edit-remove" data-toggle="modal" data-target="#editSessionModal"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a></td>
-                  <td><a href="" class="edit-remove" onclick="deleteSession('@s.id')"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td>
-                </tr>
-                }
               </table>
-
 					</div>
 					<div class="pull-right">
 				  		<button type="button" class="btn btn-block btn-sm btn-warning" data-toggle="modal" data-target="#addSessionModal" onclick = "setPath('@template.uuid')">Add Session</button>
@@ -107,7 +106,7 @@
 	<a class="btn btn-inverse" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
 		Add Template
 	</a>
-
+</div>
 
   <!-- Error messages -->
   @if(templateForm.hasGlobalErrors()) {
@@ -179,7 +178,7 @@
             '_label -> "Day of the Week (1 = Monday, 2 = Tuesday, etc.)",
             '_showConstraints -> false)
             @inputRadioGroup(sessionForm("isAM"), 
-            options = Seq("True"->"AM   ", "False"->"PM"),
+            options = Seq("true"->"AM   ", "false"->"PM"),
             '_label -> "Time of Day",
             'id -> "inputSessionAM",
             '_showConstraints -> false)
@@ -192,7 +191,8 @@
     </div>
   </div>
 
-  <div id="editSessionModal" class="modal fade">
+
+  <div class="modal fade editForm" style="display: none">
     <div class="modal-dialog">
      <div class="modal-content">
         <div class="modal-header">
@@ -202,7 +202,54 @@
           @if(sessionForm.hasGlobalErrors()){
             <p class="text-center formGlobalError"><font color = "red">@sessionForm.globalError.message</font></p>
           }
-          @form(routes.TemplateController.updateSessionTemplate()) {
+            <div class="inputSessionLocation">Location
+              <select type="text" class="form-control" name="location">
+                <option value="Emory Clinic">Emory Clinic</option>
+                <option value="Grady Clinic">Grady Clinic</option>
+                <option value="VA Clinic">Va Clinic</option>
+                <option value="VA Telederm">VA Telederm</option>
+                <option value="Emory Dermpath">Emory Dermpath</option>
+              </select>
+            </div>
+            <br>
+            <div class="inputSessionPhysician">Physician on Duty
+              <input type="text" class="form-control" name="physician">
+            </div>
+            <br>
+            <div class="inputSessionWeek">Week of Rotation
+              <input type="number" class="form-control" name="week">
+            </div>  
+            <br>    
+            <div class="inputSessionDay">Day of the Week (1 = Monday, 2 = Tuesday, etc.)
+              <input type="number" class="form-control" name="day">
+            </div>                  
+            <br>
+            <div class="inputSessionAM">Time of Day:
+              <br>
+              <input type="radio" name="isAM" value="true">AM
+              <input type="radio" name="isAM" value="false">PM
+            </div>      
+            <button type="button" class="btn btn-sm btn-inverse saveButton">Save</button>
+            <button type="button" class="btn btn-sm btn-inverse" onclick="$('.editForm').modal('toggle')">Cancel</button>
+            <span class="pull-right editFormErrorMessage"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+  <!--<div id="editSessionModal" class="modal fade">
+    <div class="modal-dialog">
+     <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Edit Session</h4>
+        </div>
+        <div class="modal-body">
+          @if(sessionForm.hasGlobalErrors()){
+            <p class="text-center formGlobalError"><font color = "red">@sessionForm.globalError.message</font></p>
+          }
+          @form(routes.TemplateController.updateSessionTemplate("")) {
             @select(sessionForm("location"),
             options = Seq("Emory Clinic"->"Emory Clinic", "Grady Clinic"->"Grady Clinic", "VA Clinic" -> "VA Clinic", "VA Telederm" -> "VA Telederm", "Emory Dermpath" -> "Emory Dermpath"), 
             'type -> "text", 
@@ -240,7 +287,7 @@
         <div class="modal-footer"></div>
       </div>
     </div>
-  </div>
+  </div>-->
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
@@ -309,6 +356,149 @@
       setPath('@scheduleTitle');
       addSessionModalElement.modal('show');
     }
+
+//Taken from student's page!
+
+  var editIndex;
+  
+  $('.editButton').each(function (index, button) {
+    $(button).click(function () {
+      populateEditFormWithCurrentValues(index);
+      editIndex=index;
+     // showEditForm(index);
+    });
+  });
+
+  $('.saveButton' ).each(function (index, button) {
+    $(button ).click(function () {
+      sendUpdateLearnerRequest(editIndex);
+    });
+  });
+
+  function sendUpdateLearnerRequest(index) {
+    var info = $('.sessionInfo' ).get(index);
+    var sessionID = $(info).data("session-id");
+    sessionJson = extractLearnerValuesFromForm();
+    
+    jQuery.ajax({
+      type: 'PUT',
+      contentType: 'application/json',
+      processData: false,
+      data: JSON.stringify(sessionJson),
+      dataType: 'json',
+      url: learnerRouteForUpdate(index),
+      success: function (data) {
+        $('.editForm').modal('toggle');
+        updateLearnerInfoWithValues(index, data);
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        displayFormError(index, jqXHR.responseText);
+      }
+    });
+  }
+
+  function updateLearnerInfoWithValues(index, sessionValues) {
+    var infoElem = $('.sessionInfo' ).get(index);
+
+    $('.sessionLocation', infoElem ).text(sessionValues.location);
+    $('.sessionPhysician', infoElem ).text(sessionValues.physician);
+    $('.sessionWeek', infoElem ).text(sessionValues.week);
+    $('.sessionDay', infoElem ).text(sessionValues.day);
+    if(sessionValues.isAM){
+      $('.sessionAM', infoElem ).text("AM");
+    }
+    else 
+      $('.sessionAM', infoElem ).text("PM");
+  }
+
+  function learnerRouteForUpdate(index) {
+    var info = $('.sessionInfo' ).get(index);
+    var sessionID = $(info ).data('session-id');
+    return "@routes.TemplateController.updateSessionTemplate("")" + encodeURIComponent(sessionID);
+  }
+
+ function populateEditFormWithCurrentValues(index) {
+    var formElem = $('.editForm' ).get();
+    var currentValues = extractLearnerValuesFromInfo(index);
+
+    var inputElems = $('input', formElem );
+    var selectElems = $('select', formElem); 
+    
+    $(selectElems[0] ).val(currentValues['location']);
+
+    $(inputElems[0] ).val(currentValues['physician']);
+    $(inputElems[1] ).val(currentValues['week']);
+    $(inputElems[2] ).val(currentValues['day']);
+   // $(inputElems[3] ).val(currentValues['isAM']);
+
+   if(currentValues['isAM'] == "AM"){
+       $(inputElems[3] ).val("true");
+       $(inputElems[3] ).prop("checked", true);
+    }
+    else{
+      $(inputElems[4] ).val("false");
+      $(inputElems[4] ).prop("checked", true);
+
+    }
+  }
+
+  function extractLearnerValuesFromInfo(index) {
+    var infoElem = $('.sessionInfo' ).get(index);
+    var sessionValues = {};
+    
+    sessionValues.location = $('.sessionLocation', infoElem).text();
+    sessionValues.physician = $('.sessionPhysician', infoElem).text();
+    sessionValues.week = $('.sessionWeek', infoElem).text();
+    sessionValues.day = $('.sessionDay', infoElem).text();
+    sessionValues.isAM = $('.sessionAM', infoElem).text();
+
+    return sessionValues;
+  }
+
+  function extractLearnerValuesFromForm() {
+    var formElem = $('.editForm' ).get(0);
+    var sessionValues = { };
+    var inputElems = $('input', formElem );
+    var selectElems = $('select', formElem );
+
+    sessionValues.location = $(selectElems[0] ).val();
+    sessionValues.physician = $(inputElems[0] ).val();
+    sessionValues.week = $(inputElems[1] ).val();
+    sessionValues.day = $(inputElems[2] ).val();
+    if($(inputElems[3] ).is(':checked')){
+      sessionValues.isAM = $(inputElems[3] ).val();
+    }
+    else
+      sessionValues.isAM = $(inputElems[4] ).val();
+
+    return sessionValues;
+  }
+
+  /*function showEditForm(index) {
+      $('#editSessionModal').modal.('show');
+  }*/
+
+  function hideEditForm(index) {
+    var elem = $('.editForm' ).get(index);
+    $(elem ).hide();
+  }
+
+  function displayFormError(index, message) {
+    var elem = $('.editFormErrorMessage' ).get(index);
+    $(elem ).text(message);
+  }
+
+  function locationOptionsContains(location) {
+    var contains = false;
+
+    $('select' ).first( ).children( ).each(function () {
+      if ($(this ).val() === location) {
+        contains = true;
+      }
+    });
+    return contains;
+  }
+
   </script>
 </body>
 </html>

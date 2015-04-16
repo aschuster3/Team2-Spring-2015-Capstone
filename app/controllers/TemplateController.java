@@ -3,6 +3,8 @@ package controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import models.Learner;
 import models.ScheduleTemplate;
 import models.Session;
@@ -206,8 +208,37 @@ public class TemplateController extends Controller {
 		return form;
 	}*/
 
-	public static Result updateSessionTemplate() {
-		return TODO;
+	@BodyParser.Of(BodyParser.Json.class)
+	public static Result updateSessionTemplate(String sessionId) {
+		JsonNode sessionJson = request().body().asJson();
+        SessionTemplate updatedSessionData = Json.fromJson(sessionJson, SessionTemplate.class);
+        SessionTemplate existingSession = SessionTemplate.find.byId(sessionId);
+
+        System.out.println(existingSession.id + "   " + sessionId);
+        //System.out.println("updated session ID: "+ updatedSessionData.id);
+        //System.out.println("existing session ID: "+ existingSession.id);
+        
+        if (existingSession == null) {
+            return badRequest("Session ID does not exist");
+        }
+
+       /* String errorMessage = updatedLearnerData.validate();
+        if (errorMessage != null) {
+            return badRequest(errorMessage);
+        }*/
+        System.out.println(existingSession.physician + " " + existingSession.week + " " + existingSession.day);
+
+        //if (updatedSessionData.id.equals(existingSession.id)) {
+        	existingSession.updateLocation(updatedSessionData.location);
+        	existingSession.updatePhysician(updatedSessionData.physician);
+        	existingSession.updateWeek(updatedSessionData.week);
+        	existingSession.updateDay(updatedSessionData.day);
+        	existingSession.updateAM(updatedSessionData.isAM);
+
+        System.out.println(existingSession.physician + " " + existingSession.week + " " + existingSession.day);
+       // }
+        return ok(Json.toJson(SessionTemplate.find.byId(existingSession.id)));
+        //return status(204);
 	}
 
 }
