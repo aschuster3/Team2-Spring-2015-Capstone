@@ -15,6 +15,24 @@
 </head>
 <body>
 <div class="container">
+
+	<div class="jumbotron">
+		<h1>Coordinator Dashboard</h1>
+	</div>
+	<nav class="navbar navbar-default navbar-static-top">
+		<div class="container">
+			<ul class="nav navbar-nav pull-left">
+				<li><a href="@routes.Application.index()">Home</a></li>
+            	<li><a href="@routes.CoordinatorController.students()">Students</a></li>
+            	<li><a href="@routes.CoordinatorController.viewCoordinatorCalendar()">Schedule</a></li>
+                <li><a href="@routes.Application.viewCoordinatorSupport()">Support</a></li>
+         	</ul>
+         	<div class="btn-group pull-right" role="group" >
+		  		<button onclick="location.href='@routes.Application.logout()';" type="button" class="btn btn-block btn-sm btn-danger btn-logout">Log Out</button>
+			</div>
+ 		</div>
+	</nav>
+	
 	<h4 class="faqs">Emory Dermatology Rotation Request Form User Manual</h4>
 	
 	<hr>
@@ -60,7 +78,7 @@
 	<h6><a name="FAQ3">Where do my students report for clinic? Are there any lectures?</a></h6>
 	<p>Start times by clinic site:</p>
 
-	<table style="width:900px" class="table table-bordered">
+	<table style="width:900px" class="table table-bordered specialTable">
 	  <tr>
 	    <th>Clinic Site</th>
 	    <th>Floor</th> 
