@@ -92,8 +92,12 @@
                         
 					</div>
 					<div class = "col-md-2">
-						<button type="button" class="btn btn-sm btn-inverse emailBtn pull-right">E-mail Schedule to Student</button>
-						<button type="button" class="btn btn-sm btn-danger editButton learnerDeleteButton pull-right" data-learner-uuid="@learner.uuid">Delete Student</button>
+					@form(routes.AdminController.emailLearnerSchedule(learner.uuid)) {
+                        <button type="submit" class="btn btn-sm btn-inverse pull-right">E-mail Schedule to Student</button>
+                    }
+                    @form(routes.AdminController.deleteLearner(learner.uuid)) {
+						<button type="submit" class="btn btn-sm btn-danger pull-right">Delete Student</button>
+					}
 					</div>
 		    	</div>
 		    </div>
@@ -104,9 +108,9 @@
 	<a class="btn btn-inverse" href="@routes.AdminController.removeLearnersAndGiveCSV">
 		Export and Delete Students
 	</a>
-	<a class="btn btn-inverse" href="@routes.AdminController.removeLearnersAndGiveCSV">
-		Email All Students
-	</a>
+	@form(routes.AdminController.emailAllStudents()) {
+		<button type="submit" class="btn btn-inverse">Email All Students</button>
+	}
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>

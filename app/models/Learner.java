@@ -89,6 +89,7 @@ public class Learner extends Model {
         List<Session> schedule = Session.getLearnerSchedule(learner.email);
         for (Session session: schedule) {
             session.assignedLearner = null;
+            session.save();
         }
         learner.delete();
     }

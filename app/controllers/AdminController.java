@@ -35,6 +35,31 @@ public class AdminController extends Controller {
         
         return ok(views.html.studentsAdminView.render(learners, learnerSchedules, Learner.LEARNER_TYPES));
     }
+    
+    public static Result emailLearnerSchedule(String learnerId) {
+        Learner learner = Learner.find.where().eq("uuid", learnerId).findUnique();
+        
+        Email email = new Email();
+        email.setSubject("The following includes schedule details.");
+        email.setFrom("admin@emory.edu");
+        email.addTo(learner.email);
+        email.setBodyText("Test");
+        
+        MailerPlugin.send(email);
+        return status(NO_CONTENT);
+    }
+    
+    public static Result emailAllStudents() {
+        return TODO;
+    }
+    
+    public static Result deleteLearner(String learnerId) {
+        Learner learner = Learner.find.where().eq("uuid", learnerId).findUnique();
+        if(learner != null) {
+            Learner.deleteLearnerButFreeTheirSessions(learner);
+        }
+        return redirect(routes.AdminController.viewLearners());
+    }
 
     public static Result viewAllCoordinators() {
         return ok(views.html.coordinatorsPage.render(

@@ -26,8 +26,8 @@ POST          /signup                             controllers.Application.create
 GET           /signupConfirmed                    controllers.Application.viewRegistrationFormConfirmation()
 
 # UnapprovedUser Actions
-POST          /testUU/:id/delete                  controllers.AdminController.removeUnapprovedUser(id: String)
-POST          /testUU/:id                         controllers.AdminController.approveUnapprovedUser(id: String)
+POST          /unapprovedUser/:id/delete          controllers.AdminController.removeUnapprovedUser(id: String)
+POST          /unapprovedUser/:id                 controllers.AdminController.approveUnapprovedUser(id: String)
 GET           /completeSignup/:token              controllers.Application.setPassword(token: String)
 POST          /completeSignup                     controllers.Application.addNewUser(email: String)
 
@@ -51,6 +51,7 @@ DELETE        /learners-api/:learnerUUID          controllers.LearnerController.
 # Coordinator Learner Page
 GET           /students                           controllers.CoordinatorController.students()
 POST          /students                           controllers.CoordinatorController.createLearner()
+POST          /sendEmailToLearner/:id             controllers.CoordinatorController.emailLearnerSchedule(id: String)
 
 # Coordinator Calendar Page
 GET           /calendar                           controllers.CoordinatorController.viewCoordinatorCalendar()
@@ -58,9 +59,14 @@ GET           /calendar                           controllers.CoordinatorControl
 # Admin View: Coordinators List
 GET           /coordinators                       controllers.AdminController.viewAllCoordinators()
 POST          /forgotPassword/:userUUID           controllers.Application.sendNewPasswordToUser(userUUID: String)
-GET           /viewlearner                        controllers.AdminController.viewLearners()
 GET           /admin-support                      controllers.Application.viewSupportPage()
 GET           /coordinator-support                controllers.Application.viewCoordinatorSupport()
+
+# Admin View: Learners List
+GET           /viewlearner                        controllers.AdminController.viewLearners()
+POST          /deleteLearner/:id                  controllers.AdminController.deleteLearner(id: String)
+POST          /sendEmail/:id                      controllers.AdminController.emailLearnerSchedule(id: String)
+POST          /sendAllEmail                       controllers.AdminController.emailAllStudents()
 
 # Admin View: Calendar Page
 GET           /admincalendar                      controllers.AdminController.viewCalendar()

@@ -121,8 +121,10 @@
                         
 					</div>
 					<div class = "col-md-2">
-						<button type="button" class="btn btn-sm btn-inverse emailBtn">E-mail Schedule to Student</button>
-					</div>
+					@form(routes.CoordinatorController.emailLearnerSchedule(learner.uuid)) {
+                        <button type="submit" class="btn btn-sm btn-inverse pull-right">E-mail Schedule to Student</button>
+                    }
+                    </div>
 		    	</div>
 		    </div>
 		</div>

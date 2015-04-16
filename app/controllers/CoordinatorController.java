@@ -11,6 +11,8 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
 import play.twirl.api.Html;
+import play.libs.mailer.Email;
+import play.libs.mailer.MailerPlugin;
 import views.html.calendarCoordinator;
 import views.html.studentsPage;
 
@@ -28,6 +30,19 @@ public class CoordinatorController extends Controller {
         } else {
             return ok(studentsPageRenderWithForm(email, learnerForm));
         }
+    }
+    
+    public static Result emailLearnerSchedule(String learnerId) {
+        Learner learner = Learner.find.where().eq("uuid", learnerId).findUnique();
+        
+        Email email = new Email();
+        email.setSubject("The following includes schedule details.");
+        email.setFrom("admin@emory.edu");
+        email.addTo(learner.email);
+        email.setBodyText("Test");
+        
+        MailerPlugin.send(email);
+        return status(NO_CONTENT);
     }
 
     public static Result createLearner() {
