@@ -52,6 +52,7 @@ DELETE        /learners-api/:learnerUUID          controllers.LearnerController.
 GET           /students                           controllers.CoordinatorController.students()
 POST          /students                           controllers.CoordinatorController.createLearner()
 POST          /sendEmailToLearner/:id             controllers.CoordinatorController.emailLearnerSchedule(id: String)
+POST          /sendEmailToAllLearners             controllers.CoordinatorController.emailAllStudents()
 
 # Coordinator Calendar Page
 GET           /calendar                           controllers.CoordinatorController.viewCoordinatorCalendar()

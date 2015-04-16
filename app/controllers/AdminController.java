@@ -50,7 +50,18 @@ public class AdminController extends Controller {
     }
     
     public static Result emailAllStudents() {
-        return TODO;
+        List<Learner> learners = Learner.getAll();
+        for(Learner l: learners) {
+            Email email = new Email();
+            email.setSubject("The following includes schedule details.");
+            email.setFrom("admin@emory.edu");
+            email.addTo(l.email);
+            email.setBodyText("Test");
+            
+            MailerPlugin.send(email);
+        }
+        
+        return status(NO_CONTENT);
     }
     
     public static Result deleteLearner(String learnerId) {

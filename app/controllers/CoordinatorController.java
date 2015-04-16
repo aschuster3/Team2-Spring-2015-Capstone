@@ -44,6 +44,21 @@ public class CoordinatorController extends Controller {
         MailerPlugin.send(email);
         return status(NO_CONTENT);
     }
+    
+    public static Result emailAllStudents() {
+        List<Learner> learners = Learner.getAllOwnedBy(session().get("email"));
+        for(Learner l: learners) {
+            Email email = new Email();
+            email.setSubject("The following includes schedule details.");
+            email.setFrom("admin@emory.edu");
+            email.addTo(l.email);
+            email.setBodyText("Test");
+            
+            MailerPlugin.send(email);
+        }
+        
+        return status(NO_CONTENT);
+    }
 
     public static Result createLearner() {
         Form<Learner.PreLearner> filledForm = learnerForm.bindFromRequest();

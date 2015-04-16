@@ -134,9 +134,9 @@
 	<a class="btn btn-inverse" data-toggle="collapse" href="#createLearnerPanel" aria-expanded="false" aria-controls="createLearnerPanel">
 		Add Student
 	</a>
-	<a class="btn btn-inverse" href="#">
-		Email All Students
-	</a>
+	@form(routes.CoordinatorController.emailAllStudents()) {
+        <button type="submit" class="btn btn-inverse">Email All Students</button>
+    }
 	@*
 		If the user submitted an invalid form, we want them to see this form immediately.
 		So, don't set the class to 'collapse' for the above scenario!
