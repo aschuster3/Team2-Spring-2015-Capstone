@@ -26,7 +26,7 @@
 <!-- Jumbotron and nav bar -->
 <div class="container">
 	<div class="jumbotron">
-		<h2>Manage Templates</h2>	
+		<h1>Manage Templates</h1>	
 	</div>
 	<nav class="navbar navbar-default navbar-static-top">
 		<div class="container">
@@ -237,58 +237,6 @@
       </div>
     </div>
 
-
-
-  <!--<div id="editSessionModal" class="modal fade">
-    <div class="modal-dialog">
-     <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">Edit Session</h4>
-        </div>
-        <div class="modal-body">
-          @if(sessionForm.hasGlobalErrors()){
-            <p class="text-center formGlobalError"><font color = "red">@sessionForm.globalError.message</font></p>
-          }
-          @form(routes.TemplateController.updateSessionTemplate("")) {
-            @select(sessionForm("location"),
-            options = Seq("Emory Clinic"->"Emory Clinic", "Grady Clinic"->"Grady Clinic", "VA Clinic" -> "VA Clinic", "VA Telederm" -> "VA Telederm", "Emory Dermpath" -> "Emory Dermpath"), 
-            'type -> "text", 
-            'id -> "inputSessionLocation",
-            'class -> "form-control", 
-            '_label -> "Location",
-            '_showConstraints -> false)
-            @inputText(sessionForm("physician"), 
-            'type -> "text",
-            'class -> "form-control", 
-            'id -> "inputSessionPhysician",
-            '_label -> "Physician on Duty",
-            '_showConstraints -> false)
-            @inputText(sessionForm("week"), 
-            'type -> "number",
-            'class -> "form-control", 
-            'id -> "inputSessionWeek",
-            '_label -> "Week of Rotation",
-            '_showConstraints -> false)
-            @inputText(sessionForm("day"), 
-            'type -> "number",
-            'class -> "form-control", 
-            'id -> "inputSessionDay",
-            '_label -> "Day of the Week (1 = Monday, 2 = Tuesday, etc.)",
-            '_showConstraints -> false)
-            @inputRadioGroup(sessionForm("isAM"), 
-            options = Seq("True"->"AM   ", "False"->"PM"),
-            '_label -> "Time of Day",
-            'id -> "inputSessionAM",
-            '_showConstraints -> false)
-          <button id="cancelButton" class="btn btn-inverse pull-right" data-dismiss="modal">Cancel</button>
-          <input role="button" class="btn btn-inverse pull-right btn-space" type="submit" value="Submit"></input> 
-          }
-        </div>
-        <div class="modal-footer"></div>
-      </div>
-    </div>
-  </div>-->
-
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
   <script type="text/javascript">
@@ -357,10 +305,8 @@
       addSessionModalElement.modal('show');
     }
 
-//Taken from student's page!
-
   var editIndex;
-  
+
   $('.editButton').each(function (index, button) {
     $(button).click(function () {
       populateEditFormWithCurrentValues(index);
@@ -371,14 +317,14 @@
 
   $('.saveButton' ).each(function (index, button) {
     $(button ).click(function () {
-      sendUpdateLearnerRequest(editIndex);
+      sendUpdateSessionRequest(editIndex);
     });
   });
 
-  function sendUpdateLearnerRequest(index) {
+  function sendUpdateSessionRequest(index) {
     var info = $('.sessionInfo' ).get(index);
     var sessionID = $(info).data("session-id");
-    sessionJson = extractLearnerValuesFromForm();
+    sessionJson = extractSessionValuesFromForm();
     
     jQuery.ajax({
       type: 'PUT',
@@ -386,10 +332,10 @@
       processData: false,
       data: JSON.stringify(sessionJson),
       dataType: 'json',
-      url: learnerRouteForUpdate(index),
+      url: sessionRouteForUpdate(index),
       success: function (data) {
         $('.editForm').modal('toggle');
-        updateLearnerInfoWithValues(index, data);
+        updateSessionInfoWithValues(index, data);
       },
       error: function (jqXHR, textStatus, errorThrown) {
         displayFormError(index, jqXHR.responseText);
@@ -397,7 +343,7 @@
     });
   }
 
-  function updateLearnerInfoWithValues(index, sessionValues) {
+  function updateSessionInfoWithValues(index, sessionValues) {
     var infoElem = $('.sessionInfo' ).get(index);
 
     $('.sessionLocation', infoElem ).text(sessionValues.location);
@@ -411,7 +357,7 @@
       $('.sessionAM', infoElem ).text("PM");
   }
 
-  function learnerRouteForUpdate(index) {
+  function sessionRouteForUpdate(index) {
     var info = $('.sessionInfo' ).get(index);
     var sessionID = $(info ).data('session-id');
     return "@routes.TemplateController.updateSessionTemplate("")" + encodeURIComponent(sessionID);
@@ -419,7 +365,7 @@
 
  function populateEditFormWithCurrentValues(index) {
     var formElem = $('.editForm' ).get();
-    var currentValues = extractLearnerValuesFromInfo(index);
+    var currentValues = extractSessionValuesFromInfo(index);
 
     var inputElems = $('input', formElem );
     var selectElems = $('select', formElem); 
@@ -442,7 +388,7 @@
     }
   }
 
-  function extractLearnerValuesFromInfo(index) {
+  function extractSessionValuesFromInfo(index) {
     var infoElem = $('.sessionInfo' ).get(index);
     var sessionValues = {};
     
@@ -455,7 +401,7 @@
     return sessionValues;
   }
 
-  function extractLearnerValuesFromForm() {
+  function extractSessionValuesFromForm() {
     var formElem = $('.editForm' ).get(0);
     var sessionValues = { };
     var inputElems = $('input', formElem );
@@ -476,18 +422,18 @@
 
   /*function showEditForm(index) {
       $('#editSessionModal').modal.('show');
-  }*/
+  }
 
   function hideEditForm(index) {
     var elem = $('.editForm' ).get(index);
     $(elem ).hide();
-  }
+  }*/
 
   function displayFormError(index, message) {
     var elem = $('.editFormErrorMessage' ).get(index);
     $(elem ).text(message);
   }
-
+/*
   function locationOptionsContains(location) {
     var contains = false;
 
@@ -498,7 +444,7 @@
     });
     return contains;
   }
-
+*/
   </script>
 </body>
 </html>
