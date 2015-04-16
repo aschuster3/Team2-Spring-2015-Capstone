@@ -11,13 +11,11 @@
 	<meta charset="UTF-8">
 
 	<link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap3/css/bootstrap.min.css")">
-    <!--<link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap3/css/bootstrap-theme.min.css")">-->
     <link rel="stylesheet" href="@routes.Assets.at("stylesheets/flat-ui.css")">
     <link rel="stylesheet" href="@routes.Assets.at("stylesheets/main.css")">
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
-	<!--<script type="text/javascript" src="components/bootstrap3/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="components/jquery/jquery.min.js"></script>-->
+
   <link rel="shortcut icon" href="@routes.Assets.at("images/favicon.gif")" />
   
 </head>
@@ -375,7 +373,6 @@
     $(inputElems[0] ).val(currentValues['physician']);
     $(inputElems[1] ).val(currentValues['week']);
     $(inputElems[2] ).val(currentValues['day']);
-   // $(inputElems[3] ).val(currentValues['isAM']);
 
    if(currentValues['isAM'] == "AM"){
        $(inputElems[3] ).val("true");
@@ -420,31 +417,11 @@
     return sessionValues;
   }
 
-  /*function showEditForm(index) {
-      $('#editSessionModal').modal.('show');
-  }
-
-  function hideEditForm(index) {
-    var elem = $('.editForm' ).get(index);
-    $(elem ).hide();
-  }*/
-
   function displayFormError(index, message) {
     var elem = $('.editFormErrorMessage' ).get(index);
     $(elem ).text(message);
   }
-/*
-  function locationOptionsContains(location) {
-    var contains = false;
 
-    $('select' ).first( ).children( ).each(function () {
-      if ($(this ).val() === location) {
-        contains = true;
-      }
-    });
-    return contains;
-  }
-*/
   </script>
 </body>
 </html>
