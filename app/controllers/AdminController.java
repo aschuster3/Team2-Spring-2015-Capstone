@@ -20,9 +20,11 @@ import play.libs.mailer.Email;
 import play.libs.mailer.MailerPlugin;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.Security;
 import play.mvc.With;
 import util.CSVUtil;
 
+@Security.Authenticated(Secured.class)
 @With(SecuredAdminAction.class)
 public class AdminController extends Controller {
     

@@ -1,13 +1,11 @@
 import java.util.*;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.routes;
 import models.Learner;
 import models.Session;
 import models.ScheduleTemplate;
 import models.SessionTemplate;
-import controllers.SessionController;
 
 import models.User;
 import org.junit.*;
@@ -343,8 +341,8 @@ public class SessionControllerTest {
         );
     	assertThat(status(result)).isEqualTo(CREATED);
 		assertThat(Session.getAll().size()).isEqualTo(30);
-        assertThat(Session.getAll().get(0).scheduleTitle).isEqualTo(Session.getAll().get(1).scheduleTitle);
-        assertThat(Session.getAll().get(0).scheduleTitle).isNotEqualTo(scheduleTemp.uuid);
+        assertThat(Session.getAll().get(0).scheduleGroupId).isEqualTo(Session.getAll().get(1).scheduleGroupId);
+        assertThat(Session.getAll().get(0).scheduleGroupId).isNotEqualTo(scheduleTemp.uuid);
     }
     
 }

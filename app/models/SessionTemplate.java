@@ -7,7 +7,7 @@ import play.data.validation.Constraints.*;
 import javax.persistence.*;
 
 @Entity
-public class SessionTemplate extends Model{
+public class SessionTemplate extends Model implements Comparable<SessionTemplate> {
 
 	@Id
 	public String id;
@@ -104,4 +104,33 @@ public class SessionTemplate extends Model{
 		
     public static Finder<String, SessionTemplate> find = new Finder<String, SessionTemplate>(
             String.class, SessionTemplate.class);
+
+	@Override
+	public int compareTo(SessionTemplate other) {
+		if (this == other) {
+			return 0;
+		}
+
+		if (this.week < other.week) {
+			return -1;
+		} else if (this.week > other.week) {
+			return 1;
+		}
+
+		// occurs on same week
+		if (this.day < other.day) {
+			return -1;
+		} else if (this.day > other.day) {
+			return 1;
+		}
+
+		// occurs on same week and day
+		if (this.isAM && !other.isAM) {
+			return -1;
+		} else if (!this.isAM && other.isAM) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
 }

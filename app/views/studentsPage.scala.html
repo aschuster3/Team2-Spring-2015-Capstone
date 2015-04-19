@@ -131,16 +131,20 @@
 		@(panelNum += 1)
 		}
 	</div>
-	<a class="btn btn-inverse" data-toggle="collapse" href="#createLearnerPanel" aria-expanded="false" aria-controls="createLearnerPanel">
-		Add Student
-	</a>
-	@form(routes.CoordinatorController.emailAllStudents()) {
-        <button type="submit" class="btn btn-inverse">Email All Students</button>
-    }
-	@*
-		If the user submitted an invalid form, we want them to see this form immediately.
-		So, don't set the class to 'collapse' for the above scenario!
-	 *@
+	<div class="inline btn-space-sm">
+		<a class="btn btn-inverse" data-toggle="collapse" href="#createLearnerPanel" aria-expanded="false" aria-controls="createLearnerPanel">
+			Add Student
+		</a>
+	</div>
+	<div class="inline">
+		@form(routes.CoordinatorController.emailAllStudents()) {
+	        <button type="submit" class="btn btn-inverse">Email All Students</button>
+	    }
+		@*
+			If the user submitted an invalid form, we want them to see this form immediately.
+			So, don't set the class to 'collapse' for the above scenario!
+		 *@
+	</div>
 	<div class="@(if (learnerForm.hasErrors() || learnerForm.hasGlobalErrors()) "" else "collapse") submitform" id="createLearnerPanel">
 		@form(routes.CoordinatorController.createLearner) {
 		  @inputText(learnerForm("firstName"),

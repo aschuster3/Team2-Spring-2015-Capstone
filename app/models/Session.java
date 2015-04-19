@@ -4,11 +4,11 @@ import java.util.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 
+import com.google.common.base.Joiner;
 import play.db.ebean.Model;
 
 
@@ -46,7 +46,7 @@ public class Session extends Model {
 
 	public Long recurringGroupId;
 
-	public String scheduleTitle;
+	public String scheduleGroupId;
 
 	/**
 	 * This is a comma separated list.
@@ -55,6 +55,14 @@ public class Session extends Model {
 	 */
 	@Column(length=500)
 	public String supportedLearnerTypesAsString;
+
+	/*
+	 * This needs to be a separate flag because we allow
+	 * the user to specify any "Other" types,
+	 * so creating a list of all accepted types is
+	 * not feasible.
+	 */
+	public boolean supportsAnyLearnerType;
 
 
 
@@ -107,12 +115,12 @@ public class Session extends Model {
 
     public Session(String title, Date date, boolean isAM, String schedule){
     	this(title, date, isAM);
-    	this.scheduleTitle = schedule;
+    	this.scheduleGroupId = schedule;
     }
     
     public Session(String id, String title, Date date, String physician, boolean isAM, String supportedLearnerTypes, String schedule){
     	this(id, title, date, physician, isAM, supportedLearnerTypes);
-    	this.scheduleTitle = schedule;
+    	this.scheduleGroupId = schedule;
     }
 
 	public Session(String id, String title, String date, boolean isAM){
@@ -202,5 +210,15 @@ public class Session extends Model {
 		clone.id = null;
 
 		return clone;
+	}
+
+	public void thaw() {
+		this.supportsAnyLearnerType = true;
+		Set<String> supportedTypes = this.getSupportedLearnerTypes();
+		for (String type: Learner.LEARNER_TYPES) {
+			supportedTypes.add(type);
+		}
+		this.supportedLearnerTypesAsString = Joiner.on(',').join(supportedTypes);
+		this.scheduleGroupId = null;
 	}
 }

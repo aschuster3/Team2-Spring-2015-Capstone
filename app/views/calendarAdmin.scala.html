@@ -6,7 +6,6 @@
     <meta charset="UTF-8">
     <meta name="description" content="Admin calendar">
     <meta name="viewport" content="width=device-width">
-
     <link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
     <link rel="stylesheet" href="@routes.Assets.at("stylesheets/angular-bootstrap-calendar.min.css")">
     <!--<link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap3/css/bootstrap-theme.min.css")">-->
@@ -140,7 +139,7 @@
                     </div>
                     <br>
                 
-                     
+                    <div ng-if="isCreateModal">
                     <p class="tablehead">Repeat</p>
                     <div class="radio-inline">
                       <label>
@@ -167,28 +166,36 @@
                     <p class="input-group" ng-show="isRecurringEvent(event)">
                       <input type="text" class="form-control" readonly datepicker-popup="EEE MMMM d, yyyy"
                              ng-model="event.recurringEndDate" is-open="showRecurringEndDatePicker" close-text="Close"
-                             ng-required="isRecurringEvent(event)">
+                             min-date="event.date" date-disabled="!isValidRecurringEndDate(date);" ng-required="isRecurringEvent(event)">
                       <span class="input-group-btn">
                         <button type="button" class="btn btn-default" ng-click="toggleRecurringEndDatePicker($event)"><i class="glyphicon glyphicon-search"></i></button>
                       </span>
                     </p>
+                    </div>
 
                 </div>
-                
 
                 <div class="col-md-5 pull-left session-right">
                     <p class="tablehead">Learner Types</p>
-           
+                    <div class="checkbox">
+                    <label>
+                    <input type="checkbox"
+                    ng-checked="event.supportsAnyLearnerType"
+                    ng-click="toggleAnyLearnerTypeChecked(event)">
+                    Allow Any Learner Type
+                    </label>
+                    </div>
+
                     <div class="checkbox" ng-repeat="learnerType in allLearnerTypes">
                       <label><input type="checkbox"
                                     value="{{learnerType}}"
-                                    ng-checked="learnerTypeIsChecked(event, learnerType)"
+                                    ng-checked="learnerTypeIsChecked(event, learnerType) || event.supportsAnyLearnerType"
                                     ng-click="toggleLearnerTypeChecked(event, learnerType)">{{ learnerType }}</label>
                     </div>
 
                     <button ng-show="!showOtherLearnerInput" ng-click="clickShowOtherLearnerInput();" class="btn btn-sm btn-default btn-info">Add Other Learner Type</button>
                     <input ng-show="showOtherLearnerInput" type="text" class="form-control" ng-model="newOtherLearnerType">
-                    <button ng-show="showOtherLearnerInput" ng-click="clickAddOtherLearnerType();" class="btn btn-sm btn-default btn-info">Add Learner Type</button>
+                    <button ng-show="showOtherLearnerInput" ng-disabled="!isValidLearnerType(newOtherLearnerType);" ng-click="clickAddOtherLearnerType();" class="btn btn-sm btn-default btn-info">Add Learner Type</button>
                 </div>
                 
                 <hr>
@@ -230,5 +237,6 @@
     <script src="@routes.Assets.at("javascripts/notificationModalService.js")"></script>
     <script src="@routes.Assets.at("javascripts/addTemplateModalCtrl.js")"></script>
     <script src="@routes.Assets.at("javascripts/scheduleTemplatesService.js")"></script>
+    <script src="@routes.Assets.at("javascripts/datepicker.decorator.js")"></script>
   </body>
 </html>

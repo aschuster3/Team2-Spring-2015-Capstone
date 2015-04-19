@@ -67,7 +67,7 @@ b{
 	font-weight: 600;
 }
 .editButton{
-	margin-top: 20px;
+	margin-top: 10px;
 }
 .emailBtn{
 	padding-right: 10px;
@@ -179,7 +179,7 @@ dl{
 }
 
 .btn-space{
-	margin-right: 15px;
+	margin-right: 10px;
 }
 .btn-space-sm{
 	margin-right: 5px;
@@ -201,4 +201,7 @@ a.edit-remove{
 }
 .navPadding{
 	margin-top: 20px;
+}
+div.inline{
+	float:left;
 }

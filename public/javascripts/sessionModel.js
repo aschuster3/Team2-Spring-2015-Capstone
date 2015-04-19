@@ -62,8 +62,8 @@ angular.module('mwl.calendar')
         });
     }
 
-    function createRecurringGroup(newSession, recurringType) {
-      return sessionService.createRecurringSessions(newSession, recurringType)
+    function createRecurringGroup(newSession, recurringType, recurringEndDate) {
+      return sessionService.createRecurringSessions(newSession, recurringType, recurringEndDate)
         .then(function success(response) {
           var data = response.data;
           angular.forEach(data, function (session) {

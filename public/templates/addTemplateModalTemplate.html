@@ -5,10 +5,7 @@
 
     <form name="addTemplateForm" novalidate>
         <div class="modal-body">
-            {{ form.selectedScheduleTemplate }}
-            {{ form.startDate }}
-            {{ showDatePicker }}
-                <p class="tablehead">Location</p>
+                <p class="tablehead">Template</p>
                 <div class="form-horizontal">
                     <fieldset>
                         <select
@@ -23,7 +20,9 @@
                 <p class="tablehead">Start Date</p>
                 <p class="input-group">
                     <input type="text" class="form-control" readonly datepicker-popup="EEE MMMM d, yyyy"
-                           ng-model="form.startDate" is-open="form.showDatePicker" close-text="Close" required />
+                           ng-model="form.startDate" is-open="form.showDatePicker" close-text="Close"
+                           date-disabled="!isSelectedTemplateStartDay(date)"
+                           required>
                     <span class="input-group-btn">
                     <button type="button" class="btn btn-default" ng-click="toggleDatePicker($event);">
                         <i class="glyphicon glyphicon-search"></i>

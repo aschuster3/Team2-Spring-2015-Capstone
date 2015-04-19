@@ -85,13 +85,32 @@ angular.module('mwl.calendar')
     });
     
     $scope.addSessionToLearner = function(session) {
+      var sessionsToAssign;
+      if (belongsToSchedule(session)) {
+        sessionsToAssign = allSessionsInSameSchedule(session);
+      } else {
+        sessionsToAssign = [session];
+      }
+
+      /*
+       * We send a single update AJAX call, which will tell us whether
+       * or not the group is taken.
+       *
+       * If the group is free, then send AJAX calls for remaining sessions in group.
+       */
+
       var sessionWithNewLearner = angular.copy(session);
     	if(sessionWithNewLearner.assignedLearner == null && learnerIsSelected()) {
-	    	sessionWithNewLearner.assignedLearner = $scope.currentLearner.email;
-	    	sessionWithNewLearner.type = "invalid";
-        sessionWithNewLearner.editable = false;
-        sessionWithNewLearner.deletable = true;
-	      Sessions.update(sessionWithNewLearner).catch(
+        var selectedLearner = angular.copy($scope.currentLearner);
+	    	assignSingleSessionToLearner(sessionWithNewLearner, selectedLearner);
+	      Sessions.update(sessionWithNewLearner).then(
+          function success() {
+            sessionsToAssign.forEach(function (elem) {
+              var updatedSession = angular.copy(elem);
+              assignSingleSessionToLearner(updatedSession, selectedLearner);
+              Sessions.update(updatedSession);
+            });
+          },
           function error() {
             notificationModalService.show("Error: Another learner has been signed up for this session already!");
             Sessions.refresh(session);
@@ -109,13 +128,33 @@ angular.module('mwl.calendar')
         return;
       }
 
-      var sessionWithoutLearner = angular.copy(session);
-      sessionWithoutLearner.assignedLearner = null;
-      sessionWithoutLearner.type = "info";
-      sessionWithoutLearner.editable = true;
-      sessionWithoutLearner.deletable = false;
-      Sessions.update(sessionWithoutLearner);
+      var sessionsToRemoveLearner;
+      if (belongsToSchedule(session)) {
+        sessionsToRemoveLearner = allSessionsInSameSchedule(session);
+      } else {
+        sessionsToRemoveLearner = [session];
+      }
+
+      sessionsToRemoveLearner.forEach(function (elem) {
+        var sessionWithoutLearner = angular.copy(elem);
+        removeSingleSessionFromLearner(sessionWithoutLearner);
+        Sessions.update(sessionWithoutLearner);
+      });
     };
+
+    function assignSingleSessionToLearner(session, learner) {
+      session.assignedLearner = learner.email;
+      session.type = "invalid";
+      session.editable = false;
+      session.deletable = true;
+    }
+
+    function removeSingleSessionFromLearner(session) {
+      session.assignedLearner = null;
+      session.type = "info";
+      session.editable = true;
+      session.deletable = false;
+    }
     
     function updateEventTypes(events, currentLearner) {
       events.forEach(function (event) {
@@ -126,11 +165,13 @@ angular.module('mwl.calendar')
         } else if (typeof currentLearner !== "object") {
           //console.log(event.title + " is being flagged as info (2)");
           event.type = "info";
+        } else if (event.supportsAnyLearnerType) {
+          event.type = "info";
         } else if (event.supportedLearnerTypes.indexOf(currentLearner.learnerType) === -1) {
-          //console.log(event.title + " is being flagged as INVALID (3)");
+          //console.log(event.title + " is being flagged as INVALID (4)");
           event.type = "invalid";
         } else {
-          //console.log(event.title + " is being flagged as info (4)");
+          //console.log(event.title + " is being flagged as info (5)");
           event.type = "info";
         }
       });
@@ -160,7 +201,7 @@ angular.module('mwl.calendar')
     $scope.displayEditIcon = function (event) {
       if ($scope.isAdminView) {
         return true;
-      } else if (typeof $scope.assignedLearner !== "object") {
+      } else if (!learnerIsSelected()) {
         return false;
       } else {
         return event.type !== "invalid";
@@ -175,19 +216,32 @@ angular.module('mwl.calendar')
       return currentDate.getTime() - session.date.getTime() < 0;
     }
 
-    function deleteEvent(event) {
-      // TODO provide option to user
-      if (event.recurringGroupId === null) {
-        Sessions.delete(event).then(
-          function success() {
-            if (event.assignedLearner !== null) {
-              notificationModalService.show("An email has been sent to notify the assigned learner and their coordinator that this clinic was cancelled.", "Filled Clinic Was Deleted")
-            }
-          }
-        );
-      } else {
-        Sessions.deleteRecurringGroup(event);
+    function belongsToSchedule(session) {
+      return session.scheduleGroupId !== null;
+    }
+
+    function allSessionsInSameSchedule(session) {
+      if (session.scheduleGroupId === null) {
+        return [];
       }
+
+      var sessionsForSchedule = [];
+      $scope.events.forEach(function (otherSession) {
+        if (session.scheduleGroupId === otherSession.scheduleGroupId) {
+          sessionsForSchedule.push(otherSession);
+        }
+      });
+      return sessionsForSchedule;
+    }
+
+    function deleteEvent(event) {
+      Sessions.delete(event).then(
+        function success() {
+          if (event.assignedLearner !== null) {
+            notificationModalService.show("An email has been sent to notify the assigned learner and their coordinator that this clinic was cancelled.", "Filled Clinic Was Deleted");
+          }
+        }
+      );
     }
 
     /***********************************************************************
@@ -286,6 +340,43 @@ angular.module('mwl.calendar')
             return event.recurringType !== REC_TYPE_NONE;
           };
 
+          $scope.isValidRecurringEndDate = function (date) {
+            if (!($scope.event.date instanceof Date) || !(date instanceof Date)) {
+              return false;
+            }
+
+            if ($scope.event.recurringType === REC_TYPE_WEEKLY) {
+              return $scope.event.date.getDay() === date.getDay();
+            } else if ($scope.event.recurringType === REC_TYPE_MONTHLY) {
+              return isValidRecurringMonthEndDate(date);
+            } else {
+              return false;
+            }
+
+          };
+
+          /*
+           * For now, the least complicated implementation that
+           * also minimizes confusion is only allowing user
+           * to select the last day of the month.
+           */
+          function isValidRecurringMonthEndDate(date) {
+            var lastDayOfCurrentMonth = moment(date).endOf('month');
+            var currentDay = moment(date);
+
+            return currentDay.dayOfYear() === lastDayOfCurrentMonth.dayOfYear();
+          }
+
+          $scope.$watch('event.date', refreshDatepicker);
+          $scope.$watch('event.recurringType', refreshDatepicker);
+
+          function refreshDatepicker() {
+            if (!$scope.isValidRecurringEndDate($scope.event.recurringEndDate)) {
+              $scope.event.recurringEndDate = null;
+            }
+            $scope.$broadcast('refreshDatepickers');
+          }
+
           function stopEventAndToggleProperty($event, scopePropertyName) {
             $event.preventDefault();
             $event.stopPropagation();
@@ -306,7 +397,7 @@ angular.module('mwl.calendar')
 
           $scope.clickCreate = function () {
             if ($scope.event.recurringType !== REC_TYPE_NONE) {
-              Sessions.createRecurringGroup($scope.event, $scope.event.recurringType);
+              Sessions.createRecurringGroup($scope.event, $scope.event.recurringType, $scope.event.recurringEndDate);
             } else {
               Sessions.create($scope.event);
             }
@@ -341,15 +432,33 @@ angular.module('mwl.calendar')
             "Physician Assistant Student",
             "Pediatrics Allergy Fellow",
             "International Student",
-            "Pre-Med Student",
+            "Pre-Med Student"
           ];
 
+          var learnerTypeRegex = /^\w[^,]*$/;
+          function isValidLearnerType (learnerType) {
+            return learnerTypeRegex.test(learnerType);
+          }
+
+          event.supportedLearnerTypes.forEach(function (learnerType) {
+            if ($scope.allLearnerTypes.indexOf(learnerType) === -1
+                  && isValidLearnerType(learnerType)) {
+              $scope.allLearnerTypes.push(learnerType);
+            }
+          });
+
           $scope.toggleLearnerTypeChecked = toggleLearnerTypeChecked;
+          $scope.toggleAnyLearnerTypeChecked = toggleAnyLearnerTypeChecked;
           $scope.learnerTypeIsChecked = learnerTypeIsChecked;
           $scope.clickShowOtherLearnerInput = showOtherLearnerInput;
           $scope.clickAddOtherLearnerType = addOtherLearnerType;
-          $scope.newOtherLearnerInput = ""
+          $scope.newOtherLearnerType = "";
           $scope.showOtherLearnerInput = false;
+          $scope.isValidLearnerType = isValidLearnerType;
+
+          $scope.$watch('event.supportedLearnerTypes', function (newVal) {
+            $scope.event.supportedLearnerTypesAsString = $scope.event.supportedLearnerTypes.join(',');
+          }, true);
 
           function toggleLearnerTypeChecked(event, learnerType) {
             var index = event.supportedLearnerTypes.indexOf(learnerType);
@@ -357,10 +466,30 @@ angular.module('mwl.calendar')
             if (index === -1) {
               event.supportedLearnerTypes.push(learnerType);
             } else {
+              event.supportsAnyLearnerType = false;
               event.supportedLearnerTypes.splice(index, 1);
             }
+          }
 
-            event.supportedLearnerTypesAsString = event.supportedLearnerTypes.join(',');
+          function toggleAnyLearnerTypeChecked(event) {
+            if (event.supportsAnyLearnerType) {
+              clearAllSupportedLearnerTypes(event);
+            } else {
+              setAllSupportedLearnerTypes(event);
+            }
+          }
+
+          function clearAllSupportedLearnerTypes(event) {
+            event.supportsAnyLearnerType = false;
+            event.supportedLearnerTypes = [];
+          }
+
+          function setAllSupportedLearnerTypes(event) {
+            event.supportsAnyLearnerType = true;
+            event.supportedLearnerTypes = [];
+            $scope.allLearnerTypes.forEach(function (learnerType) {
+              event.supportedLearnerTypes.push(learnerType);
+            });
           }
 
           function learnerTypeIsChecked(event, learnerType) {
@@ -373,9 +502,14 @@ angular.module('mwl.calendar')
           }
 
           function addOtherLearnerType() {
-            $scope.allLearnerTypes.push(angular.copy($scope.newOtherLearnerType));
-            $scope.newOtherLearnerInput = "";
+            var newLearnerType = angular.copy($scope.newOtherLearnerType);
+            $scope.allLearnerTypes.push(newLearnerType);
+            $scope.newOtherLearnerType = "";
             $scope.showOtherLearnerInput = false;
+
+            if ($scope.event.supportsAnyLearnerType) {
+              $scope.event.supportedLearnerTypes.push(newLearnerType);
+            }
           }
 
         }

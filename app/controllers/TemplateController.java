@@ -187,58 +187,23 @@ public class TemplateController extends Controller {
 		}
 	}
 
-	/*public static Form<PreSession> sessionTemplate(String sessionId){
-		SessionTemplate session = SessionTemplate.find.byId(sessionId);
-		if(session == null){
-			return null;
-		}
-		PreSession preSession = new PreSession();
-		preSession.location = session.location;
-		preSession.physician = session.physician;
-		preSession.week = session.week;
-		preSession.day = session.day;
-		if(session.isAM){
-			preSession.isAM = "True";
-		}
-		else
-			preSession.isAM = "False";
-		preSession.schedule = session.schedule.uuid;
-
-		Form<PreSession> form = sessionForm.bind(Json.toJson(preSession));
-		return form;
-	}*/
-
 	@BodyParser.Of(BodyParser.Json.class)
 	public static Result updateSessionTemplate(String sessionId) {
 		JsonNode sessionJson = request().body().asJson();
         SessionTemplate updatedSessionData = Json.fromJson(sessionJson, SessionTemplate.class);
         SessionTemplate existingSession = SessionTemplate.find.byId(sessionId);
-
-        System.out.println(existingSession.id + "   " + sessionId);
-        //System.out.println("updated session ID: "+ updatedSessionData.id);
-        //System.out.println("existing session ID: "+ existingSession.id);
-        
+    
         if (existingSession == null) {
             return badRequest("Session ID does not exist");
         }
 
-       /* String errorMessage = updatedLearnerData.validate();
-        if (errorMessage != null) {
-            return badRequest(errorMessage);
-        }*/
-        System.out.println(existingSession.physician + " " + existingSession.week + " " + existingSession.day);
+    	existingSession.updateLocation(updatedSessionData.location);
+    	existingSession.updatePhysician(updatedSessionData.physician);
+    	existingSession.updateWeek(updatedSessionData.week);
+    	existingSession.updateDay(updatedSessionData.day);
+    	existingSession.updateAM(updatedSessionData.isAM);
 
-        //if (updatedSessionData.id.equals(existingSession.id)) {
-        	existingSession.updateLocation(updatedSessionData.location);
-        	existingSession.updatePhysician(updatedSessionData.physician);
-        	existingSession.updateWeek(updatedSessionData.week);
-        	existingSession.updateDay(updatedSessionData.day);
-        	existingSession.updateAM(updatedSessionData.isAM);
-
-        System.out.println(existingSession.physician + " " + existingSession.week + " " + existingSession.day);
-       // }
         return ok(Json.toJson(SessionTemplate.find.byId(existingSession.id)));
-        //return status(204);
 	}
 
 }

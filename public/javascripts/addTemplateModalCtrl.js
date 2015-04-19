@@ -15,6 +15,13 @@ angular.module('mwl.calendar')
       $scope.form.showDatePicker = !$scope.form.showDatePicker;
     };
 
+    $scope.isSelectedTemplateStartDay = function (date) {
+      if ($scope.form.selectedScheduleTemplate === null || date === null) {
+        return false;
+      }
+      return date.getDay() === $scope.form.selectedScheduleTemplate.startDay;
+    };
+
     $scope.clickSubmit = createSessionsFromScheduleTemplate;
     $scope.clickCancel = closeModal;
 
@@ -35,6 +42,13 @@ angular.module('mwl.calendar')
       scheduleTemplatesService.getAll().then(function success(scheduleTemplates) {
         $scope.form.scheduleTemplateOptions = scheduleTemplates;
       });
+      
+      $scope.$watch('form.selectedScheduleTemplate', function () {
+        if (!$scope.isSelectedTemplateStartDay($scope.form.startDate)) {
+          $scope.form.startDate = null;
+        }
+        $scope.$broadcast('refreshDatepickers');
+      })
     }
 
   }]);

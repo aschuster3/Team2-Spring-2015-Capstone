@@ -17,6 +17,8 @@ create table learner (
 create table recurring_session_group (
   id                        bigint not null,
   recurring_type            integer,
+  end_date                  timestamp,
+  use_last_day_of_week_occurrence boolean,
   constraint pk_recurring_session_group primary key (id))
 ;
 
@@ -36,8 +38,9 @@ create table session (
   physician                 varchar(255),
   assigned_learner          varchar(255),
   recurring_group_id        bigint,
-  schedule_title            varchar(255),
+  schedule_group_id         varchar(255),
   supported_learner_types_as_string varchar(500),
+  supports_any_learner_type boolean,
   constraint pk_session primary key (id))
 ;
 
