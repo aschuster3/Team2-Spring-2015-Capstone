@@ -210,4 +210,10 @@ public class Session extends Model {
 
 		return clone;
 	}
+
+	public void thaw() {
+		this.supportedLearnerTypesAsString = "";
+		this.supportsAnyLearnerType = true;
+		this.scheduleGroupId = null;
+	}
 }
