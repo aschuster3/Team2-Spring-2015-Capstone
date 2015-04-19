@@ -174,21 +174,28 @@
                     </p>
 
                 </div>
-                
 
                 <div class="col-md-5 pull-left session-right">
                     <p class="tablehead">Learner Types</p>
-           
+                    <div class="checkbox">
+                    <label>
+                    <input type="checkbox"
+                    ng-checked="event.supportsAnyLearnerType"
+                    ng-click="toggleAnyLearnerTypeChecked(event)">
+                    Allow Any Learner Type
+                    </label>
+                    </div>
+
                     <div class="checkbox" ng-repeat="learnerType in allLearnerTypes">
                       <label><input type="checkbox"
                                     value="{{learnerType}}"
-                                    ng-checked="learnerTypeIsChecked(event, learnerType)"
+                                    ng-checked="learnerTypeIsChecked(event, learnerType) || event.supportsAnyLearnerType"
                                     ng-click="toggleLearnerTypeChecked(event, learnerType)">{{ learnerType }}</label>
                     </div>
 
                     <button ng-show="!showOtherLearnerInput" ng-click="clickShowOtherLearnerInput();" class="btn btn-sm btn-default btn-info">Add Other Learner Type</button>
                     <input ng-show="showOtherLearnerInput" type="text" class="form-control" ng-model="newOtherLearnerType">
-                    <button ng-show="showOtherLearnerInput" ng-click="clickAddOtherLearnerType();" class="btn btn-sm btn-default btn-info">Add Learner Type</button>
+                    <button ng-show="showOtherLearnerInput" ng-disabled="!isValidLearnerType(newOtherLearnerType);" ng-click="clickAddOtherLearnerType();" class="btn btn-sm btn-default btn-info">Add Learner Type</button>
                 </div>
                 
                 <hr>

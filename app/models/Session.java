@@ -56,6 +56,14 @@ public class Session extends Model {
 	@Column(length=500)
 	public String supportedLearnerTypesAsString;
 
+	/*
+	 * This needs to be a separate flag because we allow
+	 * the user to specify any "Other" types,
+	 * so creating a list of all accepted types is
+	 * not feasible.
+	 */
+	public boolean supportsAnyLearnerType;
+
 
 
 	/*
