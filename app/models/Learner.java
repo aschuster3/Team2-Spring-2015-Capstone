@@ -21,6 +21,7 @@ import play.libs.Json;
 @SuppressWarnings("serial")
 public class Learner extends Model {
 
+    // referenced in main.js
     public static final List<String> LEARNER_TYPES = Arrays.asList(
             "Sub-I Medical Student",
             "Ambulatory Medical Student",

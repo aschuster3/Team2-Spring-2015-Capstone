@@ -126,11 +126,13 @@ angular.module('mwl.calendar')
         } else if (typeof currentLearner !== "object") {
           //console.log(event.title + " is being flagged as info (2)");
           event.type = "info";
+        } else if (event.supportsAnyLearnerType) {
+          event.type = "info";
         } else if (event.supportedLearnerTypes.indexOf(currentLearner.learnerType) === -1) {
-          //console.log(event.title + " is being flagged as INVALID (3)");
+          //console.log(event.title + " is being flagged as INVALID (4)");
           event.type = "invalid";
         } else {
-          //console.log(event.title + " is being flagged as info (4)");
+          //console.log(event.title + " is being flagged as info (5)");
           event.type = "info";
         }
       });
@@ -160,7 +162,7 @@ angular.module('mwl.calendar')
     $scope.displayEditIcon = function (event) {
       if ($scope.isAdminView) {
         return true;
-      } else if (typeof $scope.assignedLearner !== "object") {
+      } else if (!learnerIsSelected()) {
         return false;
       } else {
         return event.type !== "invalid";
@@ -341,15 +343,27 @@ angular.module('mwl.calendar')
             "Physician Assistant Student",
             "Pediatrics Allergy Fellow",
             "International Student",
-            "Pre-Med Student",
+            "Pre-Med Student"
           ];
 
+          event.supportedLearnerTypes.forEach(function (learnerType) {
+            if ($scope.allLearnerTypes.indexOf(learnerType) === -1) {
+              $scope.allLearnerTypes.push(learnerType);
+            }
+          });
+
           $scope.toggleLearnerTypeChecked = toggleLearnerTypeChecked;
+          $scope.toggleAnyLearnerTypeChecked = toggleAnyLearnerTypeChecked;
           $scope.learnerTypeIsChecked = learnerTypeIsChecked;
           $scope.clickShowOtherLearnerInput = showOtherLearnerInput;
           $scope.clickAddOtherLearnerType = addOtherLearnerType;
-          $scope.newOtherLearnerInput = ""
+          $scope.newOtherLearnerType = "";
           $scope.showOtherLearnerInput = false;
+          $scope.isValidLearnerType = isValidLearnerType;
+
+          $scope.$watch('event.supportedLearnerTypes', function (newVal) {
+            $scope.event.supportedLearnerTypesAsString = $scope.event.supportedLearnerTypes.join(',');
+          }, true);
 
           function toggleLearnerTypeChecked(event, learnerType) {
             var index = event.supportedLearnerTypes.indexOf(learnerType);
@@ -357,10 +371,33 @@ angular.module('mwl.calendar')
             if (index === -1) {
               event.supportedLearnerTypes.push(learnerType);
             } else {
+              event.supportsAnyLearnerType = false;
               event.supportedLearnerTypes.splice(index, 1);
             }
+          }
 
-            event.supportedLearnerTypesAsString = event.supportedLearnerTypes.join(',');
+          function toggleAnyLearnerTypeChecked(event) {
+            console.log("Event", event);
+            if (event.supportsAnyLearnerType) {
+              console.log("IF BLOCK");
+              clearAllSupportedLearnerTypes(event);
+            } else {
+              console.log("ELSE BLOCK");
+              setAllSupportedLearnerTypes(event);
+            }
+          }
+
+          function clearAllSupportedLearnerTypes(event) {
+            event.supportsAnyLearnerType = false;
+            event.supportedLearnerTypes = [];
+          }
+
+          function setAllSupportedLearnerTypes(event) {
+            event.supportsAnyLearnerType = true;
+            event.supportedLearnerTypes = [];
+            $scope.allLearnerTypes.forEach(function (learnerType) {
+              event.supportedLearnerTypes.push(learnerType);
+            });
           }
 
           function learnerTypeIsChecked(event, learnerType) {
@@ -372,10 +409,20 @@ angular.module('mwl.calendar')
             $scope.showOtherLearnerInput = true;
           }
 
+          var learnerTypeRegex = /^\w[\w\s]*$/;
+          function isValidLearnerType (learnerType) {
+            return learnerTypeRegex.test(learnerType);
+          }
+
           function addOtherLearnerType() {
-            $scope.allLearnerTypes.push(angular.copy($scope.newOtherLearnerType));
-            $scope.newOtherLearnerInput = "";
+            var newLearnerType = angular.copy($scope.newOtherLearnerType);
+            $scope.allLearnerTypes.push(newLearnerType);
+            $scope.newOtherLearnerType = "";
             $scope.showOtherLearnerInput = false;
+
+            if ($scope.event.supportsAnyLearnerType) {
+              $scope.event.supportedLearnerTypes.push(newLearnerType);
+            }
           }
 
         }
