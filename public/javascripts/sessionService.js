@@ -23,11 +23,12 @@ angular.module('mwl.calendar')
             return $http.post(urlBase, session);
         };
 
-        service.createRecurringSessions = function (session, recurringType) {
+        service.createRecurringSessions = function (session, recurringType, recurringEndDate) {
             return $http.post(urlBase + '/rec', {
                 session: session,
                 recurringSessionGroup: {
-                    recurringType: recurringType
+                    recurringType: recurringType,
+                    endDate: recurringEndDate
                 }
             });
         };

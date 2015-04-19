@@ -178,18 +178,13 @@ angular.module('mwl.calendar')
     }
 
     function deleteEvent(event) {
-      // TODO provide option to user
-      if (event.recurringGroupId === null) {
-        Sessions.delete(event).then(
-          function success() {
-            if (event.assignedLearner !== null) {
-              notificationModalService.show("An email has been sent to notify the assigned learner and their coordinator that this clinic was cancelled.", "Filled Clinic Was Deleted")
-            }
+      Sessions.delete(event).then(
+        function success() {
+          if (event.assignedLearner !== null) {
+            notificationModalService.show("An email has been sent to notify the assigned learner and their coordinator that this clinic was cancelled.", "Filled Clinic Was Deleted");
           }
-        );
-      } else {
-        Sessions.deleteRecurringGroup(event);
-      }
+        }
+      );
     }
 
     /***********************************************************************
@@ -308,7 +303,7 @@ angular.module('mwl.calendar')
 
           $scope.clickCreate = function () {
             if ($scope.event.recurringType !== REC_TYPE_NONE) {
-              Sessions.createRecurringGroup($scope.event, $scope.event.recurringType);
+              Sessions.createRecurringGroup($scope.event, $scope.event.recurringType, $scope.event.recurringEndDate);
             } else {
               Sessions.create($scope.event);
             }

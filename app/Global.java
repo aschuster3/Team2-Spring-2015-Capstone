@@ -101,9 +101,5 @@ public class Global extends GlobalSettings {
         ObjectMapper mapper = new ObjectMapper()
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         Json.setObjectMapper(mapper);
-
-        // TODO
-        new RecurringSessionJob(Duration.create(7, TimeUnit.DAYS), 1)
-                .schedule(Duration.create(0, TimeUnit.MILLISECONDS));
     }
 }

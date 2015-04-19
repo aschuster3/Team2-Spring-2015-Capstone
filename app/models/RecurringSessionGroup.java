@@ -20,6 +20,8 @@ public class RecurringSessionGroup extends Model {
 
     public int recurringType;
 
+    public Date endDate;
+
     public boolean useLastDayOfWeekOccurrence = false;  // for monthly only
 
     /**

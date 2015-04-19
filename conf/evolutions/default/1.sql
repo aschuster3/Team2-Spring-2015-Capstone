@@ -17,6 +17,7 @@ create table learner (
 create table recurring_session_group (
   id                        bigint not null,
   recurring_type            integer,
+  end_date                  timestamp,
   use_last_day_of_week_occurrence boolean,
   constraint pk_recurring_session_group primary key (id))
 ;

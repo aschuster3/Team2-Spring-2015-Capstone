@@ -180,8 +180,23 @@ public class SessionController extends Controller {
 		baseSession.recurringGroupId = recGroup.id;
 		Session.create(baseSession);
 
-		List<Session> createdSessions = recGroup.generateNewOccurrences(52);
+		List<Session> createdSessions = new ArrayList<>();
 		createdSessions.add(baseSession);
+
+		/*
+		 * Using existing generateNewOccurrences() method because it works.
+		 *
+		 * TODO: refactor Session generation to be centered around an end date
+		 */
+		while (true) {
+			Session nextSession = recGroup.generateNewOccurrences(1).get(0);
+			if (nextSession.date.after(recGroup.endDate)) {
+				nextSession.delete();
+				break;
+			} else {
+				createdSessions.add(nextSession);
+			}
+		}
 
 		return status(CREATED, Json.toJson(createdSessions));
 	}
