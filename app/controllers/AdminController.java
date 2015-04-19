@@ -39,11 +39,28 @@ public class AdminController extends Controller {
     public static Result emailLearnerSchedule(String learnerId) {
         Learner learner = Learner.find.where().eq("uuid", learnerId).findUnique();
         
+        List<Session> schedule = Session.getLearnerSchedule(learner.email);
+        
+        StringBuilder sb = new StringBuilder("Test ");
+        
         Email email = new Email();
         email.setSubject("The following includes schedule details.");
         email.setFrom("admin@emory.edu");
         email.addTo(learner.email);
-        email.setBodyText("Test");
+        for(Session session: schedule) {
+            sb.append(session.title);
+            sb.append(" | ");
+            sb.append(session.physician);
+            sb.append(" | ");
+            if(session.isAM) {
+                sb.append("AM");
+            } else {
+                sb.append("PM");
+            }
+            sb.append("</br>");
+        }
+        
+        email.setBodyText(sb.toString());
         
         MailerPlugin.send(email);
         return status(NO_CONTENT);
@@ -76,6 +93,36 @@ public class AdminController extends Controller {
         return ok(views.html.coordinatorsPage.render(
                 UnapprovedUser.getAll(),
                 User.getAllCoordinators()));
+    }
+    
+    private Result emailStudent(Learner learner) {
+        Learner learner = Learner.find.where().eq("uuid", learnerId).findUnique();
+        
+        List<Session> schedule = Session.getLearnerSchedule(learner.email);
+        
+        StringBuilder sb = new StringBuilder("Test ");
+        
+        Email email = new Email();
+        email.setSubject("The following includes schedule details.");
+        email.setFrom("admin@emory.edu");
+        email.addTo(learner.email);
+        for(Session session: schedule) {
+            sb.append(session.title);
+            sb.append(" | ");
+            sb.append(session.physician);
+            sb.append(" | ");
+            if(session.isAM) {
+                sb.append("AM");
+            } else {
+                sb.append("PM");
+            }
+            sb.append("</br>");
+        }
+        
+        email.setBodyText(sb.toString());
+        
+        MailerPlugin.send(email);
+        return status(NO_CONTENT);
     }
     
     /**
