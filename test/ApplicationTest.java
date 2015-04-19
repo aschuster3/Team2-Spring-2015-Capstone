@@ -1,4 +1,5 @@
 import controllers.routes;
+import controllers.Secured;
 import models.UnapprovedUser;
 import models.User;
 import models.UserReset;
@@ -294,5 +295,40 @@ public class ApplicationTest {
         );
 
         assertThat(status(result)).isEqualTo(303);
+    }
+
+    @Test
+    public void testSessionExpiredLogic() {
+        /* TIMEOUT specified in Secured.java as 10 minutes */
+
+        // timestamps are in millis,
+        //    1 second  == 1000 millis,
+        //    1 minute  == 60000 millis,
+        //   10 minutes == 600000 millis
+        Secured secured = new Secured();
+        String timestamp = "1000000";
+        String timestamp_plus_ten_minutes = "1600000";
+        String timestamp_plus_nine_minutes_59seconds = "1599000";
+        String timestamp_minus_one_second = "999000";
+
+        // ongoing valid session
+        assertThat(secured.sessionExpired(timestamp, timestamp_plus_nine_minutes_59seconds)).isFalse();
+        assertThat(secured.sessionExpired(timestamp, timestamp)).isFalse();
+        System.out.println("Made it HERE!!");
+
+        // ongoing expired session
+        assertThat(secured.sessionExpired(timestamp, timestamp_plus_ten_minutes)).isTrue();
+
+        System.out.println("Made it HERE222!!");
+        // session just started
+        assertThat(secured.sessionExpired(null, timestamp)).isFalse();
+        assertThat(secured.sessionExpired("", timestamp)).isFalse();
+
+        // invalid input (back in time)
+        assertThat(secured.sessionExpired(timestamp, timestamp_minus_one_second)).isTrue();
+
+        // other invalid input
+        assertThat(secured.sessionExpired(timestamp, null)).isTrue();
+        assertThat(secured.sessionExpired(timestamp, "")).isTrue();
     }
 }
