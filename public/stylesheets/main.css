@@ -77,6 +77,9 @@ b{
 	font-family: 'Open Sans', sans-serif;
 	background-color:purple;
 }
+.glyphicon-large-margin{
+	margin-top: 10px;
+}
 #content{
 	padding-top: 10px;
 }
@@ -184,6 +187,9 @@ dl{
 .btn-space-sm{
 	margin-right: 5px;
 }
+.btn-space-bottom{
+	margin-bottom: 5px;
+}
 
 a.edit-remove{
 	color: #34495e;
@@ -204,4 +210,7 @@ a.edit-remove{
 }
 div.inline{
 	float:left;
+}
+.editform{
+	margin-top: 30px;
 }
