@@ -245,18 +245,38 @@ public class SessionController extends Controller {
 		}
 
 		Date startDate = Json.fromJson(json.get("startDate"), Date.class);
+		Date mondayOfFirstWeek = mondayOfWeekFor(startDate);
 		List<Session> createdSessions = new ArrayList<>();
 		String scheduleInstanceId = UUID.randomUUID().toString();
 
+		/*
+		 * This computation only works if the day we pass to cal.setTime()
+		 * is a Monday (of the first week of the schedule).
+		 */
 		for (SessionTemplate session: schedule.sessions){
 			int days = (session.week - 1)*7 + (session.day - 1);
 			Calendar cal = Calendar.getInstance();
-			cal.setTime(startDate);
+			cal.setTime(mondayOfFirstWeek);
 			cal.add(Calendar.DATE, days);
 			Session newSession = new Session(null, session.location, cal.getTime(), session.physician, session.isAM, schedule.learnerType, scheduleInstanceId);
 			Session.create(newSession);
 			createdSessions.add(newSession);
 		}
 		return status(CREATED, Json.toJson(createdSessions));
+	}
+
+	private static Date mondayOfWeekFor(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+
+		if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+			cal.add(Calendar.DAY_OF_MONTH, 1);
+			return cal.getTime();
+		}
+
+		while (cal.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
+			cal.add(Calendar.DAY_OF_MONTH, -1);
+		}
+		return cal.getTime();
 	}
 }

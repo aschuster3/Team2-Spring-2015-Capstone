@@ -283,6 +283,21 @@ angular.module('mwl.calendar')
             return event.recurringType !== REC_TYPE_NONE;
           };
 
+          $scope.isValidRecurringEndDate = function (date) {
+            if (!($scope.event.date instanceof Date) || !(date instanceof Date)) {
+              return false;
+            }
+            return $scope.event.date.getDay() === date.getDay();
+          };
+
+          $scope.$watch('event.date', function () {
+            if (!$scope.isValidRecurringEndDate($scope.event.recurringEndDate)) {
+              $scope.event.recurringEndDate = null;
+            }
+            console.log("Triggering a datepicker refresh...");
+            $scope.$broadcast('refreshDatepickers');
+          })
+
           function stopEventAndToggleProperty($event, scopePropertyName) {
             $event.preventDefault();
             $event.stopPropagation();

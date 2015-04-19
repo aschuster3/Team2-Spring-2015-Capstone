@@ -6,6 +6,7 @@ import play.data.validation.Constraints.*;
 import javax.persistence.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -70,4 +71,11 @@ public class ScheduleTemplate extends Model {
 	
 	 public static Finder<String, ScheduleTemplate> find = new Finder<String, ScheduleTemplate>(
 	            String.class, ScheduleTemplate.class);
+
+
+	@Transient
+	public int getStartDay() {
+		Collections.sort(sessions);
+		return sessions.get(0).day;
+	}
 }

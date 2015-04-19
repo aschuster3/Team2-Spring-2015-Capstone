@@ -6,7 +6,6 @@
     <meta charset="UTF-8">
     <meta name="description" content="Admin calendar">
     <meta name="viewport" content="width=device-width">
-
     <link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
     <link rel="stylesheet" href="@routes.Assets.at("stylesheets/angular-bootstrap-calendar.min.css")">
     <!--<link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap3/css/bootstrap-theme.min.css")">-->
@@ -167,7 +166,7 @@
                     <p class="input-group" ng-show="isRecurringEvent(event)">
                       <input type="text" class="form-control" readonly datepicker-popup="EEE MMMM d, yyyy"
                              ng-model="event.recurringEndDate" is-open="showRecurringEndDatePicker" close-text="Close"
-                             ng-required="isRecurringEvent(event)">
+                             min-date="event.date" date-disabled="!isValidRecurringEndDate(date);" ng-required="isRecurringEvent(event)">
                       <span class="input-group-btn">
                         <button type="button" class="btn btn-default" ng-click="toggleRecurringEndDatePicker($event)"><i class="glyphicon glyphicon-search"></i></button>
                       </span>
@@ -237,5 +236,6 @@
     <script src="@routes.Assets.at("javascripts/notificationModalService.js")"></script>
     <script src="@routes.Assets.at("javascripts/addTemplateModalCtrl.js")"></script>
     <script src="@routes.Assets.at("javascripts/scheduleTemplatesService.js")"></script>
+    <script src="@routes.Assets.at("javascripts/datepicker.decorator.js")"></script>
   </body>
 </html>
