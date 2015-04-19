@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 
+import com.google.common.base.Joiner;
 import play.db.ebean.Model;
 
 
@@ -212,8 +213,12 @@ public class Session extends Model {
 	}
 
 	public void thaw() {
-		this.supportedLearnerTypesAsString = "";
 		this.supportsAnyLearnerType = true;
+		Set<String> supportedTypes = this.getSupportedLearnerTypes();
+		for (String type: Learner.LEARNER_TYPES) {
+			supportedTypes.add(type);
+		}
+		this.supportedLearnerTypesAsString = Joiner.on(',').join(supportedTypes);
 		this.scheduleGroupId = null;
 	}
 }

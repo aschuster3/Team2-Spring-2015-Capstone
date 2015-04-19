@@ -103,7 +103,7 @@ public class Global extends GlobalSettings {
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         Json.setObjectMapper(mapper);
 
-        SessionThawingJob thawJob = new SessionThawingJob(Duration.create(10, TimeUnit.MINUTES));
+        SessionThawingJob thawJob = new SessionThawingJob(Duration.create(1, TimeUnit.MINUTES));
         thawJob.schedule(Duration.create(0, TimeUnit.MILLISECONDS));
     }
 }

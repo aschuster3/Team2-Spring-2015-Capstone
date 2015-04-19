@@ -16,7 +16,7 @@ public class SessionThawingJob extends AkkaJob {
 
     @Override
     public void run() {
-        for (Session session: Session.find.all()) {
+        for (Session session: Session.find.where().eq("assignedLearner", null).findList()) {
             if (shouldThawSession(session, new Date())) {
                 session.thaw();
                 session.save();

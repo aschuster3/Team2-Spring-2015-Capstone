@@ -435,8 +435,14 @@ angular.module('mwl.calendar')
             "Pre-Med Student"
           ];
 
+          var learnerTypeRegex = /^\w[^,]*$/;
+          function isValidLearnerType (learnerType) {
+            return learnerTypeRegex.test(learnerType);
+          }
+
           event.supportedLearnerTypes.forEach(function (learnerType) {
-            if ($scope.allLearnerTypes.indexOf(learnerType) === -1) {
+            if ($scope.allLearnerTypes.indexOf(learnerType) === -1
+                  && isValidLearnerType(learnerType)) {
               $scope.allLearnerTypes.push(learnerType);
             }
           });
@@ -493,11 +499,6 @@ angular.module('mwl.calendar')
           function showOtherLearnerInput() {
             $scope.newOtherLearnerInput = "";
             $scope.showOtherLearnerInput = true;
-          }
-
-          var learnerTypeRegex = /^\w[\w\s]*$/;
-          function isValidLearnerType (learnerType) {
-            return learnerTypeRegex.test(learnerType);
           }
 
           function addOtherLearnerType() {
