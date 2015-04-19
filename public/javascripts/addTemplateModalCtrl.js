@@ -16,7 +16,7 @@ angular.module('mwl.calendar')
     };
 
     $scope.isSelectedTemplateStartDay = function (date) {
-      if ($scope.form.selectedScheduleTemplate === null) {
+      if ($scope.form.selectedScheduleTemplate === null || date === null) {
         return false;
       }
       return date.getDay() === $scope.form.selectedScheduleTemplate.startDay;
@@ -42,9 +42,11 @@ angular.module('mwl.calendar')
       scheduleTemplatesService.getAll().then(function success(scheduleTemplates) {
         $scope.form.scheduleTemplateOptions = scheduleTemplates;
       });
-
+      
       $scope.$watch('form.selectedScheduleTemplate', function () {
-        console.log("Triggering a datepicker refresh...");
+        if (!$scope.isSelectedTemplateStartDay($scope.form.startDate)) {
+          $scope.form.startDate = null;
+        }
         $scope.$broadcast('refreshDatepickers');
       })
     }

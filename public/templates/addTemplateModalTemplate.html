@@ -21,7 +21,8 @@
                 <p class="input-group">
                     <input type="text" class="form-control" readonly datepicker-popup="EEE MMMM d, yyyy"
                            ng-model="form.startDate" is-open="form.showDatePicker" close-text="Close"
-                           date-disabled="!isSelectedTemplateStartDay(date)"/>
+                           date-disabled="!isSelectedTemplateStartDay(date)"
+                           required>
                     <span class="input-group-btn">
                     <button type="button" class="btn btn-default" ng-click="toggleDatePicker($event);">
                         <i class="glyphicon glyphicon-search"></i>

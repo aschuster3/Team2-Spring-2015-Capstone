@@ -287,16 +287,38 @@ angular.module('mwl.calendar')
             if (!($scope.event.date instanceof Date) || !(date instanceof Date)) {
               return false;
             }
-            return $scope.event.date.getDay() === date.getDay();
+
+            if ($scope.event.recurringType === REC_TYPE_WEEKLY) {
+              return $scope.event.date.getDay() === date.getDay();
+            } else if ($scope.event.recurringType === REC_TYPE_MONTHLY) {
+              return isValidRecurringMonthEndDate(date);
+            } else {
+              return false;
+            }
+
           };
 
-          $scope.$watch('event.date', function () {
+          /*
+           * For now, the least complicated implementation that
+           * also minimizes confusion is only allowing user
+           * to select the last day of the month.
+           */
+          function isValidRecurringMonthEndDate(date) {
+            var lastDayOfCurrentMonth = moment(date).endOf('month');
+            var currentDay = moment(date);
+
+            return currentDay.dayOfYear() === lastDayOfCurrentMonth.dayOfYear();
+          }
+
+          $scope.$watch('event.date', refreshDatepicker);
+          $scope.$watch('event.recurringType', refreshDatepicker);
+
+          function refreshDatepicker() {
             if (!$scope.isValidRecurringEndDate($scope.event.recurringEndDate)) {
               $scope.event.recurringEndDate = null;
             }
-            console.log("Triggering a datepicker refresh...");
             $scope.$broadcast('refreshDatepickers');
-          })
+          }
 
           function stopEventAndToggleProperty($event, scopePropertyName) {
             $event.preventDefault();
@@ -387,12 +409,9 @@ angular.module('mwl.calendar')
           }
 
           function toggleAnyLearnerTypeChecked(event) {
-            console.log("Event", event);
             if (event.supportsAnyLearnerType) {
-              console.log("IF BLOCK");
               clearAllSupportedLearnerTypes(event);
             } else {
-              console.log("ELSE BLOCK");
               setAllSupportedLearnerTypes(event);
             }
           }
