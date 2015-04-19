@@ -85,13 +85,32 @@ angular.module('mwl.calendar')
     });
     
     $scope.addSessionToLearner = function(session) {
+      var sessionsToAssign;
+      if (belongsToSchedule(session)) {
+        sessionsToAssign = allSessionsInSameSchedule(session);
+      } else {
+        sessionsToAssign = [session];
+      }
+
+      /*
+       * We send a single update AJAX call, which will tell us whether
+       * or not the group is taken.
+       *
+       * If the group is free, then send AJAX calls for remaining sessions in group.
+       */
+
       var sessionWithNewLearner = angular.copy(session);
     	if(sessionWithNewLearner.assignedLearner == null && learnerIsSelected()) {
-	    	sessionWithNewLearner.assignedLearner = $scope.currentLearner.email;
-	    	sessionWithNewLearner.type = "invalid";
-        sessionWithNewLearner.editable = false;
-        sessionWithNewLearner.deletable = true;
-	      Sessions.update(sessionWithNewLearner).catch(
+        var selectedLearner = angular.copy($scope.currentLearner);
+	    	assignSingleSessionToLearner(sessionWithNewLearner, selectedLearner);
+	      Sessions.update(sessionWithNewLearner).then(
+          function success() {
+            sessionsToAssign.forEach(function (elem) {
+              var updatedSession = angular.copy(elem);
+              assignSingleSessionToLearner(updatedSession, selectedLearner);
+              Sessions.update(updatedSession);
+            });
+          },
           function error() {
             notificationModalService.show("Error: Another learner has been signed up for this session already!");
             Sessions.refresh(session);
@@ -109,13 +128,33 @@ angular.module('mwl.calendar')
         return;
       }
 
-      var sessionWithoutLearner = angular.copy(session);
-      sessionWithoutLearner.assignedLearner = null;
-      sessionWithoutLearner.type = "info";
-      sessionWithoutLearner.editable = true;
-      sessionWithoutLearner.deletable = false;
-      Sessions.update(sessionWithoutLearner);
+      var sessionsToRemoveLearner;
+      if (belongsToSchedule(session)) {
+        sessionsToRemoveLearner = allSessionsInSameSchedule(session);
+      } else {
+        sessionsToRemoveLearner = [session];
+      }
+
+      sessionsToRemoveLearner.forEach(function (elem) {
+        var sessionWithoutLearner = angular.copy(elem);
+        removeSingleSessionFromLearner(sessionWithoutLearner);
+        Sessions.update(sessionWithoutLearner);
+      });
     };
+
+    function assignSingleSessionToLearner(session, learner) {
+      session.assignedLearner = learner.email;
+      session.type = "invalid";
+      session.editable = false;
+      session.deletable = true;
+    }
+
+    function removeSingleSessionFromLearner(session) {
+      session.assignedLearner = null;
+      session.type = "info";
+      session.editable = true;
+      session.deletable = false;
+    }
     
     function updateEventTypes(events, currentLearner) {
       events.forEach(function (event) {
@@ -175,6 +214,24 @@ angular.module('mwl.calendar')
     function isCompleted(session) {
       var currentDate = new Date();
       return currentDate.getTime() - session.date.getTime() < 0;
+    }
+
+    function belongsToSchedule(session) {
+      return session.scheduleGroupId !== null;
+    }
+
+    function allSessionsInSameSchedule(session) {
+      if (session.scheduleGroupId === null) {
+        return [];
+      }
+
+      var sessionsForSchedule = [];
+      $scope.events.forEach(function (otherSession) {
+        if (session.scheduleGroupId === otherSession.scheduleGroupId) {
+          sessionsForSchedule.push(otherSession);
+        }
+      });
+      return sessionsForSchedule;
     }
 
     function deleteEvent(event) {

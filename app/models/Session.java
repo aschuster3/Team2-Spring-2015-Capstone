@@ -4,7 +4,6 @@ import java.util.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
@@ -46,7 +45,7 @@ public class Session extends Model {
 
 	public Long recurringGroupId;
 
-	public String scheduleTitle;
+	public String scheduleGroupId;
 
 	/**
 	 * This is a comma separated list.
@@ -115,12 +114,12 @@ public class Session extends Model {
 
     public Session(String title, Date date, boolean isAM, String schedule){
     	this(title, date, isAM);
-    	this.scheduleTitle = schedule;
+    	this.scheduleGroupId = schedule;
     }
     
     public Session(String id, String title, Date date, String physician, boolean isAM, String supportedLearnerTypes, String schedule){
     	this(id, title, date, physician, isAM, supportedLearnerTypes);
-    	this.scheduleTitle = schedule;
+    	this.scheduleGroupId = schedule;
     }
 
 	public Session(String id, String title, String date, boolean isAM){
