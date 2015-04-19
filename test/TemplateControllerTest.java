@@ -187,6 +187,19 @@ public class TemplateControllerTest {
     	assertThat(ScheduleTemplate.find.byId(schedule.uuid).sessions.get(0).physician).isEqualTo("Mary");
     }
     
+    @Test
+    public void updateLearnerType(){
+    	ScheduleTemplate st1 = new ScheduleTemplate("template1", "subi");
+    	st1.save();
+    	
+    	assertThat(ScheduleTemplate.find.byId(st1.uuid).title).isEqualTo("template1");
+    	assertThat(ScheduleTemplate.find.byId(st1.uuid).learnerType).isEqualTo("subi");
+    	
+    	st1.updateLearnerType("Morehouse");
+    	
+    	assertThat(ScheduleTemplate.find.byId(st1.uuid).learnerType).isEqualTo("Morehouse");
+    }
+    
     
     @Test
 	public void removeSessionFromSchedule(){

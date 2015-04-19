@@ -61,8 +61,8 @@
 		    	<div class="panel-body">
 		    		<div class = "pull-left">
               <div class="inline"><h6>Learner Type: &nbsp;</h6></div>
-              <div class="inline"><h6>@template.learnerType &nbsp;</h6></div>
-              <div class="inline"><a href="" class="edit-remove editButton" data-toggle="modal" data-target=".editForm"><span class="glyphicon glyphicon-pencil glyphicon-large-margin" aria-hidden="true"></span></a></div>
+              <div class="inline learnerType" data-schedule-id="@template.uuid"><h6 class="type">@template.learnerType &nbsp;</h6></div>
+              <div class="inline"><a href="" class="edit-remove editLearnerButton" data-toggle="modal" data-target=".editLearnerForm"><span class="glyphicon glyphicon-pencil glyphicon-large-margin" aria-hidden="true"></span></a></div>
               <br>
               <br>
 
@@ -234,8 +234,30 @@
               <input type="radio" name="isAM" value="false">PM
             </div>      
             <button type="button" class="btn btn-sm btn-inverse saveButton">Save</button>
-            <button type="button" class="btn btn-sm btn-inverse" onclick="$('.editForm').modal('toggle')">Cancel</button>
+            <button type="button" class="btn btn-sm btn-inverse" onclick="closeEditModal()">Cancel</button>
             <span class="pull-right editFormErrorMessage"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade editLearnerForm" style="display: none">
+    <div class="modal-dialog">
+     <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Edit Schedule</h4>
+        </div>
+        <div class="modal-body">
+            <div class="inputLearnerType">Learner Type
+              <select type="text" class="form-control" name="learnerType">
+                @for(learner <- learnerTypeOptions){
+                  <option value="@learner">@learner</option>                }
+              </select>
+            <br>
+            </div>
+            <button type="button" class="btn btn-sm btn-inverse saveLearnerButton">Save</button>
+            <button type="button" class="btn btn-sm btn-inverse" onclick="closeLearnerModal()">Cancel</button>
+            <span class="pull-right learnerFormErrorMessage"></span>
           </div>
         </div>
       </div>
@@ -251,6 +273,7 @@
       setCursorAtFirstInputOf(this);
     });
 
+    
     function scrollTo(elem) {
       $('html,body' ).animate({
       scrollTop: $(elem ).offset( ).top
@@ -315,7 +338,18 @@
     $(button).click(function () {
       populateEditFormWithCurrentValues(index);
       editIndex=index;
-     // showEditForm(index);
+    });
+  });
+
+  $('.editLearnerButton').each(function (index, button) {
+    $(button).click(function () {
+      editIndex=index;
+    });
+  });
+
+  $('.saveLearnerButton' ).each(function (index, button) {
+    $(button ).click(function () {
+      sendUpdateLearnerRequest(editIndex);
     });
   });
 
@@ -324,6 +358,33 @@
       sendUpdateSessionRequest(editIndex);
     });
   });
+
+  function sendUpdateLearnerRequest(index) {
+    var info = $('.learnerType' ).get(index);
+    var scheduleID = $(info).data("schedule-id");
+    var scheduleValues = {};
+
+    var elem = $('.editLearnerForm').get(0);
+    var selectElems = $('select', elem );
+
+    scheduleValues.learnerType = $(selectElems[0] ).val();
+        
+    jQuery.ajax({
+      type: 'PUT',
+      contentType: 'application/json',
+      processData: false,
+      data: JSON.stringify(scheduleValues),
+      dataType: 'json',
+      url: "@routes.TemplateController.updateLearnerType("")" + encodeURIComponent(scheduleID),
+      success: function (data) {
+        $('.editLearnerForm').modal('toggle');
+        $('.type', info).text(data.learnerType);
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        displayFormError(index, jqXHR.responseText, '.learnerFormErrorMessage');
+      }
+    });
+  }
 
   function sendUpdateSessionRequest(index) {
     var info = $('.sessionInfo' ).get(index);
@@ -342,7 +403,7 @@
         updateSessionInfoWithValues(index, data);
       },
       error: function (jqXHR, textStatus, errorThrown) {
-        displayFormError(index, jqXHR.responseText);
+        displayFormError(index, jqXHR.responseText, '.editFormErrorMessage');
       }
     });
   }
@@ -361,7 +422,7 @@
       $('.sessionAM', infoElem ).text("PM");
   }
 
-  function sessionRouteForUpdate(index) {
+   function sessionRouteForUpdate(index) {
     var info = $('.sessionInfo' ).get(index);
     var sessionID = $(info ).data('session-id');
     return "@routes.TemplateController.updateSessionTemplate("")" + encodeURIComponent(sessionID);
@@ -423,9 +484,20 @@
     return sessionValues;
   }
 
-  function displayFormError(index, message) {
-    var elem = $('.editFormErrorMessage' ).get(index);
+  function displayFormError(index, message, form) {
+    var elem = $(form).get();
     $(elem ).text(message);
+    $(elem).css('color', 'red');
+  }
+
+  function closeEditModal(){
+    $('.editForm').modal('toggle');
+    $($('.editFormErrorMessage' ).get()).text('');
+  }
+
+  function closeLearnerModal(){
+    $('.editLearnerForm').modal('toggle');
+    $($('.learnerFormErrorMessage' ).get()).text('');
   }
 
   </script>

@@ -196,6 +196,16 @@ public class TemplateController extends Controller {
         if (existingSession == null) {
             return badRequest("Session ID does not exist");
         }
+        
+        if(existingSession.schedule!=null){
+        	SessionTemplate st = SessionTemplate.find.where().eq("week", updatedSessionData.week)
+        		.eq("day", updatedSessionData.day).eq("isAM", updatedSessionData.isAM)
+        		.eq("schedule", existingSession.schedule).findUnique();
+        	if(st != null){
+        		if(st.id != existingSession.id)
+        		return badRequest("A session already exists at this time in this schedule.");
+        	}
+        }
 
     	existingSession.updateLocation(updatedSessionData.location);
     	existingSession.updatePhysician(updatedSessionData.physician);
@@ -204,6 +214,20 @@ public class TemplateController extends Controller {
     	existingSession.updateAM(updatedSessionData.isAM);
 
         return ok(Json.toJson(SessionTemplate.find.byId(existingSession.id)));
+	}
+	
+	@BodyParser.Of(BodyParser.Json.class)
+	public static Result updateLearnerType(String scheduleId){
+		JsonNode scheduleJson = request().body().asJson();
+		ScheduleTemplate updatedLearnerType = Json.fromJson(scheduleJson, ScheduleTemplate.class);
+		ScheduleTemplate existingSchedule = ScheduleTemplate.find.byId(scheduleId);
+		
+		if (existingSchedule == null) {
+            return badRequest("Schedule ID does not exist");
+        }
+        existingSchedule.updateLearnerType(updatedLearnerType.learnerType);
+
+        return ok(Json.toJson(ScheduleTemplate.find.byId(existingSchedule.uuid)));
 	}
 
 }

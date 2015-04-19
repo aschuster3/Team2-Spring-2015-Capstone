@@ -76,7 +76,8 @@ GET           /admincalendar                      controllers.AdminController.vi
 GET           /templates                          controllers.TemplateController.templates()
 POST          /templates                          controllers.TemplateController.createScheduleTemplate()
 POST          /templates/:scheduleID              controllers.TemplateController.createSessionTemplate(scheduleID: String)
-PUT          /templates/:sessionId			      controllers.TemplateController.updateSessionTemplate(sessionId: String)
+PUT           /templates/:sessionId			      controllers.TemplateController.updateSessionTemplate(sessionId: String)
+PUT           /templates/changeLearner/:scheduleId			  controllers.TemplateController.updateLearnerType(scheduleId: String)
 DELETE        /templates/:sessionId               controllers.TemplateController.deleteSessionFromSchedule(sessionId: String)
 GET           /templates-api                      controllers.TemplateController.jsonTemplates()
 
