@@ -20,6 +20,8 @@ public class RecurringSessionGroup extends Model {
 
     public int recurringType;
 
+    public boolean useLastDayOfWeekOccurrence = false;  // for monthly only
+
     /**
      * @param recurringType choose from REC_TYPE_XXX constants
      */
@@ -74,29 +76,73 @@ public class RecurringSessionGroup extends Model {
     }
 
     private Date nextOccurrenceDate(Date baseDate) {
-        if (invalidRecurringType(this.recurringType)) {
-            return null;
+        switch (this.recurringType) {
+            case REC_TYPE_WEEKLY:   return nextOccurrenceDateForWeekly(baseDate);
+            case REC_TYPE_MONTHLY:  return nextOccurrenceDateForMonthly(baseDate);
+            default:                return null;
         }
+    }
 
+    private Date nextOccurrenceDateForWeekly(Date baseDate) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(baseDate);
-        if (recurringType == REC_TYPE_WEEKLY) {
-
-        }
-        int calendarFieldToIncrement = calendarFieldFromRecurringType();
-        cal.add(calendarFieldToIncrement, 1);
+        cal.add(Calendar.WEEK_OF_YEAR, 1);
         return cal.getTime();
     }
 
-    private boolean invalidRecurringType(int recurringType) {
-        return recurringType != REC_TYPE_WEEKLY
-                && recurringType != REC_TYPE_MONTHLY;
+    private Date nextOccurrenceDateForMonthly(Date baseDate) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(baseDate);
+
+        int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+        int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
+
+        // Ex: first Monday of month is the 1st occurrence of Monday in the month
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(baseDate);
+        cal2.set(Calendar.DAY_OF_MONTH, 1);
+
+        int dayOfWeekOccurrencesUntilBaseDate = 0;
+        do {
+            if (cal2.get(Calendar.DAY_OF_WEEK) == dayOfWeek) {
+                dayOfWeekOccurrencesUntilBaseDate++;
+            }
+            cal2.add(Calendar.DAY_OF_MONTH, 1);
+        } while (cal2.get(Calendar.DAY_OF_MONTH) <= dayOfMonth
+                    && cal2.get(Calendar.MONTH) == cal.get(Calendar.MONTH));
+
+        if (dayOfWeekOccurrencesUntilBaseDate == 5) {
+            this.useLastDayOfWeekOccurrence = true;
+        }
+
+        cal.add(Calendar.MONTH, 1);
+        setCalendarToFirstOccurrenceInMonth(cal, dayOfWeek);
+
+        /*
+         * Here, we check if the month changes because we don't want
+         * to suggest a date in the next month.
+         *
+         * In the case that this month does not have an "nth" occurrence
+         * of a particular DAY_OF_WEEK, then default to the last
+         * occurrence of that DAY_OF_WEEK.
+         */
+        int month = cal.get(Calendar.MONTH);
+        for (int i = 1; i < dayOfWeekOccurrencesUntilBaseDate || useLastDayOfWeekOccurrence; i++) {
+            cal.add(Calendar.WEEK_OF_YEAR, 1);
+            if (month != cal.get(Calendar.MONTH)) {
+                cal.add(Calendar.WEEK_OF_YEAR, -1);
+                break;
+            }
+        }
+
+        return cal.getTime();
     }
 
-    private int calendarFieldFromRecurringType() {
-        return this.recurringType == REC_TYPE_MONTHLY
-                ? Calendar.MONTH
-                : Calendar.WEEK_OF_YEAR;
+    private void setCalendarToFirstOccurrenceInMonth(Calendar cal, int dayOfWeek) {
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        while (cal.get(Calendar.DAY_OF_WEEK) != dayOfWeek) {
+            cal.add(Calendar.DAY_OF_MONTH, 1);
+        }
     }
 
     public List<Session> allSessions() {
