@@ -11,15 +11,15 @@
         class="cal-cell1 cal-cell {{ day.highlightClass }}"
         ng-repeat="day in week track by $index"
         ng-click="dayClicked($parent.$index, $index)"
-        ng-class="{pointer: day.events.length > 0}">
+        ng-class="{pointer: numVisible(day.events) > 0}">
         <div class="cal-month-day" ng-class="{'cal-day-outmonth': !day.inMonth, 'cal-day-inmonth': day.inMonth, 'cal-day-weekend': $index == 5 || $index == 6, 'cal-day-today': day.isToday}">
-          <small class="cal-events-num badge badge-inverse pull-left" ng-show="day.events.length > 0">{{ day.events.length }}</small>
+          <small class="cal-events-num badge badge-inverse pull-left" ng-show="numVisible(day.events) > 0">{{ numVisible(day.events) }}</small>
           <span class="pull-right" data-cal-date>{{ day.label }}</span>
           <div class="cal-day-tick" ng-show="day.isOpened">
             <i class="glyphicon glyphicon-chevron-up"></i>
             <i class="fa fa-chevron-up"></i>
           </div>
-          <div class="events-list" ng-show="day.events.length > 0">
+          <div class="events-list" ng-show="numVisible(day.events) > 0">
             <!--  commenting out the little dots showing the events on the calendar
             <a
               href="javascript:;"
@@ -42,7 +42,7 @@
       <div class="cal-slide-content cal-event-list">
         <ul class="unstyled list-unstyled">
 
-          <li ng-repeat="event in openEvents | orderBy:['-isAM','+title','+physician'] track by $index">
+          <li ng-repeat="event in openEvents | filter:shouldShowEvent | orderBy:['-isAM','+title','+physician'] track by $index">
             <span class="pull-left event event-{{ event.type }}"></span>
             &nbsp;
             <a
@@ -50,7 +50,8 @@
               class="event-item"
               ng-click="eventClick({$event: event})">
               <span ng-style="eventFontColor(event)">
-                {{  event.title  }}
+                <span ng-if="event.scheduleGroupId !== null && event.scheduleTitle">&lt;{{ event.scheduleTitle }}&gt;</span>
+                <span>{{  event.title  }}</span>
                 <span ng-if="event.physician">  |  {{  event.physician  }}</span>
                 <span ng-if="event.isAM">  |  AM</span>
                 <span ng-if="!event.isAM">  |  PM</span>

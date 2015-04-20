@@ -3,7 +3,9 @@
 </div>
 
 <div class="modal-body">
-    {{ message }}
+    <div ng-repeat="message in messages track by $index">
+        {{ message }}
+    </div>
 </div>
 
 <div class="modal-footer">

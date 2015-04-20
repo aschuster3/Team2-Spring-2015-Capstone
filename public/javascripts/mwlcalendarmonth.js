@@ -33,7 +33,25 @@ angular.module('mwl.calendar')
           } else {
             return {"color":"white"};
           }
+        };
+
+        scope.shouldShowEvent = shouldShowEvent;
+
+        function shouldShowEvent(event) {
+          return scope.isAdminView
+            || event.scheduleGroupId === null
+            || (event.scheduleGroupId !== null && event.firstSessionInScheduleGroup);
         }
+
+        scope.numVisible = function (events) {
+          var count = 0;
+          events.forEach(function (elem) {
+            if (shouldShowEvent(elem)) {
+              count++;
+            }
+          });
+          return count;
+        };
 
         var firstRun = false;
 

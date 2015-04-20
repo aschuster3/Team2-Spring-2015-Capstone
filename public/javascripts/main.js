@@ -105,6 +105,10 @@ angular.module('mwl.calendar')
 	    	assignSingleSessionToLearner(sessionWithNewLearner, selectedLearner);
 	      Sessions.update(sessionWithNewLearner).then(
           function success() {
+            if (belongsToSchedule(sessionWithNewLearner)) {
+              notificationModalService.show(['This half-day session belongs to a group.', selectedLearner.fullName + ' has been registered for all half-day sessions in this group.  Please refer to the "Students" page for their updated schedule.'], 'Registered for "' + sessionWithNewLearner.scheduleTitle + '" Schedule');
+            }
+
             sessionsToAssign.forEach(function (elem) {
               var updatedSession = angular.copy(elem);
               assignSingleSessionToLearner(updatedSession, selectedLearner);

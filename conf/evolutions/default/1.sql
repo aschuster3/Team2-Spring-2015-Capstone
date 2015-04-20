@@ -39,6 +39,8 @@ create table session (
   assigned_learner          varchar(255),
   recurring_group_id        bigint,
   schedule_group_id         varchar(255),
+  schedule_title            varchar(255),
+  first_session_in_schedule_group boolean,
   supported_learner_types_as_string varchar(500),
   supports_any_learner_type boolean,
   constraint pk_session primary key (id))

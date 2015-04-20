@@ -253,14 +253,22 @@ public class SessionController extends Controller {
 		 * This computation only works if the day we pass to cal.setTime()
 		 * is a Monday (of the first week of the schedule).
 		 */
+		Collections.sort(schedule.sessions);
+		boolean isFirst = true;
 		for (SessionTemplate session: schedule.sessions){
 			int days = (session.week - 1)*7 + (session.day - 1);
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(mondayOfFirstWeek);
 			cal.add(Calendar.DATE, days);
-			Session newSession = new Session(null, session.location, cal.getTime(), session.physician, session.isAM, schedule.learnerType, scheduleInstanceId);
+
+			Session newSession = new Session(null, session.location, cal.getTime(), session.physician, session.isAM, schedule.learnerType);
+			newSession.scheduleGroupId = scheduleInstanceId;
+			newSession.firstSessionInScheduleGroup = isFirst;
+			newSession.scheduleTitle = schedule.title;
 			Session.create(newSession);
 			createdSessions.add(newSession);
+
+			isFirst = false;
 		}
 		return status(CREATED, Json.toJson(createdSessions));
 	}

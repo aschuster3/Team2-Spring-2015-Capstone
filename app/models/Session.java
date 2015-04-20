@@ -48,6 +48,10 @@ public class Session extends Model {
 
 	public String scheduleGroupId;
 
+	public String scheduleTitle;
+
+	public boolean firstSessionInScheduleGroup;
+
 	/**
 	 * This is a comma separated list.
 	 *
@@ -115,11 +119,6 @@ public class Session extends Model {
 
     public Session(String title, Date date, boolean isAM, String schedule){
     	this(title, date, isAM);
-    	this.scheduleGroupId = schedule;
-    }
-    
-    public Session(String id, String title, Date date, String physician, boolean isAM, String supportedLearnerTypes, String schedule){
-    	this(id, title, date, physician, isAM, supportedLearnerTypes);
     	this.scheduleGroupId = schedule;
     }
 
@@ -220,5 +219,7 @@ public class Session extends Model {
 		}
 		this.supportedLearnerTypesAsString = Joiner.on(',').join(supportedTypes);
 		this.scheduleGroupId = null;
+		this.scheduleTitle = null;
+		this.firstSessionInScheduleGroup = false;
 	}
 }
