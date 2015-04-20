@@ -52,9 +52,9 @@
               <span ng-style="eventFontColor(event)">
                 <span ng-if="event.scheduleGroupId !== null && event.scheduleTitle">&lt;{{ event.scheduleTitle }}&gt;</span>
                 <span>{{  event.title  }}</span>
-                <span ng-if="event.physician">  |  {{  event.physician  }}</span>
-                <span ng-if="event.isAM">  |  AM</span>
-                <span ng-if="!event.isAM">  |  PM</span>
+                <span ng-if="event.physician"> &nbsp; &nbsp; | &nbsp; &nbsp; {{  event.physician  }}</span>
+                <span ng-if="event.isAM"> &nbsp; &nbsp; | &nbsp; &nbsp; AM</span>
+                <span ng-if="!event.isAM"> &nbsp; &nbsp; | &nbsp; &nbsp;  PM</span>
               </span>
             </a>
 

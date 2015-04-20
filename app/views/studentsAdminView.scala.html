@@ -94,10 +94,10 @@
 
 					<div class = "col-md-2">
 					@form(routes.AdminController.emailLearnerSchedule(learner.uuid)) {
-                        <button type="submit" class="btn btn-sm btn-inverse pull-right btn-space-bottom">E-mail Schedule to Student</button>
+                        <button type="submit" class="btn btn-sm btn-inverse pull-right btn-space-bottom" type="submit" data-toggle="modal" data-target="#EmailModal">E-mail Schedule to Student</button>
                     }
                     @form(routes.AdminController.deleteLearner(learner.uuid)) {
-						<button type="submit" class="btn btn-sm btn-danger pull-right">Delete Student</button>
+						<button type="submit" class="btn btn-sm btn-danger pull-right" type="submit" data-toggle="modal" data-target="#DeleteStudentModal">Delete Student</button>
 					}
 
 					</div>
@@ -108,18 +108,90 @@
 		}
 	</div>
 		<div class="inline btn-space-sm">
-			<a class="btn btn-inverse" href="@routes.AdminController.removeLearnersAndGiveCSV">
+			<a class="btn btn-inverse" href="@routes.AdminController.removeLearnersAndGiveCSV" type="submit" data-toggle="modal" data-target="#ExportDeleteAllModal">
 
 				Export and Delete Students
 			</a>
 		</div>
 		<div class="inline">
 			@form(routes.AdminController.emailAllStudents()) {
-				<button type="submit" class="btn btn-inverse">Email All Students</button>
+				<button type="submit" class="btn btn-inverse" type="submit" data-toggle="modal" data-target="#EmailAllModal">Email All Students</button>
 			}
 		</div>
 	</div>
 </div>
+
+<!-- EMAIL SINGLE STUDENT MODAL -->
+<div id="EmailModal" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+			  <h4 class="modal-title">Student Emailed!</h4>
+			</div>
+			<div class="modal-body">
+			  <p class="modalBody">This student has been sent an email with their schedule.</p>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-inverse pull-right" data-dismiss="modal">Ok</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- DELETE SINGLE STUDENT MODAL -->
+<div id="DeleteStudentModal" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+			  <h4 class="modal-title">Delete Student?</h4>
+			</div>
+			<div class="modal-body">
+			  <p class="modalBody">Are you sure you would like to delete this student?</p>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-space-sm btn-inverse pull-right" data-dismiss="modal">Cancel</button>
+				<button class="btn btn-space-sm btn-inverse pull-right" data-dismiss="modal">Confirm</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- EXPORT AND DELETE ALL STUDENTS MODAL -->
+<div id="ExportDeleteAllModal" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+			  <h4 class="modal-title">Export and Delete All Students?</h4>
+			</div>
+			<div class="modal-body">
+			  <p class="modalBody">Are you sure you would like to export and delete all students?</p>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-space-sm btn-inverse pull-right" data-dismiss="modal">Cancel</button>
+				<button class="btn btn-space-sm btn-inverse pull-right" data-dismiss="modal">Confirm</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- EMAIL ALL STUDENTS MODAL -->
+<div id="EmailAllModal" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+			  <h4 class="modal-title">Email All Students?</h4>
+			</div>
+			<div class="modal-body">
+			  <p class="modalBody">Are you sure you would like to email all students their schedule?</p>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-space-sm btn-inverse pull-right" data-dismiss="modal">Cancel</button>
+				<button class="btn btn-space-sm btn-inverse pull-right" data-dismiss="modal">Confirm</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script>
