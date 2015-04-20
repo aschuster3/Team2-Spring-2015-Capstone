@@ -1,11 +1,18 @@
 package controllers;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 
 import models.Learner;
 import models.Session;
 import models.User;
+import play.Play;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -35,11 +42,40 @@ public class CoordinatorController extends Controller {
     public static Result emailLearnerSchedule(String learnerId) {
         Learner learner = Learner.find.where().eq("uuid", learnerId).findUnique();
         
+        List<Session> schedule = Session.getLearnerSchedule(learner.email);
+        
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append(getHeader());
+        
         Email email = new Email();
         email.setSubject("The following includes schedule details.");
         email.setFrom("admin@emory.edu");
         email.addTo(learner.email);
-        email.setBodyText("Test");
+        sb.append("<table style=\"width:80%\" border=\"1\">"
+                + "<tr> <th>Clinic</th> <th>Physician</th> <th>Session Time</th> </tr>");
+        for(Session session: schedule) {
+            sb.append("<tr>");
+            sb.append("<td>");
+            sb.append(session.title);
+            sb.append("</td>");
+            sb.append("<td>");
+            sb.append(session.physician);
+            sb.append("</td>");
+            sb.append("<td>");
+            if(session.isAM) {
+                sb.append("AM");
+            } else {
+                sb.append("PM");
+            }
+            sb.append("</td>");
+            sb.append("</tr>");
+        }
+        sb.append("</table>");
+        
+        sb.append(getFooter());
+        
+        email.setBodyHtml(sb.toString());
         
         MailerPlugin.send(email);
         return status(NO_CONTENT);
@@ -47,17 +83,111 @@ public class CoordinatorController extends Controller {
     
     public static Result emailAllStudents() {
         List<Learner> learners = Learner.getAllOwnedBy(session().get("email"));
+        
+        String header = getHeader();
+        String footer = getFooter();
+        
+        List<Session> schedule;
+        StringBuilder sb;
         for(Learner l: learners) {
+            sb = new StringBuilder();
+            sb.append(header);
+            schedule = Session.getLearnerSchedule(l.email);
+            
             Email email = new Email();
-            email.setSubject("The following includes schedule details.");
+            email.setSubject("Welcome to the Emory Dermatology Rotation");
             email.setFrom("admin@emory.edu");
             email.addTo(l.email);
-            email.setBodyText("Test");
+            sb.append("<table style=\"width:80%\" border=\"1\">"
+                    + "<tr> <th>Clinic</th> <th>Physician</th> <th>Session Time</th> </tr>");
+            for(Session session: schedule) {
+                sb.append("<tr>");
+                sb.append("<td>");
+                sb.append(session.title);
+                sb.append("</td>");
+                sb.append("<td>");
+                sb.append(session.physician);
+                sb.append("</td>");
+                sb.append("<td>");
+                if(session.isAM) {
+                    sb.append("AM");
+                } else {
+                    sb.append("PM");
+                }
+                sb.append("</td>");
+                sb.append("</tr>");
+            }
+            sb.append("</table>");
+            sb.append(footer);
+            
+            email.setBodyHtml(sb.toString());
             
             MailerPlugin.send(email);
         }
         
         return status(NO_CONTENT);
+    }
+    
+    private static String getHeader() {
+        String filePath = Play.application().path().getAbsolutePath() 
+                + "/public/templates/email_template_head.txt";
+        String everything = "";
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(filePath));
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+
+            while (line != null) {
+                sb.append(line);
+                sb.append(System.lineSeparator());
+                line = br.readLine();
+            }
+            everything = sb.toString();
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            if(br != null) {
+                try{
+                    br.close();
+                } catch(IOException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        }
+        
+        return everything;
+    }
+    
+    private static String getFooter() {
+        String filePath = Play.application().path().getAbsolutePath() 
+                + "/public/templates/email_template_tail.txt";
+        String everything = "";
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(filePath));
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+
+            while (line != null) {
+                sb.append(line);
+                sb.append(System.lineSeparator());
+                line = br.readLine();
+            }
+            everything = sb.toString();
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            if(br != null) {
+                try{
+                    br.close();
+                } catch(IOException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        }
+        
+        return everything;
     }
 
     public static Result createLearner() {

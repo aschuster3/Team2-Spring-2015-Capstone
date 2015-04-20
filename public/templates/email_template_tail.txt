@@ -1,0 +1,37 @@
+<br><br>
+
+		<table style="width:80%" border="1">
+		  <tr>
+		    <th>Clinic Site</th>
+		    <th>Floor</th> 
+		    <th>Start Time</th>
+		  </tr>
+		  <tr>
+		    <td>The Emory Clinic (TEC) <br>1525 Clifton Road</td>
+		    <td>3rd Floor</td> 
+		    <td>8:20am* &amp; 1:00pm
+			<br>*Except Thursday mornings start at 10am</td>
+		  </tr>
+		  <tr>
+		    <td>Grady Clinic</td>
+		    <td>1st Floor (A/B Tower)</td> 
+		    <td>8:15am &amp; 1:15pm</td>
+		  </tr>
+		  <tr>
+		    <td>VA Clinic</td>
+		    <td>1st Floor (medicine subspecialties clinic area)</td> 
+		    <td>8:30am* &amp; 1:30pm
+			<br>*Except Tuesday mornings start at 9:30am</td>
+		  </tr>
+		</table>
+
+		<p>We also welcome rotators to attend Emory Dermatology Grand Rounds, which are held on the 1st, 3rd, and 5th Thursday of the month. It is in the Brown Auditorium at Emory Clinic Building A (1365 Clifton Road) from 7:45am to 10am.</p>
+
+		<p>Please wear your white coat and ID badge at all times in clinic. No food or drink is allowed in clinic areas.</p>
+    
+    <p>In order to receive credit for this rotation, you will need to complete the following survey evaluation at the end of your rotation:  https://www.surveymonkey.com/s/ZTFF8GQ Please do not forget to do this, as credit will not be given for the rotation until the survey is completed.</p>
+
+    <p>We hope you enjoy your time with us.  If you have any questions, please call our Dermatology Program Coordinator at 404-727-3669.</p>
+	</div>
+</body>
+</html>

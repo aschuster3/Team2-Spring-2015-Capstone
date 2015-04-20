@@ -1,0 +1,11 @@
+<html>
+<head>
+</head>
+
+<body>    
+	<div style="width:80%; margin:0 auto;">
+		<h2><center>Welcome to Emory&#39;s Department of Dermatology!</center></h2>
+
+		<p>You have been registered for the dermatology clinics listed below. If you are unable to attend any of these sessions, please contact your program coordinator immediately and ask him/her to unregister you for that session. If you are not unregistered for a clinic that you cannot attend, then you will be marked as absent and may not receive full credit for this rotation.  If there is a last minute change to your schedule, please call 404-727-3669 to notify our Dermatology Program Coordinator.</p>
+
+		<br>
