@@ -289,8 +289,7 @@ public class AdminController extends Controller {
         try {
             CSVUtil.writeCoordinatorCSV(User.getAllCoordinators(), csvStringWriter);
         } catch (IOException e) {
-            Logger.info("There has been an issue");
-            return internalServerError("server error: unable to write CSV coordinator data");
+            return internalServerError("Server error: unable to write CSV coordinator data");
         }
 
         InputStream csvResponseStream = new ByteArrayInputStream(
