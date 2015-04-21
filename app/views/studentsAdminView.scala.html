@@ -161,8 +161,8 @@
 			  <p class="modalBody">Are you sure you would like to export and delete all students?</p>
 			</div>
 			<div class="modal-footer">
-				<button class="btn btn-space-sm btn-inverse pull-right" data-dismiss="modal">Cancel</button>
-				<a href="@routes.AdminController.removeLearnersAndGiveCSV" class="btn btn-space-sm btn-inverse pull-right confirm-btn" data-dismiss="modal">Confirm</a>
+				<button class="btn btn-space-sm btn-inverse pull-right cancel-btn" data-dismiss="modal">Cancel</button>
+				<button class="btn btn-space-sm btn-inverse pull-right confirm-btn" data-dismiss="modal">Confirm</button>
 			</div>
 		</div>
 	</div>
@@ -186,10 +186,20 @@
 	</div>
 </div>
 
+@*
+	Use a hidden form here to download the file because we cannot submit
+	a form GET and dismiss a modal at the same time.
+*@
+<div id="ExportDeleteAllFormContainer">
+	@form(routes.AdminController.removeLearnersAndGiveCSV()) {
+	}
+</div>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script>
 	var deleteStudentModal = $('#DeleteStudentModal');
+	var exportDeleteAllModal = $('#ExportDeleteAllModal');
 	var emailAllModal = $('#EmailAllModal');
 
 	deleteStudentModal.on('show.bs.modal', function (evt) {
@@ -207,6 +217,21 @@
 	$('.confirm-btn', emailAllModal ).click(function () {
 		emailAllModal.modal('hide');
 		ajaxEmailAll();
+	});
+
+	$('.confirm-btn', exportDeleteAllModal ).click(function () {
+		exportDeleteAllModal.data('confirmed', true);
+	});
+
+	exportDeleteAllModal.on('hidden.bs.modal', function () {
+		if (exportDeleteAllModal.data('confirmed')) {
+			$('#ExportDeleteAllFormContainer form' ).submit();
+			/*
+			 * This is misleading if form submission fails!
+			 */
+			$('.studentsSection .panel' ).remove();
+		}
+		exportDeleteAllModal.data('confirmed', false);
 	});
 
 	function ajaxDeleteLearner(learnerUUID, panelToRemove) {
