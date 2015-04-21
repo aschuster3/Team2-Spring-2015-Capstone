@@ -122,7 +122,7 @@
 					</div>
 					<div class = "col-md-2">
 					@form(routes.CoordinatorController.emailLearnerSchedule(learner.uuid)) {
-                        <button type="submit" class="btn btn-sm btn-inverse pull-right">E-mail Schedule to Student</button>
+                        <button type="submit" class="btn btn-sm btn-inverse pull-right" data-toggle="modal" data-target="#EmailModal">E-mail Schedule to Student</button>
                     }
                     </div>
 		    	</div>
@@ -137,9 +137,7 @@
 		</a>
 	</div>
 	<div class="inline">
-		@form(routes.CoordinatorController.emailAllStudents()) {
-	        <button type="submit" class="btn btn-inverse">Email All Students</button>
-	    }
+		<button class="btn btn-inverse" data-toggle="modal" data-target="#EmailAllModal">Email All Students</button>
 		@*
 			If the user submitted an invalid form, we want them to see this form immediately.
 			So, don't set the class to 'collapse' for the above scenario!
@@ -188,6 +186,42 @@
 		}
 	</div>
 </div>
+
+<!-- EMAIL SINGLE STUDENT MODAL -->
+<div id="EmailModal" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Student Emailed!</h4>
+			</div>
+			<div class="modal-body">
+				<p class="modalBody">This student has been sent an email with their schedule.</p>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-inverse pull-right" data-dismiss="modal">Ok</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- EMAIL ALL STUDENTS MODAL -->
+<div id="EmailAllModal" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Email All Students?</h4>
+			</div>
+			<div class="modal-body">
+				<p class="modalBody">Are you sure you would like to email all students their schedule?</p>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-space-sm btn-inverse pull-right" data-dismiss="modal">Cancel</button>
+				<button class="btn btn-space-sm btn-inverse pull-right confirm-btn">Confirm</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
@@ -393,12 +427,31 @@
 	function learnerRouteForUpdate(index) {
 		var info = $('.learnerInfo' ).get(index);
 		var learnerUUID = $(info ).data('learner-uuid');
-		return @routes.LearnerController.updateLearner("") + encodeURIComponent(learnerUUID);
+		return '@routes.LearnerController.updateLearner("")' + encodeURIComponent(learnerUUID);
 	}
 
 	function displayFormError(index, message) {
 		var elem = $('.editFormErrorMessage' ).get(index);
 		$(elem ).text(message);
+	}
+
+
+	var emailAllModal = $('#EmailAllModal');
+
+	$('.confirm-btn', emailAllModal ).click(function () {
+		emailAllModal.modal('hide');
+		ajaxEmailAll();
+	});
+
+	function ajaxEmailAll() {
+		$.ajax({
+			type: 'POST',
+			url: routeForEmailAll()
+		});
+	}
+
+	function routeForEmailAll() {
+		return '@routes.CoordinatorController.emailAllStudents';
 	}
 </script>
 </body>

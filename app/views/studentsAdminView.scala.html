@@ -96,9 +96,7 @@
 					@form(routes.AdminController.emailLearnerSchedule(learner.uuid)) {
                         <button type="submit" class="btn btn-sm btn-inverse pull-right btn-space-bottom" type="submit" data-toggle="modal" data-target="#EmailModal">E-mail Schedule to Student</button>
                     }
-                    @form(routes.AdminController.deleteLearner(learner.uuid)) {
-						<button type="submit" class="btn btn-sm btn-danger pull-right" type="submit" data-toggle="modal" data-target="#DeleteStudentModal">Delete Student</button>
-					}
+					<button class="btn btn-sm btn-danger pull-right" data-learner-uuid="@learner.uuid" data-toggle="modal" data-target="#DeleteStudentModal">Delete Student</button>
 
 					</div>
 		    	</div>
@@ -107,16 +105,12 @@
 		@(panelNum += 1)
 		}
 	</div>
+	<div>
 		<div class="inline btn-space-sm">
-			<a class="btn btn-inverse" href="@routes.AdminController.removeLearnersAndGiveCSV" type="submit" data-toggle="modal" data-target="#ExportDeleteAllModal">
-
-				Export and Delete Students
-			</a>
+			<button class="btn btn-inverse" data-toggle="modal" data-target="#ExportDeleteAllModal">Export and Delete Students</button>
 		</div>
 		<div class="inline">
-			@form(routes.AdminController.emailAllStudents()) {
-				<button type="submit" class="btn btn-inverse" type="submit" data-toggle="modal" data-target="#EmailAllModal">Email All Students</button>
-			}
+			<button class="btn btn-inverse" data-toggle="modal" data-target="#EmailAllModal">Email All Students</button>
 		</div>
 	</div>
 </div>
@@ -150,7 +144,7 @@
 			</div>
 			<div class="modal-footer">
 				<button class="btn btn-space-sm btn-inverse pull-right" data-dismiss="modal">Cancel</button>
-				<button class="btn btn-space-sm btn-inverse pull-right" data-dismiss="modal">Confirm</button>
+				<button class="btn btn-space-sm btn-inverse pull-right confirm-btn" data-dismiss="modal">Confirm</button>
 			</div>
 		</div>
 	</div>
@@ -168,7 +162,7 @@
 			</div>
 			<div class="modal-footer">
 				<button class="btn btn-space-sm btn-inverse pull-right" data-dismiss="modal">Cancel</button>
-				<button class="btn btn-space-sm btn-inverse pull-right" data-dismiss="modal">Confirm</button>
+				<a href="@routes.AdminController.removeLearnersAndGiveCSV" class="btn btn-space-sm btn-inverse pull-right confirm-btn" data-dismiss="modal">Confirm</a>
 			</div>
 		</div>
 	</div>
@@ -186,7 +180,7 @@
 			</div>
 			<div class="modal-footer">
 				<button class="btn btn-space-sm btn-inverse pull-right" data-dismiss="modal">Cancel</button>
-				<button class="btn btn-space-sm btn-inverse pull-right" data-dismiss="modal">Confirm</button>
+				<button class="btn btn-space-sm btn-inverse pull-right confirm-btn">Confirm</button>
 			</div>
 		</div>
 	</div>
@@ -195,25 +189,49 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script>
-	$('.learnerDeleteButton' ).on('click', function () {
-		var learnerUUID = $(this ).data('learner-uuid');
-		var panelToRemove = $(this ).closest('.panel');
-		makeAjaxDeleteCall(learnerUUID, panelToRemove);
+	var deleteStudentModal = $('#DeleteStudentModal');
+	var emailAllModal = $('#EmailAllModal');
+
+	deleteStudentModal.on('show.bs.modal', function (evt) {
+		$(this ).data('clicked-delete-btn', $(evt.relatedTarget));
 	});
 
-	function makeAjaxDeleteCall(learnerUUID, panelToRemove) {
+	$('.confirm-btn', deleteStudentModal).click(function () {
+		var deleteButton = deleteStudentModal.data('clicked-delete-btn');
+		var learnerUUID = deleteButton.data('learner-uuid');
+		var panelToRemove = deleteButton.closest('.panel');
+		deleteStudentModal.modal('hide');
+		ajaxDeleteLearner(learnerUUID, panelToRemove);
+	});
+
+	$('.confirm-btn', emailAllModal ).click(function () {
+		emailAllModal.modal('hide');
+		ajaxEmailAll();
+	});
+
+	function ajaxDeleteLearner(learnerUUID, panelToRemove) {
 		$.ajax({
 			type: 'DELETE',
 			url: routeForDelete(learnerUUID),
 			success: function () {
-				console.log(panelToRemove);
 				$(panelToRemove ).remove();
 			}
 		});
 	}
 
+	function ajaxEmailAll() {
+		$.ajax({
+			type: 'POST',
+			url: routeForEmailAll()
+		});
+	}
+
 	function routeForDelete(learnerUUID) {
 		return '@routes.LearnerController.ajaxDeleteLearner("")' + encodeURIComponent(learnerUUID);
+	}
+
+	function routeForEmailAll() {
+		return '@routes.AdminController.emailAllStudents';
 	}
 
 </script>
