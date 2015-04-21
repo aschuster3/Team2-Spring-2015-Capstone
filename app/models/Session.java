@@ -42,6 +42,7 @@ public class Session extends Model {
 
 	public String physician;
 
+	// Learner's email address
     public String assignedLearner;
 
 	public Long recurringGroupId;

@@ -11,6 +11,8 @@ import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -19,6 +21,7 @@ import models.Learner;
 import models.Session;
 import models.UnapprovedUser;
 import models.User;
+import play.Logger;
 import play.Play;
 import play.libs.mailer.Email;
 import play.libs.mailer.MailerPlugin;
@@ -207,36 +210,6 @@ public class AdminController extends Controller {
                 User.getAllCoordinators()));
     }
     
-//    private Result emailStudent(Learner learner) {
-//        Learner learner = Learner.find.where().eq("uuid", learner.uuid).findUnique();
-//        
-//        List<Session> schedule = Session.getLearnerSchedule(learner.email);
-//        
-//        StringBuilder sb = new StringBuilder();
-//        
-//        Email email = new Email();
-//        email.setSubject("The following includes schedule details.");
-//        email.setFrom("admin@emory.edu");
-//        email.addTo(learner.email);
-//        for(Session session: schedule) {
-//            sb.append(session.title);
-//            sb.append(" | ");
-//            sb.append(session.physician);
-//            sb.append(" | ");
-//            if(session.isAM) {
-//                sb.append("AM");
-//            } else {
-//                sb.append("PM");
-//            }
-//            sb.append("</br>");
-//        }
-//        
-//        email.setBodyText(sb.toString());
-//        
-//        MailerPlugin.send(email);
-//        return status(NO_CONTENT);
-//    }
-    
     /**
      * Removes an UnapprovedUser from the database when 
      * and administrator presses the "delete" button
@@ -316,6 +289,7 @@ public class AdminController extends Controller {
         try {
             CSVUtil.writeCoordinatorCSV(User.getAllCoordinators(), csvStringWriter);
         } catch (IOException e) {
+            Logger.info("There has been an issue");
             return internalServerError("server error: unable to write CSV coordinator data");
         }
 
@@ -330,8 +304,30 @@ public class AdminController extends Controller {
      */
     public static Result removeAllLearnersAndTheirSessions() {
         List<Learner> learners = Learner.find.all();
+        List<Session> sessions;
+        
+        boolean learnerHasFinishedSessions = true;
         for (Learner learner: learners) {
-            Learner.deleteLearnerAndTheirSchedule(learner);
+            sessions = Session.getLearnerSchedule(learner.email);
+            
+            // today    
+            Calendar date = new GregorianCalendar();
+            // reset hour, minutes, seconds and millis
+            date.set(Calendar.HOUR_OF_DAY, 23);
+            date.set(Calendar.MINUTE, 0);
+            date.set(Calendar.SECOND, 0);
+            date.set(Calendar.MILLISECOND, 0);
+            
+            for(Session s: sessions) {
+                if(date.before(s.date)) {
+                    learnerHasFinishedSessions = false;
+                    break;
+                }
+            }
+            
+            if(learnerHasFinishedSessions && !sessions.isEmpty()) {
+                Learner.deleteLearnerAndTheirSchedule(learner);
+            }
         }
         return status(NO_CONTENT);
     }

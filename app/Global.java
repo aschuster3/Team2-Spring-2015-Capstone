@@ -59,25 +59,25 @@ public class Global extends GlobalSettings {
 
             
             Ebean.save(new Session("1", "Emory Clinic", date.getTime(), "Dr. Payne", true, LEARNER_TYPES_A));
-            Ebean.save(new Session("2", "Grady Clinic", date.getTime(), "Dr. Grey", false, LEARNER_TYPES_AB));
+            Ebean.save(new Session("2", "VA Clinic", date.getTime(), "Dr. Grey", false, LEARNER_TYPES_AB));
 
             // next day
             date.add(Calendar.DAY_OF_MONTH, 1);
             
             Ebean.save(new Session("3", "Grady Clinic", date.getTime(), "Dr. Professor Patrick", true, LEARNER_TYPES_BC));
-            Ebean.save(new Session("4", "Another Clinic", date.getTime(), "Dr. Cox", false, LEARNER_TYPES_ABC));
+            Ebean.save(new Session("4", "Emory Clinic", date.getTime(), "Dr. Cox", false, LEARNER_TYPES_ABC));
             
             // next day
             date.add(Calendar.DAY_OF_MONTH, 1);
             
-            Ebean.save(new Session("5", "Yet Another Clinic", date.getTime(), "Dr. McDreamy", true, LEARNER_TYPES_A));
+            Ebean.save(new Session("5", "VA Clinic", date.getTime(), "Dr. McDreamy", true, LEARNER_TYPES_A));
             Ebean.save(new Session("6", "Emory Clinic", date.getTime(), "Dr. Howser", false, LEARNER_TYPES_AB));
             
             // next day
             date.add(Calendar.DAY_OF_MONTH, 1);
             
-            Ebean.save(new Session("7", "Sacred Heart Clinic", date.getTime(), "Dr. Horrible", true, LEARNER_TYPES_ABC));
-            Ebean.save(new Session("8", "90210 Clinic", date.getTime(), "Dr. Doctor", false, LEARNER_TYPES_BC));
+            Ebean.save(new Session("7", "Grady Clinic", date.getTime(), "Dr. Horrible", true, LEARNER_TYPES_ABC));
+            Ebean.save(new Session("8", "VA Clinic", date.getTime(), "Dr. Doctor", false, LEARNER_TYPES_BC));
             
             // next day
             date.add(Calendar.DAY_OF_MONTH, 1);
