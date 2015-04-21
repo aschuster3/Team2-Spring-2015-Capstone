@@ -88,6 +88,9 @@ public class Global extends GlobalSettings {
             Session seshNegative3 = new Session("9003", "Emory Clinic", pre_date.getTime(), "Dr. Brawley", false, LEARNER_TYPE_C);
             seshNegative3.assignedLearner = "student6@emory.edu";
             Ebean.save(seshNegative3);
+            Session seshNegative4 = new Session("9004", "Emory Clinic", pre_date.getTime(), "Dr. Brawley", false, LEARNER_TYPE_C);
+            Ebean.save(seshNegative4);
+            
             
             
             // today    
@@ -138,7 +141,7 @@ public class Global extends GlobalSettings {
             
             // two weeks in the future
             date.add(Calendar.MONTH, 1);
-            date.add(Calendar.DAY_OF_MONTH, -14);
+            date.add(Calendar.DAY_OF_MONTH, -13);
             
             Ebean.save(new Session("1234", "Emory Clinic", date.getTime(), "Dr. Pickles", true, LEARNER_TYPES_A));
             Ebean.save(new Session("5678", "Grady Clinic", date.getTime(), "Dr. Empanada", false, LEARNER_TYPES_AB));
