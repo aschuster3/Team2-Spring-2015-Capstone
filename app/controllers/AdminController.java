@@ -245,7 +245,7 @@ public class AdminController extends Controller {
             user.save();
             
             Email email = new Email();
-            email.setSubject("Test Email");
+            email.setSubject("Approval to the Emory Dermatology Rotation Application");
             email.setFrom("admin@emory.edu");
             email.addTo(userEmail);
             email.setBodyText("Go to " + url.toString() + 
