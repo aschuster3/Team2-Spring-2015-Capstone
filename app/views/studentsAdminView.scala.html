@@ -226,10 +226,6 @@
 	exportDeleteAllModal.on('hidden.bs.modal', function () {
 		if (exportDeleteAllModal.data('confirmed')) {
 			$('#ExportDeleteAllFormContainer form' ).submit();
-			/*
-			 * This is misleading if form submission fails!
-			 */
-			$('.studentsSection .panel' ).remove();
 		}
 		exportDeleteAllModal.data('confirmed', false);
 	});
