@@ -244,6 +244,10 @@ public class SessionController extends Controller {
 			return badRequest("JSON must include 'startDate' field in request body");
 		}
 
+		boolean preventThawing = json.has("preventThawing")
+				? Json.fromJson(json.get("preventThawing"), Boolean.class)
+				: false
+				;
 		Date startDate = Json.fromJson(json.get("startDate"), Date.class);
 		Date mondayOfFirstWeek = mondayOfWeekFor(startDate);
 		List<Session> createdSessions = new ArrayList<>();
@@ -265,6 +269,7 @@ public class SessionController extends Controller {
 			newSession.scheduleGroupId = scheduleInstanceId;
 			newSession.firstSessionInScheduleGroup = isFirst;
 			newSession.scheduleTitle = schedule.title;
+			newSession.preventThawing = preventThawing;
 			Session.create(newSession);
 			createdSessions.add(newSession);
 

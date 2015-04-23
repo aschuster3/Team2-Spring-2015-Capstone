@@ -5,30 +5,38 @@
 
     <form name="addTemplateForm" novalidate>
         <div class="modal-body">
-                <p class="tablehead">Template</p>
-                <div class="form-horizontal">
-                    <fieldset>
-                        <select
-                                class="form-control"
-                                ng-model="form.selectedScheduleTemplate"
-                                ng-options="template as template.title for template in form.scheduleTemplateOptions"
-                                required>
-                        </select>
-                    </fieldset>
-                </div>
+            <p class="tablehead">Template</p>
+            <div class="form-horizontal">
+                <fieldset>
+                    <select
+                            class="form-control"
+                            ng-model="form.selectedScheduleTemplate"
+                            ng-options="template as template.title for template in form.scheduleTemplateOptions"
+                            required>
+                    </select>
+                </fieldset>
+            </div>
 
-                <p class="tablehead">Start Date</p>
-                <p class="input-group">
-                    <input type="text" class="form-control" readonly datepicker-popup="EEE MMMM d, yyyy"
-                           ng-model="form.startDate" is-open="form.showDatePicker" close-text="Close"
-                           date-disabled="!isSelectedTemplateStartDay(date)"
-                           required>
-                    <span class="input-group-btn">
-                    <button type="button" class="btn btn-default" ng-click="toggleDatePicker($event);">
-                        <i class="glyphicon glyphicon-search"></i>
-                    </button>
-                    </span>
-                </p>
+            <p class="tablehead">Start Date</p>
+            <p class="input-group">
+                <input type="text" class="form-control" readonly datepicker-popup="EEE MMMM d, yyyy"
+                       ng-model="form.startDate" is-open="form.showDatePicker" close-text="Close"
+                       date-disabled="!isSelectedTemplateStartDay(date)"
+                       required>
+                <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="toggleDatePicker($event);">
+                    <i class="glyphicon glyphicon-search"></i>
+                </button>
+                </span>
+            </p>
+
+            <p class="tablehead">Thawing</p>
+            <div class="checkbox" style="margin-top: 0">
+                <label>
+                    <input type="checkbox" ng-checked="form.preventThawing" ng-click="form.preventThawing = !form.preventThawing">
+                    Prevent automatic thawing
+                </label>
+            </div>
 
         </div>
 

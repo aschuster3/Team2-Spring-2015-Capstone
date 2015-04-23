@@ -344,5 +344,34 @@ public class SessionControllerTest {
         assertThat(Session.getAll().get(0).scheduleGroupId).isEqualTo(Session.getAll().get(1).scheduleGroupId);
         assertThat(Session.getAll().get(0).scheduleGroupId).isNotEqualTo(scheduleTemp.uuid);
     }
+
+    @Test
+    public void sessionThawSucceeds_SupportsAnyLearnerType() {
+        Session session = new Session(null, "title", new Date(0));
+        session.thaw();
+        assertThat(session.supportsAnyLearnerType).isEqualTo(true);
+    }
+
+    @Test
+    public void sessionThaw_OnSessionFromTemplate_FreesSessionFromGroup() {
+        Session session = new Session(null, "title", new Date(0));
+        session.scheduleGroupId = UUID.randomUUID().toString();
+        session.scheduleTitle = "Schedule Title";
+
+        session.thaw();
+
+        assertThat(session.scheduleGroupId).isNull();
+        assertThat(session.scheduleTitle).isNull();
+    }
+
+    @Test
+    public void sessionThaw_failsIfPreventThawIsSet() {
+        Session session = new Session(null, "title", new Date(0));
+        session.preventThawing = true;
+
+        session.thaw();
+
+        assertThat(session.supportsAnyLearnerType).isFalse();
+    }
     
 }

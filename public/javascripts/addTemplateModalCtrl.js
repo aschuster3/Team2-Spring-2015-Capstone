@@ -4,6 +4,7 @@ angular.module('mwl.calendar')
     $scope.form = { };
     $scope.form.startDate = null;
     $scope.form.selectedScheduleTemplate = null;
+    $scope.form.preventThawing = false;
 
     $scope.form.scheduleTemplateOptions = [];
 
@@ -30,7 +31,7 @@ angular.module('mwl.calendar')
 
 
     function createSessionsFromScheduleTemplate () {
-      Sessions.createFromScheduleTemplate($scope.form.selectedScheduleTemplate, $scope.form.startDate);
+      Sessions.createFromScheduleTemplate($scope.form.selectedScheduleTemplate, $scope.form.startDate, $scope.form.preventThawing);
       closeModal();  // on success
     }
 

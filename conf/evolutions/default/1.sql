@@ -38,6 +38,7 @@ create table session (
   physician                 varchar(255),
   assigned_learner          varchar(255),
   recurring_group_id        bigint,
+  prevent_thawing           boolean,
   schedule_group_id         varchar(255),
   schedule_title            varchar(255),
   first_session_in_schedule_group boolean,

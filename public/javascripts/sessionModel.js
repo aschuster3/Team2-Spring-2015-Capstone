@@ -75,8 +75,8 @@ angular.module('mwl.calendar')
         });
     }
 
-    function createFromScheduleTemplate(scheduleTemplate, startDate) {
-      return sessionService.createFromScheduleTemplate(scheduleTemplate, startDate)
+    function createFromScheduleTemplate(scheduleTemplate, startDate, preventThawing) {
+      return sessionService.createFromScheduleTemplate(scheduleTemplate, startDate, preventThawing)
         .then(function success(response) {
           var createdSessions = response.data;
           angular.forEach(createdSessions, function (session) {

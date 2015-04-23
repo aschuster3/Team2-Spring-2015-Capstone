@@ -47,6 +47,11 @@ public class Session extends Model {
 
 	public Long recurringGroupId;
 
+	public boolean preventThawing;
+
+	/*
+	 * Only relevant for sessions that are created from templates
+	 */
 	public String scheduleGroupId;
 
 	public String scheduleTitle;
@@ -56,7 +61,7 @@ public class Session extends Model {
 	/**
 	 * This is a comma separated list.
 	 *
-	 * Becaues eBean does not support @ElementCollection!
+	 * Becaues Ebean does not support @ElementCollection!
 	 */
 	@Column(length=500)
 	public String supportedLearnerTypesAsString;
@@ -213,6 +218,10 @@ public class Session extends Model {
 	}
 
 	public void thaw() {
+		if (this.preventThawing) {
+			return;
+		}
+
 		this.supportsAnyLearnerType = true;
 		Set<String> supportedTypes = this.getSupportedLearnerTypes();
 		for (String type: Learner.LEARNER_TYPES) {
