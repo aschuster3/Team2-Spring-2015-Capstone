@@ -314,12 +314,10 @@ public class ApplicationTest {
         // ongoing valid session
         assertThat(secured.sessionExpired(timestamp, timestamp_plus_nine_minutes_59seconds)).isFalse();
         assertThat(secured.sessionExpired(timestamp, timestamp)).isFalse();
-        System.out.println("Made it HERE!!");
 
         // ongoing expired session
         assertThat(secured.sessionExpired(timestamp, timestamp_plus_ten_minutes)).isTrue();
 
-        System.out.println("Made it HERE222!!");
         // session just started
         assertThat(secured.sessionExpired(null, timestamp)).isFalse();
         assertThat(secured.sessionExpired("", timestamp)).isFalse();

@@ -85,5 +85,5 @@ GET           /templates-api                      controllers.TemplateController
 GET           /csv                                controllers.AdminController.testViewCSVStuff()
 GET           /csv/learners.csv                   controllers.AdminController.generateLearnersCSV()
 GET           /csv/coordinators.csv               controllers.AdminController.generateCoordinatorsCSV()
-POST          /removeAllLearners                  controllers.AdminController.removeAllLearnersAndTheirSessions()
+POST          /removeAllLearners                  controllers.AdminController.removeFinishedLearnersAndTheirSessions()
 GET           /del/all-learners.csv               controllers.AdminController.removeLearnersAndGiveCSV()

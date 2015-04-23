@@ -3,7 +3,6 @@ package controllers;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,17 +10,12 @@ import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import models.Learner;
 import models.Session;
 import models.UnapprovedUser;
 import models.User;
-import play.Logger;
 import play.Play;
 import play.libs.mailer.Email;
 import play.libs.mailer.MailerPlugin;
@@ -301,7 +295,7 @@ public class AdminController extends Controller {
     /**
      * Deletes all learners.  Deletes will cascade to assigned sessions.
      */
-    public static Result removeAllLearnersAndTheirSessions() {
+    public static Result removeFinishedLearnersAndTheirSessions() {
         List<Learner> learners = Learner.find.all();
         List<Session> sessions;
         
@@ -310,15 +304,17 @@ public class AdminController extends Controller {
             sessions = Session.getLearnerSchedule(learner.email);
             
             // today    
-            Calendar date = new GregorianCalendar();
+            Calendar cal = new GregorianCalendar();
             // reset hour, minutes, seconds and millis
-            date.set(Calendar.HOUR_OF_DAY, 23);
-            date.set(Calendar.MINUTE, 0);
-            date.set(Calendar.SECOND, 0);
-            date.set(Calendar.MILLISECOND, 0);
-            
+            cal.set(Calendar.HOUR_OF_DAY, 23);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+
+            Date today = cal.getTime();
+
             for(Session s: sessions) {
-                if(date.before(s.date)) {
+                if(today.before(s.date)) {
                     learnerHasFinishedSessions = false;
                     break;
                 }
@@ -338,7 +334,7 @@ public class AdminController extends Controller {
      */
     public static Result removeLearnersAndGiveCSV() {
         Result r = generateLearnersCSV();
-        removeAllLearnersAndTheirSessions();
+        removeFinishedLearnersAndTheirSessions();
         return r;
     }
 }
