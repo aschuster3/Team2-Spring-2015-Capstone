@@ -119,7 +119,7 @@ public class TemplateController extends Controller {
 		 * adding schedule to form, converting a JSON and then rebinding so that
 		 * it goes back through the validator
 		 */
-		if (filledForm.errors().size() > 1) {
+		if (filledForm.hasErrors() || filledForm.hasGlobalErrors()) {
 			return badRequest(manageTemplates.render(
 					ScheduleTemplate.find.all(), templateForm, filledForm,
 					scheduleID, Learner.LEARNER_TYPES));
@@ -183,7 +183,7 @@ public class TemplateController extends Controller {
 					+ " does not exist");
 		} else {
 			session.delete();
-			return status(200);
+			return status(NO_CONTENT);
 		}
 	}
 
