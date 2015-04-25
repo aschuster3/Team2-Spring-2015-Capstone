@@ -1,8 +1,13 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import controllers.SecuredAdminAction;
 import play.db.ebean.Model;
 import play.data.validation.Constraints.*;
+import play.mvc.Result;
+import play.mvc.With;
+
 import javax.persistence.*;
 
 import java.util.ArrayList;
@@ -78,4 +83,14 @@ public class ScheduleTemplate extends Model {
 		Collections.sort(sessions);
 		return sessions.get(0).day;
 	}
+	
+	public static Boolean delete(ScheduleTemplate st){
+		if(ScheduleTemplate.find.byId(st.uuid)!=null){
+			st.delete();
+			return true;
+		}
+		return false;
+	}
+	
+	
 }

@@ -95,11 +95,14 @@
                   </tr>
                   }
               </table>
+              <button type="button" class="btn btn-sm btn-warning" data-template-uuid="@template.uuid" data-toggle="modal" data-target="#DeleteTemplateModal">Delete Template</button>
+
 					</div>
 					<div class="pull-right">
 				  		<button type="button" class="btn btn-block btn-sm btn-warning" data-toggle="modal" data-target="#addSessionModal" onclick = "setPath('@template.uuid')">Add Session</button>
 					</div>
 		    	</div>
+
 		    </div>
 		</div>
 		@(panelNum += 1)
@@ -195,7 +198,25 @@
     </div>
   </div>
 
+<!-- DELETE Template MODAL -->
+<div id="DeleteTemplateModal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Delete Template?</h4>
+      </div>
+      <div class="modal-body">
+        <p class="modalBody">Are you sure you would like to delete this template?</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-space-sm btn-inverse pull-right" data-dismiss="modal">Cancel</button>
+        <button class="btn btn-space-sm btn-inverse pull-right confirm-btn" data-dismiss="modal">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
 
+<!--Edit session Modal-->
   <div class="modal fade editForm" style="display: none">
     <div class="modal-dialog">
      <div class="modal-content">
@@ -273,6 +294,26 @@
       setCursorAtFirstInputOf(this);
     });
 
+    var deleteTemplateModal = $('#DeleteTemplateModal');
+
+    deleteTemplateModal.on('show.bs.modal', function (evt) {
+      $(this ).data('clicked-delete-btn', $(evt.relatedTarget));
+    });
+
+    $('.confirm-btn', deleteTemplateModal).click(function () {
+      var deleteButton = deleteTemplateModal.data('clicked-delete-btn');
+      var templateUUID = deleteButton.data('template-uuid');
+      var panelToRemove = deleteButton.closest('.panel');
+      deleteTemplateModal.modal('hide');
+
+      $.ajax({
+        type: 'DELETE',
+        url: '@routes.TemplateController.deleteTemplate("")' + templateUUID,
+        success: function () {
+          $(panelToRemove ).remove();
+        }
+      });
+    });   
     
     function scrollTo(elem) {
       $('html,body' ).animate({

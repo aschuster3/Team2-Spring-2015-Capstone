@@ -80,6 +80,7 @@ PUT           /templates/:sessionId			      controllers.TemplateController.updat
 PUT           /templates/changeLearner/:scheduleId			  controllers.TemplateController.updateLearnerType(scheduleId: String)
 DELETE        /templates/:sessionId               controllers.TemplateController.deleteSessionFromSchedule(sessionId: String)
 GET           /templates-api                      controllers.TemplateController.jsonTemplates()
+DELETE		  /templates/templateDelete/:scheduleId			  controllers.TemplateController.deleteTemplate(scheduleId: String)
 
 # End-of-rotation actions
 GET           /csv                                controllers.AdminController.testViewCSVStuff()

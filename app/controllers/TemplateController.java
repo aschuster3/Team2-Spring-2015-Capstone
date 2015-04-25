@@ -186,6 +186,17 @@ public class TemplateController extends Controller {
 			return status(200);
 		}
 	}
+	
+	public static Result deleteTemplate(String scheduleID){
+		ScheduleTemplate schedule = ScheduleTemplate.find.byId(scheduleID);
+		if (schedule == null){
+			return badRequest("delete failed: schedule with id " + scheduleID
+					+ " does not exist");
+		} else{
+			schedule.delete();
+			return status(200);
+		}
+	}
 
 	@BodyParser.Of(BodyParser.Json.class)
 	public static Result updateSessionTemplate(String sessionId) {
