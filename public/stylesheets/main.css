@@ -121,6 +121,7 @@ b{
 	background:none;
 }
 .submitform{
+	clear: left;
 	padding-bottom: 30px;
 }
 .panel-group{
