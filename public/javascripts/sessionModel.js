@@ -8,6 +8,7 @@ angular.module('mwl.calendar')
       createRecurringGroup: createRecurringGroup,
       createFromScheduleTemplate: createFromScheduleTemplate,
       update: update,
+      bulkUpdate: bulkUpdate,
       delete: remove,
       deleteRecurringGroup: removeRecurringGroup
     };
@@ -96,6 +97,19 @@ angular.module('mwl.calendar')
           $log.error('sessionService.updateSession failed: ', response);
           throw response;
         });
+    }
+
+    function bulkUpdate(updatedSessions) {
+      return sessionService.updateMultipleSessions(updatedSessions)
+        .then(function success() {
+          updatedSessions.forEach(function (updatedSession) {
+            var index = findSessionIndexWithId(updatedSession.id);
+            Sessions.sessions[index] = updatedSession;
+          });
+        }, function error(response) {
+          $log.error(response);
+          throw response;
+        })
     }
 
     function remove(session) {

@@ -1,7 +1,10 @@
 package controllers;
 
 import com.avaje.ebean.Ebean;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import models.*;
 import play.data.*;
 import play.libs.Json;
@@ -10,6 +13,7 @@ import play.libs.mailer.MailerPlugin;
 import play.mvc.*;
 import views.html.*;
 
+import java.io.IOException;
 import java.util.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -60,19 +64,51 @@ public class SessionController extends Controller {
 		JsonNode json = request().body().asJson();
 		Session sessionWithNewData = Json.fromJson(json, Session.class);
 
-		if (!sessionWithNewData.id.equals(id)) {
-			return badRequest("update failed: parameter id does not match session object id");
+		String errorMessage = validateUpdateRequest(sessionWithNewData, id);
+
+		if (errorMessage != null) {
+			return badRequest(errorMessage);
 		}
-		
+
+		persistUpdatedSessionToDB(sessionWithNewData);
+		return status(204);
+	}
+
+	@BodyParser.Of(BodyParser.Json.class)
+	public static Result updateMultipleSessions() {
+		JsonNode json = request().body().asJson();
+		List<Session> sessionsWithNewData;
+		try {
+			ObjectMapper mapper = new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+			sessionsWithNewData = mapper.readValue(Json.stringify(json), new TypeReference<List<Session>>() { });
+		} catch (IOException e) {
+			e.printStackTrace();
+			return badRequest("error: must pass a list of Session objects");
+		}
+
+		for (Session session: sessionsWithNewData) {
+			String errorMessage = validateUpdateRequest(session, session.id);
+			if (errorMessage != null) {
+				return badRequest(errorMessage);
+			}
+		}
+
+		for (Session session: sessionsWithNewData) {
+			persistUpdatedSessionToDB(session);
+		}
+
+		return status(NO_CONTENT);
+	}
+
+	private static String validateUpdateRequest(Session sessionWithNewData, String id) {
 		if (sessionWithNewData.assignedLearner != null && sessionWithNewData.assignedLearner.equals("error")) {
-		    return badRequest("update failed: please choose a valid student");
+			return "update failed: please choose a valid student";
 		}
 
 		Session existingSession = Session.find.byId(id);
 
 		if (existingSession == null) {
-			Session.create(sessionWithNewData);
-			return status(CREATED, Json.toJson(sessionWithNewData));
+			return "update failed: session does not exist";
 		}
 
 		// trying to assign a new learner to a taken session
@@ -81,16 +117,19 @@ public class SessionController extends Controller {
 		if (currentLearnerId != null
 				&& newLearnerId != null
 				&& !currentLearnerId.equals(newLearnerId)) {
-			return badRequest("update failed: session is already taken by another learner");
+			return "update failed: session is already taken by another learner";
 		}
 
+		return null;
+	}
+
+	private static void persistUpdatedSessionToDB(Session sessionWithNewData) {
 		sessionWithNewData.update();
 
 		/* Model.update() ignores null values */
 		if (sessionWithNewData.assignedLearner == null) {
 			Ebean.update(sessionWithNewData, new HashSet<String>(Arrays.asList("assignedLearner")));
 		}
-		return status(204);
 	}
 
 	@With(SecuredAdminAction.class)

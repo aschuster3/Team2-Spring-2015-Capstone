@@ -3,87 +3,88 @@
 # ~~~~
 
 # Home page
-GET           /                                   controllers.Application.index()
+GET           /                                           controllers.Application.index()
 
 # Map static resources from the /public folder to the /assets URL path
-GET           /assets/*file                       controllers.Assets.at(path="/public", file)
+GET           /assets/*file                               controllers.Assets.at(path="/public", file)
 
 # Login
-GET           /login                              controllers.Application.login()
-POST          /login                              controllers.Application.authenticate()
-GET           /logout                             controllers.Application.logout()
+GET           /login                                      controllers.Application.login()
+POST          /login                                      controllers.Application.authenticate()
+GET           /logout                                     controllers.Application.logout()
 
 # Forgot Password
-GET           /forgotPassword                     controllers.Application.forgotPassword()
-POST          /forgotPassword                     controllers.Application.sendNewPassword()
-GET           /forgotPasswordConfirmed            controllers.Application.viewForgotPasswordConfirmation()
-GET           /resetPassword/:token               controllers.Application.resetPassword(token: String)
-POST          /resetPassword                      controllers.Application.changeUserPassword(email: String)
+GET           /forgotPassword                             controllers.Application.forgotPassword()
+POST          /forgotPassword                             controllers.Application.sendNewPassword()
+GET           /forgotPasswordConfirmed                    controllers.Application.viewForgotPasswordConfirmation()
+GET           /resetPassword/:token                       controllers.Application.resetPassword(token: String)
+POST          /resetPassword                              controllers.Application.changeUserPassword(email: String)
 
 # Sign up
-GET           /signup                             controllers.Application.signup()
-POST          /signup                             controllers.Application.createUnapprovedUser()
-GET           /signupConfirmed                    controllers.Application.viewRegistrationFormConfirmation()
+GET           /signup                                     controllers.Application.signup()
+POST          /signup                                     controllers.Application.createUnapprovedUser()
+GET           /signupConfirmed                            controllers.Application.viewRegistrationFormConfirmation()
 
 # UnapprovedUser Actions
-POST          /unapprovedUser/:id/delete          controllers.AdminController.removeUnapprovedUser(id: String)
-POST          /unapprovedUser/:id                 controllers.AdminController.approveUnapprovedUser(id: String)
-GET           /completeSignup/:token              controllers.Application.setPassword(token: String)
-POST          /completeSignup                     controllers.Application.addNewUser(email: String)
+POST          /unapprovedUser/:id/delete                  controllers.AdminController.removeUnapprovedUser(id: String)
+POST          /unapprovedUser/:id                         controllers.AdminController.approveUnapprovedUser(id: String)
+GET           /completeSignup/:token                      controllers.Application.setPassword(token: String)
+POST          /completeSignup                             controllers.Application.addNewUser(email: String)
 
 # Session Actions
-GET           /sessions                           controllers.SessionController.sessions()
-POST          /sessions                           controllers.SessionController.createSession()
-GET           /sessions-api                       controllers.SessionController.jsonAllSessions()
-GET           /sessions-api/:id                   controllers.SessionController.getSession(id: String)
-PUT           /sessions-api/:id                   controllers.SessionController.updateSession(id: String)
-DELETE        /sessions-api/:id                   controllers.SessionController.deleteSession(id: String)
-POST          /sessions-api                       controllers.SessionController.jsonCreateSession()
-POST          /sessions-api/rec                   controllers.SessionController.createSessionRecurrenceGroup()
-DELETE        /sessions-api/rec/:sessionId        controllers.SessionController.deleteSessionRecurrenceGroup(sessionId: String)
-POST          /sessions-api/template/:templateId  controllers.SessionController.createScheduleSessions(templateId: String)
+GET           /sessions                                   controllers.SessionController.sessions()
+POST          /sessions                                   controllers.SessionController.createSession()
+GET           /sessions-api                               controllers.SessionController.jsonAllSessions()
+GET           /sessions-api/:id                           controllers.SessionController.getSession(id: String)
+PUT           /sessions-api/:id                           controllers.SessionController.updateSession(id: String)
+PUT           /sessions-api/bulk/update                   controllers.SessionController.updateMultipleSessions()
+DELETE        /sessions-api/:id                           controllers.SessionController.deleteSession(id: String)
+POST          /sessions-api                               controllers.SessionController.jsonCreateSession()
+POST          /sessions-api/rec                           controllers.SessionController.createSessionRecurrenceGroup()
+DELETE        /sessions-api/rec/:sessionId                controllers.SessionController.deleteSessionRecurrenceGroup(sessionId: String)
+POST          /sessions-api/template/:templateId          controllers.SessionController.createScheduleSessions(templateId: String)
 
 # Learner Actions
-GET           /learners-api                       controllers.LearnerController.getLearners()
-PUT           /learners-api/:learnerUUID          controllers.LearnerController.updateLearner(learnerUUID: String)
-DELETE        /learners-api/:learnerUUID          controllers.LearnerController.ajaxDeleteLearner(learnerUUID: String)
+GET           /learners-api                               controllers.LearnerController.getLearners()
+PUT           /learners-api/:learnerUUID                  controllers.LearnerController.updateLearner(learnerUUID: String)
+DELETE        /learners-api/:learnerUUID                  controllers.LearnerController.ajaxDeleteLearner(learnerUUID: String)
 
 # Coordinator Learner Page
-GET           /students                           controllers.CoordinatorController.students()
-POST          /students                           controllers.CoordinatorController.createLearner()
-POST          /sendEmailToLearner/:id             controllers.CoordinatorController.emailLearnerSchedule(id: String)
-POST          /sendEmailToAllLearners             controllers.CoordinatorController.emailAllStudents()
+GET           /students                                   controllers.CoordinatorController.students()
+POST          /students                                   controllers.CoordinatorController.createLearner()
+POST          /sendEmailToLearner/:id                     controllers.CoordinatorController.emailLearnerSchedule(id: String)
+POST          /sendEmailToAllLearners                     controllers.CoordinatorController.emailAllStudents()
 
 # Coordinator Calendar Page
-GET           /calendar                           controllers.CoordinatorController.viewCoordinatorCalendar()
+GET           /calendar                                   controllers.CoordinatorController.viewCoordinatorCalendar()
 
 # Admin View: Coordinators List
-GET           /coordinators                       controllers.AdminController.viewAllCoordinators()
-POST          /forgotPassword/:userUUID           controllers.Application.sendNewPasswordToUser(userUUID: String)
-GET           /admin-support                      controllers.Application.viewSupportPage()
-GET           /coordinator-support                controllers.Application.viewCoordinatorSupport()
+GET           /coordinators                               controllers.AdminController.viewAllCoordinators()
+POST          /forgotPassword/:userUUID                   controllers.Application.sendNewPasswordToUser(userUUID: String)
+GET           /admin-support                              controllers.Application.viewSupportPage()
+GET           /coordinator-support                        controllers.Application.viewCoordinatorSupport()
 
 # Admin View: Learners List
-GET           /viewlearner                        controllers.AdminController.viewLearners()
-POST          /deleteLearner/:id                  controllers.AdminController.deleteLearner(id: String)
-POST          /sendEmail/:id                      controllers.AdminController.emailLearnerSchedule(id: String)
-POST          /sendAllEmail                       controllers.AdminController.emailAllStudents()
+GET           /viewlearner                                controllers.AdminController.viewLearners()
+POST          /deleteLearner/:id                          controllers.AdminController.deleteLearner(id: String)
+POST          /sendEmail/:id                              controllers.AdminController.emailLearnerSchedule(id: String)
+POST          /sendAllEmail                               controllers.AdminController.emailAllStudents()
 
 # Admin View: Calendar Page
-GET           /admincalendar                      controllers.AdminController.viewCalendar()
+GET           /admincalendar                              controllers.AdminController.viewCalendar()
 
 #Template View
-GET           /templates                          controllers.TemplateController.templates()
-POST          /templates                          controllers.TemplateController.createScheduleTemplate()
-POST          /templates/:scheduleID              controllers.TemplateController.createSessionTemplate(scheduleID: String)
-PUT           /templates/:sessionId			      controllers.TemplateController.updateSessionTemplate(sessionId: String)
-PUT           /templates/changeLearner/:scheduleId			  controllers.TemplateController.updateLearnerType(scheduleId: String)
-DELETE        /templates/:sessionId               controllers.TemplateController.deleteSessionFromSchedule(sessionId: String)
-GET           /templates-api                      controllers.TemplateController.jsonTemplates()
+GET           /templates                                  controllers.TemplateController.templates()
+POST          /templates                                  controllers.TemplateController.createScheduleTemplate()
+POST          /templates/:scheduleID                      controllers.TemplateController.createSessionTemplate(scheduleID: String)
+PUT           /templates/:sessionId                       controllers.TemplateController.updateSessionTemplate(sessionId: String)
+PUT           /templates/changeLearner/:scheduleId        controllers.TemplateController.updateLearnerType(scheduleId: String)
+DELETE        /templates/:sessionId                       controllers.TemplateController.deleteSessionFromSchedule(sessionId: String)
+GET           /templates-api                              controllers.TemplateController.jsonTemplates()
 
 # End-of-rotation actions
-GET           /csv                                controllers.AdminController.testViewCSVStuff()
-GET           /csv/learners.csv                   controllers.AdminController.generateLearnersCSV()
-GET           /csv/coordinators.csv               controllers.AdminController.generateCoordinatorsCSV()
-POST          /removeAllLearners                  controllers.AdminController.removeFinishedLearnersAndTheirSessions()
-GET           /del/all-learners.csv               controllers.AdminController.removeLearnersAndGiveCSV()
+GET           /csv                                        controllers.AdminController.testViewCSVStuff()
+GET           /csv/learners.csv                           controllers.AdminController.generateLearnersCSV()
+GET           /csv/coordinators.csv                       controllers.AdminController.generateCoordinatorsCSV()
+POST          /removeAllLearners                          controllers.AdminController.removeFinishedLearnersAndTheirSessions()
+GET           /del/all-learners.csv                       controllers.AdminController.removeLearnersAndGiveCSV()
