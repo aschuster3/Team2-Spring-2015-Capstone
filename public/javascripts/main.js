@@ -85,42 +85,29 @@ angular.module('mwl.calendar')
     });
     
     $scope.addSessionToLearner = function(session) {
-      var sessionsToAssign;
+      var selectedLearner = $scope.currentLearner;
+
       if (belongsToSchedule(session)) {
-        sessionsToAssign = allSessionsInSameSchedule(session);
-      } else {
-        sessionsToAssign = [session];
-      }
-
-      /*
-       * We send a single update AJAX call, which will tell us whether
-       * or not the group is taken.
-       *
-       * If the group is free, then send AJAX calls for remaining sessions in group.
-       */
-
-      var sessionWithNewLearner = angular.copy(session);
-    	if(sessionWithNewLearner.assignedLearner == null && learnerIsSelected()) {
-        var selectedLearner = angular.copy($scope.currentLearner);
-	    	assignSingleSessionToLearner(sessionWithNewLearner, selectedLearner);
-	      Sessions.update(sessionWithNewLearner).then(
+        var sessionsToAssign = angular.copy(allSessionsInSameSchedule(session));
+        sessionsToAssign.forEach(function (session) {
+          assignSingleSessionToLearner(session, selectedLearner);
+        });
+        Sessions.bulkUpdate(sessionsToAssign).then(
           function success() {
-            if (belongsToSchedule(sessionWithNewLearner)) {
-              notificationModalService.show(['This half-day session belongs to a group.', selectedLearner.fullName + ' has been registered for all half-day sessions in this group.  Please refer to the "Students" page for their updated schedule.'], 'Registered for "' + sessionWithNewLearner.scheduleTitle + '" Schedule');
-            }
-
-            sessionsToAssign.forEach(function (elem) {
-              var updatedSession = angular.copy(elem);
-              assignSingleSessionToLearner(updatedSession, selectedLearner);
-              Sessions.update(updatedSession);
-            });
+            notificationModalService.show(['This half-day session belongs to a group.', selectedLearner.fullName + ' has been registered for all half-day sessions in this group.  Please refer to the "Students" page for their updated schedule.'], 'Registered for "' + sessionsToAssign[0].scheduleTitle + '" Schedule');
           },
           function error() {
-            notificationModalService.show("Error: Another learner has been signed up for this session already!");
+            notificationModalService.show("Error: Another learner has been signed up for this schedule already!");
             Sessions.refresh(session);
-          }
-        );
-    	}
+          });
+      } else {
+        var sessionToAssign = angular.copy(session);
+        assignSingleSessionToLearner(sessionToAssign, $scope.currentLearner);
+        Sessions.update(sessionToAssign).catch(function error() {
+          notificationModalService.show("Error: Another learner has been signed up for this session already!");
+          Sessions.refresh(session);
+        });
+      }
     };
 
     $scope.removeSessionFromLearner = function (session) {
@@ -134,16 +121,22 @@ angular.module('mwl.calendar')
 
       var sessionsToRemoveLearner;
       if (belongsToSchedule(session)) {
-        sessionsToRemoveLearner = allSessionsInSameSchedule(session);
+        sessionsToRemoveLearner = angular.copy(allSessionsInSameSchedule(session));
       } else {
-        sessionsToRemoveLearner = [session];
+        sessionsToRemoveLearner = angular.copy([session]);
       }
 
       sessionsToRemoveLearner.forEach(function (elem) {
-        var sessionWithoutLearner = angular.copy(elem);
-        removeSingleSessionFromLearner(sessionWithoutLearner);
-        Sessions.update(sessionWithoutLearner);
+        removeSingleSessionFromLearner(elem);
       });
+
+      var selectedLearner = $scope.currentLearner;
+      Sessions.bulkUpdate(sessionsToRemoveLearner).then(function success() {
+        if (!belongsToSchedule(sessionsToRemoveLearner[0])) {
+          return;
+        }
+        notificationModalService.show(['This half-day session belongs to a group.', selectedLearner.fullName + ' has been unregistered for all half-day sessions in this group.  Please refer to the "Students" page for their updated schedule.'], 'Unregistered for "' + sessionsToRemoveLearner[0].scheduleTitle + '" Schedule');
+      })
     };
 
     function assignSingleSessionToLearner(session, learner) {

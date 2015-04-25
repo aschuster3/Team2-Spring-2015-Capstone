@@ -15,6 +15,10 @@ angular.module('mwl.calendar')
             return $http.put(urlBase + '/' + session.id, session);
         };
 
+        service.updateMultipleSessions = function (sessions) {
+            return $http.put(urlBase + '/bulk/update', sessions);
+        };
+
         service.deleteSession = function (id) {
             return $http.delete(urlBase + '/' + id);
         };
