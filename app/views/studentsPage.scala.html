@@ -143,7 +143,7 @@
 			So, don't set the class to 'collapse' for the above scenario!
 		 *@
 	</div>
-	<div class="@(if (learnerForm.hasErrors() || learnerForm.hasGlobalErrors()) "" else "collapse") submitform" id="createLearnerPanel">
+	<div class="@(if (learnerForm.hasErrors() || learnerForm.hasGlobalErrors()) "in" else "") collapse submitform" id="createLearnerPanel">
 		@form(routes.CoordinatorController.createLearner) {
 		  @inputText(learnerForm("firstName"),
 		      'type -> "text",
