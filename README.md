@@ -4,17 +4,17 @@ Dependencies include JDK version 7 or higher
 
 We used the Play Framework to create our application. In order to run the application, download and install Activator, which can be found <a href=https://typesafe.com/activator/docs>here</a>.
 
+If deploying a full version on a webserver and have a custom admin account, go to app/Global.java and change the 
+starting account.  When first deploying the application, it will be blank except for one Admin user.
+
 Once Activator is installed:
 
 1. Go to the root directory of the Dermatology Scheduling application
 2. Type "activator"
 3. Type "test" to see that the tests pass
-4. Type "run" and go to localhost:9000 to run the application To sign in as a coordinator, use the following credentials:
-		email = bob@gmail.com
+4. Type "run" and go to localhost:9000 to run the application To sign in as a coordinator, use the following credentials to sign in as an admin (Definitely change this when deploying the full version):
+		email = admin@emory.edu
 		password = secret
-To sign in as an admin, use the following credentials:
-		email = sharon@gmail.com
-		password = kitty
 
 
 To register as a coordinator:
@@ -37,3 +37,9 @@ To create new sessions/events as an admin:
 
 1. Go to localhost:9000/sessions
 2. Fill in the fields and click "Create". All fields are mandatory. ID should be an integer. All IDs must be unique.
+
+The email address from which all app related emails are sent from is set in app/util/Tags.java under the variable titled ADMIN_EMAIL.  Change this to change the email "from" field in all emails.
+
+User documentation is located in the Support tab of both the Coordinator and Admin dashboards.
+
+Developer documentation is located in the docs/ folder.  Open a file in the browser to navigate the documentation.

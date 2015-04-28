@@ -25,10 +25,19 @@ import views.html.calendarCoordinator;
 import views.html.studentsPage;
 
 @Security.Authenticated(Secured.class)
+/**
+ * The primary controller for actions executed by the Coordinators.
+ */
 public class CoordinatorController extends Controller {
     
     static Form<Learner.PreLearner> learnerForm = Form.form(Learner.PreLearner.class);
     
+    /**
+     * Returns the web page for the view of all active learners tied to that 
+     * particular coordinator (or if you're an admin, it returns all learners).
+     * 
+     * @return
+     */
     public static Result students() {
         String email = session().get("email");
         User user = User.find.where().eq("email", email).findUnique();
@@ -40,6 +49,13 @@ public class CoordinatorController extends Controller {
         }
     }
     
+    /**
+     * Action performed when a Coordinator or Admin presses the Email Student button.  It
+     * will send an email containing their schedule and location of the clinics.
+     * 
+     * @param learnerId A learner's UUID
+     * @return
+     */
     public static Result emailLearnerSchedule(String learnerId) {
         Learner learner = Learner.find.where().eq("uuid", learnerId).findUnique();
         
@@ -82,6 +98,11 @@ public class CoordinatorController extends Controller {
         return status(NO_CONTENT);
     }
     
+    /**
+     * Emails all students owned by the coordinator their clinic schedules.
+     * 
+     * @return
+     */
     public static Result emailAllStudents() {
         List<Learner> learners = Learner.getAllOwnedBy(session().get("email"));
         
@@ -191,6 +212,12 @@ public class CoordinatorController extends Controller {
         return everything;
     }
 
+    /**
+     * Action performed when a new learner is submitted by the Coordinator.  This
+     * creates the learner and adds them to the database.
+     * 
+     * @return
+     */
     public static Result createLearner() {
         Form<Learner.PreLearner> filledForm = learnerForm.bindFromRequest();
         String ownerEmail = session().get("email");
@@ -227,15 +254,34 @@ public class CoordinatorController extends Controller {
                 && otherLearnerType != null
                 && !otherLearnerType.isEmpty();
     }
-
+    
+    /**
+     * Part of the jQuery/AngularJS api to update a learner from the client-side.
+     * 
+     * @param learnerEmail
+     * @return
+     */
     public static Result updateLearner(String learnerEmail) {
         return ok(play.libs.Json.toJson(Learner.find.byId(learnerEmail)));
     }
 
+    /**
+     * Renders the current calendar for all sessions available.
+     * 
+     * @return
+     */
     public static Result viewCoordinatorCalendar() {
         return ok(calendarCoordinator.render(Learner.getAllOwnedBy(session().get("email"))));
     }
 
+    /**
+     * Renders the fully populated students page for a coordinator (the form is used to 
+     * create new learners).
+     * 
+     * @param ownerEmail Email address of the Coordinator
+     * @param form Form used to create learners
+     * @return
+     */
     private static Html studentsPageRenderWithForm(String ownerEmail, Form<Learner.PreLearner> form) {
         List<Learner> learners = Learner.getAllOwnedBy(ownerEmail);
         HashMap<String, List<Session>> learnerSchedules = new HashMap<String, List<Session>>();

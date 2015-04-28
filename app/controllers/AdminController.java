@@ -28,8 +28,17 @@ import util.Tags;
 
 @Security.Authenticated(Secured.class)
 @With(SecuredAdminAction.class)
+/**
+ * Primary Controller for most admin related actions.
+ *
+ */
 public class AdminController extends Controller {
     
+    /**
+     * Renders all active learners and their schedules.
+     * 
+     * @return
+     */
     public static Result viewLearners() {
         List<Learner> learners = Learner.getAll();
         HashMap<String, List<Session>> learnerSchedules = new HashMap<String, List<Session>>();
@@ -40,6 +49,14 @@ public class AdminController extends Controller {
         return ok(views.html.studentsAdminView.render(learners, learnerSchedules, Learner.LEARNER_TYPES));
     }
     
+    /**
+     * Emails an individual learner their schedule with a pre-generated header and footer.
+     * The header and footer are located in "public/template" and are named email_template_head.html
+     * and email_template_tail.html.
+     * 
+     * @param learnerId
+     * @return
+     */
     public static Result emailLearnerSchedule(String learnerId) {
         Learner learner = Learner.find.where().eq("uuid", learnerId).findUnique();
         
@@ -82,6 +99,11 @@ public class AdminController extends Controller {
         return status(NO_CONTENT);
     }
     
+    /**
+     * Sends every active learner their schedule.
+     * 
+     * @return
+     */
     public static Result emailAllStudents() {
         List<Learner> learners = Learner.getAll();
 
@@ -191,6 +213,12 @@ public class AdminController extends Controller {
         return everything;
     }
     
+    /**
+     * Removes a learner from the database.
+     * 
+     * @param learnerId The UUID cooresponding to the learner
+     * @return
+     */
     public static Result deleteLearner(String learnerId) {
         Learner learner = Learner.find.where().eq("uuid", learnerId).findUnique();
         if(learner != null) {
@@ -263,6 +291,11 @@ public class AdminController extends Controller {
         return ok(views.html.testCSV.render());
     }
 
+    /**
+     * Action that generates the learnerCSV and presents it to the Admin.
+     * 
+     * @return
+     */
     public static Result generateLearnersCSV() {
         StringWriter csvStringWriter = new StringWriter();
 
@@ -278,6 +311,12 @@ public class AdminController extends Controller {
         return ok(csvResponseStream);
     }
 
+    /**
+     * Action that generates the coordinatorCSV and presents it to the Admin.  Currently,
+     * there is no way for the Admin to access this from the web app.
+     * 
+     * @return
+     */
     public static Result generateCoordinatorsCSV() {
         StringWriter csvStringWriter = new StringWriter();
 

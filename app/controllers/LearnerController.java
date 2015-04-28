@@ -17,6 +17,12 @@ import java.util.List;
 @Security.Authenticated(Secured.class)
 public class LearnerController extends Controller {
 
+    /**
+     * Retrieves learners owned by the coordinator or all learners
+     * if accessed by an admin.
+     * 
+     * @return
+     */
     public static Result getLearners() {
         String email = session().get("email");
         User user = User.find.byId(email);
@@ -34,6 +40,8 @@ public class LearnerController extends Controller {
      * Changes will be propogated to the learner's sessions.
      *
      * On success, returns the entire Learner entity as JSON.
+     * 
+     * @param learnerUUID The UUID cooresponding to the learner.  It is another unique key in addition to the email.
      */
     @BodyParser.Of(BodyParser.Json.class)
     public static Result updateLearner(String learnerUUID) {
