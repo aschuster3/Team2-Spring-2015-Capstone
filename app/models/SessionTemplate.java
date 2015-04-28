@@ -6,6 +6,13 @@ import play.db.ebean.Model.Finder;
 import play.data.validation.Constraints.*;
 import javax.persistence.*;
 
+/**
+ * This is a class for generating templates of sessions. Only admins can create
+ * session templates. Session templates are added to schedule templates.
+ * 
+ * @author Julia Rapoport
+ *
+ */
 @Entity
 public class SessionTemplate extends Model implements Comparable<SessionTemplate> {
 

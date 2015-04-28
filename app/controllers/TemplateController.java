@@ -16,12 +16,24 @@ import views.html.*;
 import play.data.validation.Constraints.Required;
 import play.data.validation.ValidationError;
 
+/**
+ * The controller for creating and editing schedule and session templates.
+ * 
+ * @author Julia Rapoport
+ *
+ */
 @With(SecuredAdminAction.class)
 public class TemplateController extends Controller {
 
 	static Form<PreTemplate> templateForm = Form.form(PreTemplate.class);
 	static Form<PreSession> sessionForm = Form.form(PreSession.class);
 
+	/**
+	 * Helper class for validating user-provided information to create a new schedule template.
+	 * 
+	 * @author Julia Rapoport
+	 *
+	 */
 	public static class PreTemplate {
 
 		@Required
@@ -45,7 +57,13 @@ public class TemplateController extends Controller {
 			return null;
 		}
 	}
-
+	
+	/**
+	 * Helper class for validating user-provided information to create a new session template.
+	 * 
+	 * @author Julia Rapoport
+	 *
+	 */
 	public static class PreSession {
 
 		@Required
@@ -153,6 +171,15 @@ public class TemplateController extends Controller {
 		return ok(Json.toJson(ScheduleTemplate.find.all()));
 	}
 
+	/**
+	 * Adds the session template to the schedule template with the specified ID if the schedule
+	 * template exists, both the session and schedule templates are not null, and the session template
+	 * does not already exist in the schedule template.
+	 * 
+	 * @param scheduleID the schedule ID to which you are adding a session
+	 * @param session the new session
+	 * @return
+	 */
 	public static Result addSessionToSchedule(String scheduleID,
 			SessionTemplate session) {
 		ScheduleTemplate schedule = ScheduleTemplate.find.where()

@@ -15,6 +15,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * This is a class for generating templates of schedules.  All schedule templates have 
+ * a title, learner type, id, and list of sessions within the template. Only admins can create
+ * schedule templates. 
+ * 
+ * @author Julia Rapoport
+ *
+ */
 @Entity
 public class ScheduleTemplate extends Model {
 
@@ -40,6 +48,13 @@ public class ScheduleTemplate extends Model {
         this.uuid = UUID.randomUUID().toString();
 	}
 	
+	/**
+	 * Adds a session to the list of sessions for this template. If this session already 
+	 * exists in this template, a duplicate will not be added. 
+	 * 
+	 * @param session
+	 * @return true if the session was successfully added to this template
+	 */
 	public boolean addSession(SessionTemplate session){
 		if(!sessions.contains(session)){
 			return sessions.add(session);
@@ -76,7 +91,6 @@ public class ScheduleTemplate extends Model {
 	
 	 public static Finder<String, ScheduleTemplate> find = new Finder<String, ScheduleTemplate>(
 	            String.class, ScheduleTemplate.class);
-
 
 	@Transient
 	public int getStartDay() {
