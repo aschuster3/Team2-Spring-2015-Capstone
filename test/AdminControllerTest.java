@@ -22,6 +22,7 @@ import org.junit.Test;
 import play.Logger;
 import play.mvc.Result;
 
+import java.util.Calendar;
 import java.util.Date;
 
 
@@ -160,12 +161,14 @@ public class AdminControllerTest {
     }
 
     @Test
-    public void removeAllLearnersAndTheirSessions_RemovesLearnersFromDatabase() {
+    public void removeFinishedLearnersAndTheirSessions_RemovesFinishedLearnersFromDatabase() {
         Learner.create("email", "first", "last", "type", "owner");
-        Learner.create("email2", "first2", "last2", "type", "owner2");
+        Session session = new Session(null, "title", new Date(0));
+        session.assignedLearner = "email";
+        Session.create(session);
 
         Result result = callAction(
-                routes.ref.AdminController.removeAllLearnersAndTheirSessions(),
+                routes.ref.AdminController.removeFinishedLearnersAndTheirSessions(),
                 fakeRequest().withSession("email", ADMIN_EMAIL)
         );
         int resultingLearnerCount = Learner.find.all().size();
@@ -175,7 +178,7 @@ public class AdminControllerTest {
     }
 
     @Test
-    public void removeAllLearnersAndTheirSessions_RemovesFilledSessionsFromDatabase() {
+    public void removeFinishedLearnersAndTheirSessions_RemovesFilledSessionsFromDatabase() {
         Learner.create("email", "first", "last", "type", "owner");
 
         Session filledSession1 = new Session(null, "title", new Date(0));
@@ -191,12 +194,44 @@ public class AdminControllerTest {
         Session.create(freeSession);
 
         Result result = callAction(
-                routes.ref.AdminController.removeAllLearnersAndTheirSessions(),
+                routes.ref.AdminController.removeFinishedLearnersAndTheirSessions(),
                 fakeRequest().withSession("email", ADMIN_EMAIL)
         );
         int resultingSessionCount = Session.find.all().size();
 
         assertThat(resultingSessionCount).isEqualTo(1);
         assertThat(Session.find.byId(freeSession.id)).isNotNull();
+    }
+
+    @Test
+    public void removeFinishedLearnersAndTheirSessions_LeavesUnfinishedLearnersInDatabase() {
+        Learner.create("email2", "first2", "last2", "type", "owner2");
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DAY_OF_YEAR, 1);
+        Date futureDate = cal.getTime();
+        Session futureSession = new Session(null, "title", futureDate);
+        futureSession.assignedLearner = "email2";
+        Session.create(futureSession);
+
+        callAction(
+                routes.ref.AdminController.removeFinishedLearnersAndTheirSessions(),
+                fakeRequest().withSession("email", ADMIN_EMAIL)
+        );
+
+        assertThat(Session.find.all().size()).isEqualTo(1);
+        assertThat(Learner.find.all().size()).isEqualTo(1);
+    }
+
+    @Test
+    public void removeFinishedLearnersAndTheirSessions_LeavesNewLearnersInDatabase() {
+        Learner.create("email", "first", "last", "type", "owner");
+
+        callAction(
+                routes.ref.AdminController.removeFinishedLearnersAndTheirSessions(),
+                fakeRequest().withSession("email", ADMIN_EMAIL)
+        );
+
+        assertThat(Learner.find.all().size()).isEqualTo(1);
     }
 }

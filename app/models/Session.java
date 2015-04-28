@@ -20,7 +20,7 @@ import play.db.ebean.Model;
  * 
  * @author Julia Rapoport
  */
-public class Session extends Model {
+public class Session extends Model implements Comparable<Session> {
 
 	/* for the front-end calendar */
 	public static final String TYPE_TAKEN = "invalid";
@@ -47,6 +47,11 @@ public class Session extends Model {
 
 	public Long recurringGroupId;
 
+	public boolean preventThawing;
+
+	/*
+	 * Only relevant for sessions that are created from templates
+	 */
 	public String scheduleGroupId;
 
 	public String scheduleTitle;
@@ -56,7 +61,7 @@ public class Session extends Model {
 	/**
 	 * This is a comma separated list.
 	 *
-	 * Becaues eBean does not support @ElementCollection!
+	 * Becaues Ebean does not support @ElementCollection!
 	 */
 	@Column(length=500)
 	public String supportedLearnerTypesAsString;
@@ -150,7 +155,9 @@ public class Session extends Model {
     }
     
     public static List<Session> getLearnerSchedule(String learner) {
-        return Session.find.where().eq("assignedLearner", learner).findList();
+        List<Session> schedule = Session.find.where().eq("assignedLearner", learner).findList();
+		Collections.sort(schedule);
+		return schedule;
     }
     
     public String validate() {
@@ -213,6 +220,10 @@ public class Session extends Model {
 	}
 
 	public void thaw() {
+		if (this.preventThawing) {
+			return;
+		}
+
 		this.supportsAnyLearnerType = true;
 		Set<String> supportedTypes = this.getSupportedLearnerTypes();
 		for (String type: Learner.LEARNER_TYPES) {
@@ -222,5 +233,48 @@ public class Session extends Model {
 		this.scheduleGroupId = null;
 		this.scheduleTitle = null;
 		this.firstSessionInScheduleGroup = false;
+	}
+
+	@Override
+	public int compareTo(Session other) {
+		if (other == null) {
+			return -1;
+		}
+
+		Calendar thisCal = this.dateAsCalendar();
+		Calendar otherCal = other.dateAsCalendar();
+
+		if (thisCal.before(otherCal)) {
+			return -1;
+		} else if (thisCal.after(otherCal)) {
+			return 1;
+		}
+
+		if (this.isAM && !other.isAM) {
+			return -1;
+		} else if (!this.isAM && other.isAM) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
+
+	/**
+	 * @return A Calendar set to the session's date's Year, Month, and Day of Month
+	 */
+	public Calendar dateAsCalendar() {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		int thisYear = cal.get(Calendar.YEAR);
+		int thisMonth = cal.get(Calendar.MONTH);
+		int thisDayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
+
+		// clear then reset in order to "normalize" to Year/Month/Day
+		cal.clear();
+		cal.set(Calendar.YEAR, thisYear);
+		cal.set(Calendar.MONTH, thisMonth);
+		cal.set(Calendar.DAY_OF_MONTH, thisDayOfMonth);
+
+		return cal;
 	}
 }

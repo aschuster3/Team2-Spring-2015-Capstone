@@ -15,6 +15,10 @@ angular.module('mwl.calendar')
             return $http.put(urlBase + '/' + session.id, session);
         };
 
+        service.updateMultipleSessions = function (sessions) {
+            return $http.put(urlBase + '/bulk/update', sessions);
+        };
+
         service.deleteSession = function (id) {
             return $http.delete(urlBase + '/' + id);
         };
@@ -33,9 +37,10 @@ angular.module('mwl.calendar')
             });
         };
 
-        service.createFromScheduleTemplate = function (scheduleTemplate, startDate) {
+        service.createFromScheduleTemplate = function (scheduleTemplate, startDate, preventThawing) {
             return $http.post(urlBase + '/template/' + scheduleTemplate.uuid, {
-                startDate: startDate
+                startDate: startDate,
+                preventThawing: preventThawing
             });
         };
 
