@@ -43,6 +43,10 @@ public class Application extends Controller {
     static Form<ForgotPassword> forgotPasswordTemplate = Form.form(ForgotPassword.class);
     static Form<Password> passwordForm = Form.form(Password.class);
 
+    /**
+     * Determines whether the user is a coordinator or admin and renders the
+     * correct home page.
+     */
     @Security.Authenticated(Secured.class)
     public static Result index() {
         String email = session().get("email");
@@ -61,15 +65,25 @@ public class Application extends Controller {
     public static Result login() {
         return ok(loginPage.render(loginForm));
     }
-
+    
+    /**
+     * Renders the signup page.
+     */
     public static Result signup(){
     	return ok(registrationForm.render(signupForm));
     }
     
+    /**
+     * Renders the forgot password form.
+     */
     public static Result forgotPassword() {
         return ok(forgotPasswordForm.render(forgotPasswordTemplate));
     }
     
+    /**
+     * Creates a new Unapproved User based on information the user provided in the
+     * sign-up form.   
+     */
     public static Result createUnapprovedUser(){
     	Form<UnapprovedUser> filledForm = signupForm.bindFromRequest();
     	if (filledForm.hasGlobalErrors() || filledForm.hasErrors()) {
@@ -92,11 +106,17 @@ public class Application extends Controller {
         	return redirect(routes.Application.viewRegistrationFormConfirmation());
         }
     }
-
+    
+    /**
+     * Renders the registration confirmation form.
+     */
     public static Result viewRegistrationFormConfirmation() {
         return ok(registrationFormConfirmation.render());
     }
     
+    /**
+     * Authenticates a user based on the username and password entered in the login form.
+     */
     public static Result authenticate() {
         Form<Login> filledForm = loginForm.bindFromRequest();
         if (filledForm.hasErrors()) {
@@ -110,6 +130,9 @@ public class Application extends Controller {
         }
     }
     
+    /**
+     * Clears the session information and renders the login page.
+     */
     public static Result logout() {
         session().clear();
         flash("success", "You've been logged out");
@@ -158,7 +181,7 @@ public class Application extends Controller {
     
     /**
      * Once an acceptable password is made, the user is saved and
-     * then directed to the coordinator dashboard
+     * then directed to the coordinator dashboard.
      * 
      * @param email
      * @return
@@ -201,6 +224,11 @@ public class Application extends Controller {
         public String password;
         public String passwordConfirm;
         
+        /**
+         * A required method to determine if a form has errors
+         * 
+         * @return A String describing the issue or null if there is none.
+         */
         public String validate() {
             String error = PasswordUtil.validateClearPassword(password);
             if (error != null) {
@@ -214,6 +242,10 @@ public class Application extends Controller {
         }
     }
     
+    /**
+     * Sends a new token to the email provided by the user in the forgot password form so 
+     * that the user can reset their password.
+     */
     public static Result sendNewPassword() {
         Form<ForgotPassword> filledForm = forgotPasswordTemplate.bindFromRequest();
         if(filledForm.hasGlobalErrors() || filledForm.hasErrors()) {
@@ -236,10 +268,19 @@ public class Application extends Controller {
         }
     }
 
+    /**
+     * Renders a page that confirms the new password has been sent to the user's email.
+     */
     public static Result viewForgotPasswordConfirmation() {
         return ok(views.html.forgotPasswordFormConfirmation.render());
     }
 
+    /**
+     * Sends a new token to the email associated with the user ID so 
+     * that the user can reset their password. Functionality only available to admins.
+     * 
+     * @param userUUID the ID of the user whose password is being reset
+     */
     @With(SecuredAdminAction.class)
     public static Result sendNewPasswordToUser(String userUUID) {
         User coordinator = User.find.where().eq("uuid", userUUID).findUnique();
@@ -272,6 +313,11 @@ public class Application extends Controller {
         MailerPlugin.send(email);
     }
     
+    /**
+     * Renders the reset password page.
+     * 
+     * @param token from email sent to user
+     */
     public static Result resetPassword(String token) {
         UserReset userReset = UserReset.find.where().eq("resetToken", token).findUnique();
         if (userReset == null) {
@@ -286,6 +332,11 @@ public class Application extends Controller {
         return ok(resetPasswordPage.render(passwordForm, user));
     }
     
+    /**
+     * Updates the user's password with new password from the reset password form.
+     * 
+     * @param email of user
+     */
     public static Result changeUserPassword(String email) {
         Form<Password> filledForm = passwordForm.bindFromRequest();
         User user = User.find.byId(email);
@@ -306,10 +357,18 @@ public class Application extends Controller {
     }
   
 
+    /**
+	 * A static class made for the purpose of generating a form for password retrieval.
+	 */ 
     public static class ForgotPassword {
         @Required
         public String email;
         
+        /**
+         * A required method to determine if a form has errors
+         * 
+         * @return A String describing the issue or null if there is none.
+         */
         public String validate() {
             EmailValidator val = new EmailValidator();
             if(!val.isValid(this.email)) {
@@ -323,10 +382,16 @@ public class Application extends Controller {
         }
     }
 
+    /**
+     * Renders the admin support page.
+     */
     public static Result viewSupportPage() {
         return ok(support.render());
     }
 
+    /**
+     * Renders the coordinator support page.
+     */
     public static Result viewCoordinatorSupport() {
         return ok(coordinatorSupport.render());
     }

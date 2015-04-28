@@ -29,7 +29,8 @@ public class TemplateController extends Controller {
 	static Form<PreSession> sessionForm = Form.form(PreSession.class);
 
 	/**
-	 * Helper class for validating user-provided information to create a new schedule template.
+	 * A static class made for the purpose of generating a form with fields for 
+	 * schedule template information.
 	 * 
 	 * @author Julia Rapoport
 	 *
@@ -41,7 +42,12 @@ public class TemplateController extends Controller {
 
 		@Required
 		public String learnerType;
-
+		
+		 /**
+         * A required method to determine if a form has errors
+         * 
+         * @return A String describing the issue or null if there is none.
+         */
 		public String validate() {
 
 			if ((title == null || title.equals(""))) {
@@ -59,7 +65,8 @@ public class TemplateController extends Controller {
 	}
 	
 	/**
-	 * Helper class for validating user-provided information to create a new session template.
+	 * A static class made for the purpose of generating a form with fields for 
+	 * session template information.
 	 * 
 	 * @author Julia Rapoport
 	 *
@@ -82,7 +89,12 @@ public class TemplateController extends Controller {
 		public String isAM;
 
 		public String schedule;
-
+		
+		 /**
+         * A required method to determine if a form has errors
+         * 
+         * @return A String describing the issue or null if there is none.
+         */
 		public String validate() {
 			if (location == null || location.equals("")) {
 				return "Must have a location for the session.";
@@ -116,6 +128,11 @@ public class TemplateController extends Controller {
 		}
 	}
 
+	/**
+	 * Creates a schedule template from a form with user-provided information.
+	 * Returns a bad request if the form has errors.
+	 * 
+	 */
 	public static Result createScheduleTemplate() {
 
 		Form<PreTemplate> filledForm = templateForm.bindFromRequest();
@@ -131,6 +148,14 @@ public class TemplateController extends Controller {
 		}
 	}
 
+	/**
+	 * Creates a session template from a form with user-provided information and adds the
+	 * session to the schedule whose ID is passed into the function as a parameter.
+	 * Returns a bad request if the form has errors.
+	 * 
+	 * @param scheduleID the schedule to which to add the session
+	 * @return
+	 */
 	public static Result createSessionTemplate(String scheduleID) {
 		Form<PreSession> filledForm = sessionForm.bindFromRequest();
 		/*
@@ -167,18 +192,19 @@ public class TemplateController extends Controller {
 				templateForm, sessionForm, "", Learner.LEARNER_TYPES));
 	}
 
+	/**
+	 * @return a list of all schedule templates
+	 */
 	public static Result jsonTemplates() {
 		return ok(Json.toJson(ScheduleTemplate.find.all()));
 	}
 
 	/**
 	 * Adds the session template to the schedule template with the specified ID if the schedule
-	 * template exists, both the session and schedule templates are not null, and the session template
-	 * does not already exist in the schedule template.
+	 * template exists but the session template does not already exist in the schedule template.
 	 * 
 	 * @param scheduleID the schedule ID to which you are adding a session
 	 * @param session the new session
-	 * @return
 	 */
 	public static Result addSessionToSchedule(String scheduleID,
 			SessionTemplate session) {
@@ -203,6 +229,11 @@ public class TemplateController extends Controller {
 
 	}
 
+	/**
+	 * Deletes the session template from the database. 
+	 * 
+	 * @param id the ID of the session template to delete
+	 */
 	public static Result deleteSessionFromSchedule(String id) {
 		SessionTemplate session = SessionTemplate.find.byId(id);
 		if (session == null) {
@@ -214,6 +245,11 @@ public class TemplateController extends Controller {
 		}
 	}
 	
+	/**
+	 * Deletes the schedule template from the database. 
+	 * 
+	 * @param scheduleID the ID of the schedule template to delete
+	 */
 	public static Result deleteTemplate(String scheduleID){
 		ScheduleTemplate schedule = ScheduleTemplate.find.byId(scheduleID);
 		if (schedule == null){
@@ -225,6 +261,13 @@ public class TemplateController extends Controller {
 		}
 	}
 
+	/**
+	 * Updates the session template's fields after validating that the information does
+	 * not violate any constraints. Expects a JSON.
+	 * 
+	 * @param sessionId the ID of the session template to be modified
+	 * @return the updated session template
+	 */
 	@BodyParser.Of(BodyParser.Json.class)
 	public static Result updateSessionTemplate(String sessionId) {
 		JsonNode sessionJson = request().body().asJson();
@@ -254,6 +297,12 @@ public class TemplateController extends Controller {
         return ok(Json.toJson(SessionTemplate.find.byId(existingSession.id)));
 	}
 	
+	/**
+	 * Updates the schedule template's learner type. Expects a JSON.
+	 * 
+	 * @param scheduleId the ID of the schedule template to be modified
+	 * @return the updated schedule template
+	 */
 	@BodyParser.Of(BodyParser.Json.class)
 	public static Result updateLearnerType(String scheduleId){
 		JsonNode scheduleJson = request().body().asJson();

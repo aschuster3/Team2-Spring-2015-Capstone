@@ -59,6 +59,11 @@ public class SessionController extends Controller {
 		}
 	}
 
+	/**
+	 * Updates the session. Expects a JSON with the new data for the session. 
+	 * 
+	 * @param id the ID of the session to update
+	 */
 	@BodyParser.Of(BodyParser.Json.class)
 	public static Result updateSession(String id) {
 		JsonNode json = request().body().asJson();
@@ -74,6 +79,10 @@ public class SessionController extends Controller {
 		return status(204);
 	}
 
+	/**
+	 * Updates all sessions with new data. Expects a JSON with a list of sessions to be updated.
+	 * 
+	 */
 	@BodyParser.Of(BodyParser.Json.class)
 	public static Result updateMultipleSessions() {
 		JsonNode json = request().body().asJson();
@@ -132,6 +141,11 @@ public class SessionController extends Controller {
 		}
 	}
 
+	/**
+	 * Creates a session. Expects a JSON.
+	 * 
+	 * @return the new session
+	 */
 	@With(SecuredAdminAction.class)
 	@BodyParser.Of(BodyParser.Json.class)
 	public static Result jsonCreateSession() {
@@ -142,6 +156,12 @@ public class SessionController extends Controller {
 		return status(CREATED, Json.toJson(session));
 	}
 
+	/**
+	 * Deletes session from the database.
+	 * 
+	 * @param id the ID of the session to be deleted
+	 * @return NO_CONTENT
+	 */
 	@With(SecuredAdminAction.class)
 	public static Result deleteSession(String id) {
 		Session session = Session.find.byId(id);
@@ -271,6 +291,13 @@ public class SessionController extends Controller {
 		return status(204);
 	}
 
+	/**
+	 * Expects a JSON with a "startDate" field. Creates a new session for each session
+	 * template in the schedule template using the data in the session template to populate
+	 * the fields in the session. 
+	 * 
+	 * @param scheduleID the ID of the schedule template from which to create sessions
+	 */
 	@BodyParser.Of(BodyParser.Json.class)
 	public static Result createScheduleSessions(String scheduleID){
 		ScheduleTemplate schedule = ScheduleTemplate.find.byId(scheduleID);
