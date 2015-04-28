@@ -24,6 +24,7 @@ import play.mvc.Result;
 import play.mvc.Security;
 import play.mvc.With;
 import util.CSVUtil;
+import util.Tags;
 
 @Security.Authenticated(Secured.class)
 @With(SecuredAdminAction.class)
@@ -50,7 +51,7 @@ public class AdminController extends Controller {
         
         Email email = new Email();
         email.setSubject("The following includes schedule details.");
-        email.setFrom("admin@emory.edu");
+        email.setFrom(Tags.ADMIN_EMAIL);
         email.addTo(learner.email);
         sb.append("<table style=\"width:80%\" border=\"1\">"
                 + "<tr> <th>Clinic</th> <th>Physician</th> <th>Session Time</th> </tr>");
@@ -96,7 +97,7 @@ public class AdminController extends Controller {
             
             Email email = new Email();
             email.setSubject("Welcome to the Emory Dermatology Rotation");
-            email.setFrom("admin@emory.edu");
+            email.setFrom(Tags.ADMIN_EMAIL);
             email.addTo(l.email);
             sb.append("<table style=\"width:80%\" border=\"1\">"
                     + "<tr> <th>Clinic</th> <th>Physician</th> <th>Session Time</th> </tr>");
@@ -240,7 +241,7 @@ public class AdminController extends Controller {
             
             Email email = new Email();
             email.setSubject("Approval to the Emory Dermatology Rotation Application");
-            email.setFrom("admin@emory.edu");
+            email.setFrom(Tags.ADMIN_EMAIL);
             email.addTo(userEmail);
             email.setBodyText("Go to " + url.toString() + 
                     " to complete your signup process");

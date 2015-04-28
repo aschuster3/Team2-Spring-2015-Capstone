@@ -20,6 +20,7 @@ import play.mvc.Security;
 import play.twirl.api.Html;
 import play.libs.mailer.Email;
 import play.libs.mailer.MailerPlugin;
+import util.Tags;
 import views.html.calendarCoordinator;
 import views.html.studentsPage;
 
@@ -50,7 +51,7 @@ public class CoordinatorController extends Controller {
         
         Email email = new Email();
         email.setSubject("The following includes schedule details.");
-        email.setFrom("admin@emory.edu");
+        email.setFrom(Tags.ADMIN_EMAIL);
         email.addTo(learner.email);
         sb.append("<table style=\"width:80%\" border=\"1\">"
                 + "<tr> <th>Clinic</th> <th>Physician</th> <th>Session Time</th> </tr>");
@@ -96,7 +97,7 @@ public class CoordinatorController extends Controller {
             
             Email email = new Email();
             email.setSubject("Welcome to the Emory Dermatology Rotation");
-            email.setFrom("admin@emory.edu");
+            email.setFrom(Tags.ADMIN_EMAIL);
             email.addTo(l.email);
             sb.append("<table style=\"width:80%\" border=\"1\">"
                     + "<tr> <th>Clinic</th> <th>Physician</th> <th>Session Time</th> </tr>");

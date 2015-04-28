@@ -18,6 +18,7 @@ import play.libs.mailer.Email;
 import play.libs.mailer.MailerPlugin;
 import play.mvc.*;
 import util.PasswordUtil;
+import util.Tags;
 import views.html.adminIndex;
 import views.html.coordinatorIndex;
 import views.html.coordinatorsPage;
@@ -264,7 +265,7 @@ public class Application extends Controller {
 
         Email email = new Email();
         email.setSubject("Reset Password");
-        email.setFrom("admin@emory.edu");
+        email.setFrom(Tags.ADMIN_EMAIL);
         email.addTo(userEmail);
         email.setBodyText("Your new password is available here: " + url.toString());
 
