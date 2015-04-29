@@ -235,10 +235,16 @@
 		<ol>
 			<li><p>Choose the location of the event from the dropdown menu under “Location”</p></li>
 			<li><p>Enter the name of the physician on duty for this event in the text box under “Physician on Duty”</p></li>
-			<li><p>Select all of the learner types who are eligible to sign up for this event by checking the box next to each eligible learner type under “Learner Types”</p></li>
-			<li><p>Choose the date for this event by clicking on the magnifying glass below “Date” and clicking the date you want from the calendar modal that appears once the magnifying glass is clicked on</p></li>
+			<li><p>Select all of the learner types who are eligible to sign up for this event by checking the box next to each eligible learner type under “Learner Types”</p><ul>
+                <li><p>You can add additional learner types by clicking "Add Other Learner Type."</p></li>
+                <li><p>Learner types are case-sensitive and cannot include commas.</p></li>
+                <li><p>Selecting "Allow Any Learner Type" will allow <strong>any</strong> learner type to sign up for this event, not just the learner types present in the current list.</p></li></ul></li>
+			<li><p>Choose the date for this event by clicking on the magnifying glass below “Date” and clicking the date you want from the calendar modal that appears once the magnifying glass is clicked on</p>
 			<li><p>Choose the time of day for the event (AM or PM) by clicking the radio button for the corresponding time of day under “Time”</p></li>
-			<li><p>Choose to repeat or not repeat the event by choosing either the “None” or “Weekly” radio button under “Repeat”</p></li>
+			<li><p>Choose to repeat or not repeat the event by choosing either the “None”, “Weekly”, or "Monthly" radio button under “Repeat”</p><ul>
+                <li><p>If you chose to repeat "Weekly", you must pick the exact end date for the repeating event.</p></li>
+                <li><p>If you chose to repeat "Monthly", you must pick the end month for the repeating event.  Indicate your choice by selecting the final day of that month.</p></li></ul></li>
+			<li><p>Choose whether or not to prevent the session from thawing.  By default, all sessions will thaw two weeks before their start date.</p></li>
 		</ol>
 	</li>
 	<li><p>Once you have entered all of the event’s information, press the “Submit” button in the bottom right corner of the modal.</p></li>
@@ -293,9 +299,10 @@
 	<h6><a name="29">Add a template to the calendar</a></h6>
 	<li><p>Navigate to the calendar page by clicking the “Schedule” link in the navigation bar.</p></li>
 	<li><p>At the top right above the calendar, click the blue “Add Template to Schedule” button.</p></li>
-	<li><p>A modal will appear with a drop down menu for you to choose from the templates you have created and a place to choose the start date to apply this template to.</p></li>
+	<li><p>A modal will appear with a drop down menu for you to choose from the templates you have created, a place to choose the start date to apply this template to, and whether or not you wish to prevent the sessions from thawing.</p></li>
 	<li><p>Once you are finished, hit the blue “Submit” button in the bottom right of the modal.</p></li>
 	<li><p>If at any point you wish to cancel, hit the blue “Cancel” button in the bottom right of the modal.</p></li>
+	<li><p>Adding a template to the calendar creates new half-day sessions inside the calendar.  The new sessions inside the calendar will not be affected by any changes made from inside the "Manage Templates" view (or vice-versa).</p></li>
 
 	<hr>
 
@@ -371,8 +378,8 @@
 	<li><p>If the event has a yellow dot next to it, the event is open and the student you selected is eligible to sign up for it. If the dot is gray, then either the event has already been taken or your student is not eligible to sign up for it.</p></li>
 	<li><p>To sign your student up for this event if the dot is yellow, click the plus sign that appears to the right of the event details.</p></li>
 	<li><p>Note:  It is possible for a yellow event to actually be taken (Suppose two coordinators open the app on their own computers simultaneously.  If the first coordinator signs their learner up for an event, the second coordinator will not see this change in real-time).  In this case, you will see an error notification saying that the event has already been taken, and the event will now be grayed out.</p></li>
-	<li><p>If the session you choose to sign up for is part of a group of sessions, a pop up will appear to notify you.</p></li>
-	<li><p>Any sessions that are gray because your student is not eligible for it will open up to all types of students two weeks before the event occurs if it has not already been filled, so be sure to check back within that time frame if your student needs more sessions</p></li>
+    <li><p>If the session you choose to sign up for is part of a group of sessions, a pop up will appear to notify you after you have registered your student for the session.</p></li>
+    <li><p>Any sessions that are gray because your student is not eligible for it will open up to all types of students two weeks before the event occurs if it has not already been filled, so be sure to check back within that time frame if your student needs more sessions</p></li>
 
 
 	<h6><a name="21">Unregister a student from an event</a></h6>

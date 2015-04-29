@@ -129,7 +129,7 @@ public class SessionControllerTest {
     }
 
     @Test
-    public void updateSession_forNewSession_Succeeds() {
+    public void updateSession_forNonexistantSession_Fails() {
         JsonNode jsonForNewSession = Json.toJson(
                 new Session("1", "new-title", new Date(0)));
 
@@ -141,8 +141,8 @@ public class SessionControllerTest {
         );
         Session newSession = Session.find.byId("1");
 
-        assertThat(status(result)).isEqualTo(201);
-        assertThat(newSession).isNotNull();
+        assertThat(status(result)).isEqualTo(BAD_REQUEST);
+        assertThat(newSession).isNull();
     }
 
     @Test

@@ -333,7 +333,7 @@ public class AdminController extends Controller {
     }
 
     /**
-     * Deletes all learners.  Deletes will cascade to assigned sessions.
+     * Deletes all finished learners.  Deletes will cascade to assigned sessions.
      */
     public static Result removeFinishedLearnersAndTheirSessions() {
         List<Learner> learners = Learner.find.all();
@@ -368,9 +368,7 @@ public class AdminController extends Controller {
     }
 
     /**
-     * Deletes all learners, their sessions, then returns the CSV of learners.
-     *
-     * Temporary controller action:  We should not make this one operation in final product.
+     * Deletes finished learners, their sessions, then returns the CSV of deleted learners.
      */
     public static Result removeLearnersAndGiveCSV() {
         Result r = generateLearnersCSV();

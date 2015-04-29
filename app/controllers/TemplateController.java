@@ -22,6 +22,7 @@ import play.data.validation.ValidationError;
  * @author Julia Rapoport
  *
  */
+@Security.Authenticated(Secured.class)
 @With(SecuredAdminAction.class)
 public class TemplateController extends Controller {
 
