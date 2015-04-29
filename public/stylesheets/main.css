@@ -166,7 +166,11 @@ dl{
 	margin-top: 10px;
 }
 .pendingapproval .pull-right{
-	width: 10%;
+	width: 8em;
+}
+
+.pendingapproval .pull-right form {
+    padding-bottom: 5px;
 }
 
 .session-left{

@@ -33,12 +33,8 @@ To add new learners as a coordinator:
 2. Select "Add Student"
 3. Fill in all fields and click "Submit"
 
-To create new sessions/events as an admin:
 
-1. Go to localhost:9000/sessions
-2. Fill in the fields and click "Create". All fields are mandatory. ID should be an integer. All IDs must be unique.
-
-The email address from which all app related emails are sent from is set in app/util/Tags.java under the variable titled ADMIN_EMAIL.  Change this to change the email "from" field in all emails.
+The email address from which all app related emails are sent from is set in `app/util/Tags.java` under the variable titled ADMIN_EMAIL.  Change this to change the email "from" field in all emails.
 
 User documentation is located in the Support tab of both the Coordinator and Admin dashboards.
 

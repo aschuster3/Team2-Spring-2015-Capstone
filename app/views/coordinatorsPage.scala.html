@@ -144,30 +144,10 @@
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
 <script>
-(function () {
-	updatePendingApprovalButtonWidths();
-
 	$('#approvedModal' ).on('show.bs.modal', function (evt) {
 		var index = $(evt.relatedTarget ).data('unapproved-index');
 		$('.pendingapproval .approvalButton' ).get(index ).innerText = 'Re-approve';
-		updatePendingApprovalButtonWidths();
 	});
-
-	/* we don't need this function if we use a set width for pendingapproval buttons */
-	function updatePendingApprovalButtonWidths() {
-		var maxWidth = -1;
-		var approveAndDenyButtons = $('.pendingapproval button');
-		approveAndDenyButtons.each(function () {
-			var width = $(this ).width();
-			if (width >= maxWidth) {
-				maxWidth = width;
-			}
-		});
-		approveAndDenyButtons.each(function () {
-			$(this ).width(maxWidth);
-		})
-	}
-})();
 </script>
 </body>
 </html>
