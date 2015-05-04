@@ -11,6 +11,7 @@ import play.libs.Json;
 import play.libs.mailer.Email;
 import play.libs.mailer.MailerPlugin;
 import play.mvc.*;
+import util.Tags;
 import views.html.*;
 
 import java.io.IOException;
@@ -197,7 +198,6 @@ public class SessionController extends Controller {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("M/d/yyyy");
 		String dateString = dateFormat.format(session.date);
 
-		String subject = "[Emory Dermatology] Clinic Cancellation for " + dateString;
 		String message = "This is a notification that the following clinic has been cancelled:\n"
 				+ "\n\t" + session.title
 				+ "\n\t" + session.physician
@@ -205,7 +205,8 @@ public class SessionController extends Controller {
 
 		Email email = new Email();
 		email.addTo(emailAddress);
-		email.setSubject(subject);
+        email.setFrom(Tags.ADMIN_EMAIL);
+		email.setSubject(Tags.EMAIL_SUBJECT_SESSION_CANCELLED);
 		email.setBodyText(message);
 
 		MailerPlugin.send(email);

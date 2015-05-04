@@ -67,7 +67,7 @@ public class AdminController extends Controller {
         sb.append(getHeader());
         
         Email email = new Email();
-        email.setSubject("The following includes schedule details.");
+        email.setSubject(Tags.EMAIL_SUBJECT_LEARNER_SCHEDULE);
         email.setFrom(Tags.ADMIN_EMAIL);
         email.addTo(learner.email);
         sb.append("<table style=\"width:80%\" border=\"1\">"
@@ -118,7 +118,7 @@ public class AdminController extends Controller {
             schedule = Session.getLearnerSchedule(l.email);
             
             Email email = new Email();
-            email.setSubject("Welcome to the Emory Dermatology Rotation");
+            email.setSubject(Tags.EMAIL_SUBJECT_LEARNER_SCHEDULE);
             email.setFrom(Tags.ADMIN_EMAIL);
             email.addTo(l.email);
             sb.append("<table style=\"width:80%\" border=\"1\">"
@@ -264,11 +264,11 @@ public class AdminController extends Controller {
 
         try {
             // Verifies that the URL is not malformed
-            URL url = new URL("http://localhost:9000" + (routes.Application.setPassword(user.token)).url());
+            URL url = new URL(Tags.SITE_BASE_URL + (routes.Application.setPassword(user.token)).url());
             user.save();
             
             Email email = new Email();
-            email.setSubject("Approval to the Emory Dermatology Rotation Application");
+            email.setSubject(Tags.EMAIL_SUBJECT_COORDINATOR_APPROVAL);
             email.setFrom(Tags.ADMIN_EMAIL);
             email.addTo(userEmail);
             email.setBodyText("Go to " + url.toString() + 

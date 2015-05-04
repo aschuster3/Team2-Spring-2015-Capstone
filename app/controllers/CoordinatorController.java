@@ -66,7 +66,7 @@ public class CoordinatorController extends Controller {
         sb.append(getHeader());
         
         Email email = new Email();
-        email.setSubject("The following includes schedule details.");
+        email.setSubject(Tags.EMAIL_SUBJECT_LEARNER_SCHEDULE);
         email.setFrom(Tags.ADMIN_EMAIL);
         email.addTo(learner.email);
         sb.append("<table style=\"width:80%\" border=\"1\">"
@@ -117,7 +117,7 @@ public class CoordinatorController extends Controller {
             schedule = Session.getLearnerSchedule(l.email);
             
             Email email = new Email();
-            email.setSubject("Welcome to the Emory Dermatology Rotation");
+            email.setSubject(Tags.EMAIL_SUBJECT_LEARNER_SCHEDULE);
             email.setFrom(Tags.ADMIN_EMAIL);
             email.addTo(l.email);
             sb.append("<table style=\"width:80%\" border=\"1\">"

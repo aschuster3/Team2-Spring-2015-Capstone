@@ -302,10 +302,10 @@ public class Application extends Controller {
     }
 
     private static void sendResetPasswordEmail(String userEmail, String token) throws MalformedURLException {
-        URL url = new URL("http://localhost:9000" + (routes.Application.resetPassword(token)).url());
+        URL url = new URL(Tags.SITE_BASE_URL + (routes.Application.resetPassword(token)).url());
 
         Email email = new Email();
-        email.setSubject("Reset Password");
+        email.setSubject(Tags.EMAIL_SUBJECT_RESET_PASSWORD);
         email.setFrom(Tags.ADMIN_EMAIL);
         email.addTo(userEmail);
         email.setBodyText("Your new password is available here: " + url.toString());
