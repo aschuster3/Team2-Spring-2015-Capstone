@@ -11,18 +11,12 @@ Once Activator is installed:
 
 0. Open your terminal
 1. Go to the root directory of the Dermatology Scheduling application
-2. Run Activator:<br/>
-```shell
-$ activator
-```
-3. Run the tests to see that they pass:<br/>
-```shell
-[emory-dermatology-scheduler] $ test
-```
-4. Run the application locally in development mode:<br/>
-```shell
-[emory-dermatology-scheduler] $ run
-```
+2. Run Activator:<br />
+`$ activator`
+3. Run the tests to see that they pass:<br />
+`[emory-dermatology-scheduler] $ test`
+4. Run the application locally in development mode:<br />
+`[emory-dermatology-scheduler] $ run`
 5. In a browser, go to [http://localhost:9000](http://localhost:9000) to view the application.
 6. Use the following credentials to sign in as an admin (Definitely change this when deploying the full version):<br/>
         Email: admin@emory.edu<br/>
@@ -72,7 +66,7 @@ Change this email and password by editing the appropriate fields in the file [`a
 
 ### Add Admin Accounts
 
-To add more admin accounts, edit [`app/Global.java`] and follow the existing convention for new `User`s.
+To add more admin accounts, edit [`app/Global.java`] and follow the existing convention for a new `User`.
 
 [`app/Global.java`]: app/Global.java
 [app/Global.java]: app/Global.java
